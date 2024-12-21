@@ -1,0 +1,316 @@
+/* cip_register.css */
+
+/* Layout & Container */
+.container {
+    padding: 20px;
+    max-width: 95%;
+    margin: 0 auto;
+    overflow-x: auto;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 14px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+th {
+    background-color: #2c3e50;
+    color: #ffffff;
+    font-weight: 500;
+    padding: 12px 15px;
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #dddddd;
+    vertical-align: top;
+    min-width: 150px;
+}
+
+tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Editable Content */
+[contenteditable="true"] {
+    white-space: pre-wrap;
+    min-width: 200px;
+}
+
+[contenteditable="true"]:hover {
+    background-color: #f0f0f0;
+    outline: 1px solid #ddd;
+    padding: 2px;
+}
+
+[contenteditable="true"]:focus {
+    background-color: #fff;
+    outline: 2px solid #3498db;
+    padding: 2px;
+}
+
+/* Impact Section Styles */
+.impact-column {
+    min-width: 250px;
+    max-width: 300px;
+}
+
+.impact-item {
+    margin-bottom: 8px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    padding: 10px;
+    border: 1px solid #dee2e6;
+}
+
+.impact-details {
+    font-size: 13px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.impact-details div {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 6px;
+    line-height: 1.4;
+}
+
+.impact-details strong {
+    flex: 0 0 70px;
+    color: #495057;
+    padding-right: 8px;
+}
+
+.impact-details div span {
+    flex: 1;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    max-width: 200px;
+}
+
+/* Table cell specific */
+td.impact-column {
+    max-width: 300px;
+    padding: 10px;
+}
+
+/* Scrollbar styling */
+.impact-details::-webkit-scrollbar {
+    width: 6px;
+}
+
+.impact-details::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.impact-details::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+.impact-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.impact-btn {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #f8f9fa;
+    cursor: pointer;
+}
+
+.impact-btn.active {
+    background: #4CAF50;
+    color: white;
+}
+
+/* Files & Images */
+.files-column {
+    min-width: 150px;
+}
+
+.files-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.file-link, .image-link {
+    margin: 5px 0;
+}
+
+.file-link a, .image-link a {
+    display: inline-block;
+    padding: 4px 8px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    color: #007bff;
+    text-decoration: none;
+    font-size: 13px;
+    transition: background-color 0.2s;
+}
+
+.file-link a:hover, .image-link a:hover {
+    background: #e9ecef;
+    text-decoration: none;
+}
+
+/* Buttons */
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.save-btn, .approve-btn {
+    width: 100%;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+}
+
+.save-btn {
+    background-color: #2ecc71;
+}
+
+.save-btn:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+}
+
+.approve-btn {
+    background-color: #4CAF50;
+}
+
+.save-btn:hover {
+    background-color: #27ae60;
+}
+
+.approve-btn:hover {
+    background-color: #45a049;
+}
+
+/* Project Status */
+.project-status {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.project-status.pending {
+    background-color: #ffd700;
+    color: #000;
+}
+
+.project-status.hod_approved {
+    background-color: #90EE90;
+    color: #000;
+}
+
+.project-status.coordinator_approved {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.project-status.rejected {
+    background-color: #ff4444;
+    color: white;
+}
+
+/* Navigation */
+.back-button {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #34495e;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    transition: background-color 0.3s;
+}
+
+.back-button:hover {
+    background-color: #2c3e50;
+}
+
+.table-container {
+    overflow-x: auto;
+    margin: 20px 0;
+}
+
+table {
+    min-width: 100%;
+    white-space: nowrap;
+}
+
+[contenteditable="true"] {
+    padding: 5px;
+    border: 1px solid transparent;
+    min-width: 100px;
+}
+
+[contenteditable="true"]:hover {
+    border: 1px solid #ddd;
+    background-color: #f8f9fa;
+}
+
+[contenteditable="true"]:focus {
+    border: 1px solid #007bff;
+    background-color: #fff;
+    outline: none;
+    box-shadow: 0 0 3px rgba(0,123,255,0.3);
+}
+
+.savings-field {
+    text-align: right;
+    font-family: monospace;
+}
+
+td[data-field^="team_member"],
+td[data-field="project_leader"],
+td[data-field="supported_by"] {
+    min-width: 150px;
+}
+
+td[data-field^="savings"],
+td[data-field="estimated_savings"],
+td[data-field="realized_savings"] {
+    min-width: 120px;
+    text-align: right;
+}
+
+.month-select {
+    width: 120px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+}
+
+.month-select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 3px rgba(0,123,255,0.3);
+}
+

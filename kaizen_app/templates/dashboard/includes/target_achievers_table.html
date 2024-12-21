@@ -1,0 +1,77 @@
+<!-- templates/dashboard/includes/target_achievers_table.html -->
+<div class="modal fade" id="targetAchieversModal" tabindex="-1" role="dialog" aria-labelledby="targetAchieversModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="targetAchieversModalLabel">Target Achievers</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table align-items-center table-flush">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Sl. No</th>
+                                <th scope="col">Department</th>
+                                <th scope="col">Area Leader (HOD)</th>
+                                <th scope="col">Kaizen Coordinator</th>
+                                <th scope="col">Monthly Target</th>
+                                <th scope="col">Completed</th>
+                                <th scope="col">Achievement Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody id="targetAchieversBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+async function loadTargetAchievers() {
+    const tbody = document.getElementById('targetAchieversBody');
+    tbody.innerHTML = '';
+
+    try {
+        const departmentData = '{{ department_data|safe }}';
+        
+        const achievementData = departmentData
+            .map(dept => ({
+                department: dept.name,
+                hod: dept.hod_name,
+                employeeCount: dept.employee_count || 0,
+                monthlyTarget: dept.employee_count || 0,
+                completed: dept.approved_sheets || 0,
+                achievementRate: ((dept.approved_sheets || 0) / (dept.employee_count || 1)).toFixed(2)
+            }))
+            .sort((a, b) => b.achievementRate - a.achievementRate);
+
+        achievementData.forEach((dept, index) => {
+            const row = tbody.insertRow();
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${dept.department}</td>
+                <td>${dept.hod}</td>
+                <td></td>
+                <td>${dept.monthlyTarget}</td>
+                <td>${dept.completed}</td>
+                <td>${dept.achievementRate}</td>
+            `;
+        });
+    } catch (error) {
+        console.error('Error loading target achievers:', error);
+    }
+}
+
+function showTargetAchievers() {
+    $('#targetAchieversModal').modal('show');
+    loadTargetAchievers();
+}
+</script>
