@@ -1140,7 +1140,7 @@ def update_kaizen(request, kaizen_id):
 # views.py
 @login_required
 def hod_dashboard(request):
-    if not request.user.profile.is_hod:
+    if request.user.profile.user_type != 'hod':
         return HttpResponseForbidden()
     
     department = request.user.profile.department
@@ -1175,7 +1175,6 @@ def hod_dashboard(request):
     }
     
     return render(request, 'dashboard/hod_dashboard.html', context)
-
 # Add new view for employee submissions data
 @login_required
 def get_employee_submissions(request, employee_id):
