@@ -23,7 +23,7 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="ni ni-badge"></i></span>
                 </div>
-                <input type="text" name="employee_id" class="form-control" placeholder="Employee ID" required>
+                <input type="text" name="user_id" class="form-control" placeholder="Employee ID" required>
               </div>
             </div>
 
@@ -73,7 +73,7 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="ni ni-single-02"></i></span>
                 </div>
-                <select name="user_type" id="userType" class="form-control" required>
+                <select name="role" id="userType" class="form-control" required>
                   <option value="">Select Role</option>
                   <option value="employee">Employee</option>
                   <option value="hod">HOD</option>
@@ -117,12 +117,12 @@
     </div>
   </div>
 </div>
-
 {% endblock content %}
 
 {% block javascripts %}
 {{ block.super }}
 <script>
+// Department visibility logic
 document.getElementById('userType').addEventListener('change', function() {
     const departmentGroup = document.getElementById('departmentGroup');
     const departmentSelect = document.getElementById('department');
@@ -137,17 +137,27 @@ document.getElementById('userType').addEventListener('change', function() {
     }
 });
 
+// Form submission handler
 document.getElementById('registerForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     const errorDiv = document.getElementById('errorMessages');
     errorDiv.innerHTML = '';
 
-    // Password match validation
+    // Form validation
     const password = this.password.value;
     const confirmPassword = this.confirm_password.value;
+    const role = this.role.value;
+    const department = this.department.value;
     
+    // Password validation
     if (password !== confirmPassword) {
         errorDiv.innerHTML = 'Passwords do not match';
+        return;
+    }
+
+    // Department validation for employee/hod
+    if ((role === 'employee' || role === 'hod') && !department) {
+        errorDiv.innerHTML = 'Department is required for employees and HODs';
         return;
     }
 
@@ -166,7 +176,7 @@ document.getElementById('registerForm').addEventListener('submit', async functio
         if (data.success) {
             window.location.href = '{% url "login" %}';
         } else {
-            errorDiv.innerHTML = data.error;
+            errorDiv.innerHTML = data.error || 'Registration failed. Please try again.';
         }
     } catch (error) {
         console.error('Error:', error);

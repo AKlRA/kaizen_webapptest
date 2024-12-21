@@ -37,7 +37,6 @@ def register(request):
         password = request.POST.get('password')
         role = request.POST.get('role')
         department = request.POST.get('department')
-        pass
 
         # Check if user_id already exists
         if User.objects.filter(profile__employee_id=user_id).exists():
