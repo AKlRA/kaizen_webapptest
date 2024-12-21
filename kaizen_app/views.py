@@ -32,15 +32,40 @@ def index(request):
 
 def register(request):
     if request.method == 'POST':
+        # Add debug prints
+        print("POST data:", request.POST)
+        
         user_id = request.POST.get('user_id')
         username = request.POST.get('username')
-        password = request.POST.get('password')
+        password = request.POST.get('password')  
         role = request.POST.get('role')
         department = request.POST.get('department')
+        
+        # Print received values
+        print(f"""
+        user_id: {user_id}
+        username: {username} 
+        password: {password}
+        role: {role}
+        department: {department}
+        """)
+
+        # Check field names match form
+        if not all([user_id, username, password, role]):
+            print("Missing required fields:")
+            if not user_id: print("- user_id")
+            if not username: print("- username") 
+            if not password: print("- password")
+            if not role: print("- role")
+            return JsonResponse({'success': False, 'error': 'All fields are required'})
 
         # Check if user_id already exists
         if User.objects.filter(profile__employee_id=user_id).exists():
             return JsonResponse({'success': False, 'error': 'Employee ID already exists'})
+
+        # Check if username already exists
+        if User.objects.filter(username=username).exists():
+            return JsonResponse({'success': False, 'error': 'Username already exists'})
 
         # Check coordinator/finance limit
         if role == 'coordinator':
@@ -49,6 +74,10 @@ def register(request):
         elif role == 'finance':
             if User.objects.filter(profile__user_type='finance').count() >= 2:
                 return JsonResponse({'success': False, 'error': 'Maximum finance users limit reached'})
+
+        # Validate department for employee and hod
+        if role in ['employee', 'hod'] and not department:
+            return JsonResponse({'success': False, 'error': 'Department is required for employees and HODs'})
 
         try:
             with transaction.atomic():
@@ -66,7 +95,6 @@ def register(request):
     # Get all departments from DEPARTMENT_CHOICES
     departments = [dept[0] for dept in Profile.DEPARTMENT_CHOICES]
     return render(request, 'dashboard/register.html', {'departments': departments})
-
 # Login view
 def login_view(request):
     if request.method == 'POST':
@@ -552,6 +580,49 @@ def approve_kaizen(request, kaizen_id):
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
     
+def get_department_stats(dept_name):
+    """Helper function to get department statistics"""
+    if not dept_name:
+        return None
+        
+    hod = User.objects.filter(
+        profile__department=dept_name,
+        profile__user_type='hod'
+    ).first()
+
+    employee_count = Profile.objects.filter(
+        department=dept_name,
+        user_type='employee'
+    ).count()
+
+    try:
+        coordinator_entry = KaizenCoordinator.objects.get_or_create(
+            department=dept_name,
+            defaults={'coordinator_name': ''}
+        )[0]
+        coordinator_name = coordinator_entry.coordinator_name or ""
+    except Exception:
+        coordinator_name = ""
+
+    completed_sheets = KaizenSheet.objects.filter(
+        employee__profile__department=dept_name,
+        approval_status='completed',
+        hod_approved_at__isnull=False
+    ).count()
+
+    monthly_target = employee_count
+    achievement_rate = (completed_sheets / monthly_target * 100) if monthly_target > 0 else 0
+
+    return {
+        'name': dept_name,
+        'hod_name': hod.username if hod else "No HOD Assigned",
+        'kaizen_coordinator': coordinator_name,
+        'employee_count': employee_count,
+        'monthly_target': monthly_target,
+        'completed': completed_sheets,
+        'achievement_rate': round(achievement_rate, 2),
+    }
+
 @login_required
 def coordinator_dashboard(request):
     if not request.user.profile.is_coordinator:
@@ -563,11 +634,10 @@ def coordinator_dashboard(request):
     current_month = today.month
     current_year = today.year
 
-    # Determine academic year
-    start_year = current_year if current_month >= 4 else current_year - 1
-
     # Academic year calculations
+    start_year = current_year if current_month >= 4 else current_year - 1
     academic_years_data = []
+    
     for year in range(start_year - 4, start_year + 1):
         start_date = timezone.make_aware(timezone.datetime(year, 4, 1))
         end_date = timezone.make_aware(timezone.datetime(year + 1, 3, 31))
@@ -575,22 +645,19 @@ def coordinator_dashboard(request):
         if end_date > today:
             end_date = today
             
-        # Get completed sheets for this academic year
         completed_sheets = KaizenSheet.objects.filter(
             hod_approved_at__range=(start_date, end_date),
             approval_status='completed'
         )
         
-        # Calculate number of months between start_date and end_date
         months_diff = ((end_date.year - start_date.year) * 12 + 
                     end_date.month - start_date.month + 1)
                     
-        # Calculate average per month
         monthly_average = round(completed_sheets.count() / months_diff, 2) if months_diff > 0 else 0
         
         academic_years_data.append({
             'year': f'AY {year}-{year + 1}',
-            'average': monthly_average  # Changed from count to average
+            'average': monthly_average
         })
 
     # Monthly calculations
@@ -601,6 +668,7 @@ def coordinator_dashboard(request):
    
     total_employees = User.objects.filter(profile__user_type='employee').count()
 
+    # Calculate monthly statistics
     for month in range(1, 13):
         month_start = timezone.make_aware(timezone.datetime(current_year, month, 1))
         month_end = timezone.make_aware(
@@ -608,27 +676,32 @@ def coordinator_dashboard(request):
              else timezone.datetime(current_year + 1, 1, 1)) - timezone.timedelta(days=1)
         )
 
-        # Get submissions for the month
         submissions = KaizenSheet.objects.filter(
             created_at__range=(month_start, month_end)
         ).count()
 
-        # Get completions for the month
         completions = KaizenSheet.objects.filter(
             hod_approved_at__range=(month_start, month_end),
             approval_status='completed'
         ).count()
 
-        # Update monthly data
         monthly_submissions[month - 1] = submissions
         monthly_completions[month - 1] = completions
 
-        # Calculate monthly average (new)
         if month_start <= today:
             cumulative_completed += completions
             monthly_averages[month - 1] = round(cumulative_completed / month, 2)
         else:
             monthly_averages[month - 1] = None
+
+    # Department statistics
+    departments = []
+    department_names = Profile.objects.values_list('department', flat=True).distinct().exclude(department__isnull=True)
+
+    for dept_name in department_names:
+        dept_data = get_department_stats(dept_name)
+        if dept_data:
+            departments.append(dept_data)
 
     # Employee statistics
     employee_stats = []
@@ -639,57 +712,11 @@ def coordinator_dashboard(request):
             'username': user.username,
             'department': user.profile.department,
             'total_submissions': user_sheets.count(),
-            'pending': user_sheets.filter(
-                approval_status='pending'
-            ).count(),
+            'pending': user_sheets.filter(approval_status='pending').count(),
             'approved': user_sheets.count() - user_sheets.filter(approval_status='pending').count()
         }
         employee_stats.append(stats)
 
-    # Department data
-    departments = []
-    department_names = Profile.objects.values_list('department', flat=True).distinct()
-
-    for dept_name in department_names:
-        # Get HOD
-        hod = User.objects.filter(
-            profile__department=dept_name,
-            profile__user_type='hod'
-        ).first()
-
-        # Employee count
-        employee_count = Profile.objects.filter(
-            department=dept_name,
-            user_type='employee'
-        ).count()
-
-        # Get or create Kaizen Coordinator entry
-        kaizen_coordinator_entry, created = KaizenCoordinator.objects.get_or_create(department=dept_name)
-        coordinator_name = kaizen_coordinator_entry.coordinator_name or ""
-
-        # Completed sheets
-        completed_sheets = KaizenSheet.objects.filter(
-            employee__profile__department=dept_name,
-            approval_status='completed',
-            hod_approved_at__isnull=False  # Ensure HOD approval date is set
-        ).count()
-
-        # Calculate Achievement Rate
-        monthly_target = employee_count  # Target is 1 per employee
-        achievement_rate = (completed_sheets / monthly_target) * 100 if monthly_target > 0 else 0
-
-        dept_data = {
-            'name': dept_name,
-            'hod_name': hod.username if hod else "No HOD Assigned",
-            'kaizen_coordinator': coordinator_name,
-            'employee_count': employee_count,
-            'monthly_target': monthly_target,
-            'completed': completed_sheets,
-            'achievement_rate': round(achievement_rate, 2),
-        }
-        departments.append(dept_data)
-
-    # Prepare context with accurate statistics
     context = {
         'current_year': current_year,
         'year_range': range(current_year, current_year - 5, -1),
@@ -697,35 +724,23 @@ def coordinator_dashboard(request):
                             'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']),
         'monthly_submissions': json.dumps(monthly_submissions, cls=DjangoJSONEncoder),
         'monthly_completions': json.dumps(monthly_completions, cls=DjangoJSONEncoder),
-        'monthly_averages': json.dumps(monthly_averages, cls=DjangoJSONEncoder),  # New data
+        'monthly_averages': json.dumps(monthly_averages, cls=DjangoJSONEncoder),
         'academic_years': json.dumps([d['year'] for d in academic_years_data]),
         'academic_year_counts': json.dumps([d['average'] for d in academic_years_data], cls=DjangoJSONEncoder),
         'current_academic_year': f"{start_year}-{start_year + 1}",
         'current_month': current_month,
         'total_employees': total_employees,
         'departments': departments,
-
-        # Dashboard statistics
         'total_kaizens': KaizenSheet.objects.count(),
-        
-        # Status counts
         'completed_count': KaizenSheet.objects.filter(approval_status='completed').count(),
         'hod_pending_count': KaizenSheet.objects.filter(approval_status='pending').count(),
         'coordinator_pending_count': KaizenSheet.objects.filter(approval_status='hod_approved').count(),
         'finance_pending_count': KaizenSheet.objects.filter(approval_status='finance_pending').count(),
-
-        # Pending approvals count
-        'pending_approvals': KaizenSheet.objects.exclude(
-            approval_status='completed'
-        ).count(),
-        
+        'pending_approvals': KaizenSheet.objects.exclude(approval_status='completed').count(),
         'coordinator_approved': KaizenSheet.objects.filter(
             models.Q(approval_status='completed') |
             models.Q(approval_status='coordinator_approved')
         ).count(),
-        
-        # Additional data for modals and tables
-        'departments': departments,
         'employee_stats': employee_stats,
         'department_data': json.dumps(departments, cls=DjangoJSONEncoder)
     }
