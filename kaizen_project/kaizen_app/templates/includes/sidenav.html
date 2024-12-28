@@ -1,0 +1,37 @@
+<!-- templates/includes/sidenav.html -->
+{% load static %}
+<nav class="sidenav navbar navbar-vertical fixed-left navbar-expand-xs navbar-light bg-white" id="sidenav-main">
+    <div class="scrollbar-inner">
+        <div class="sidenav-header d-flex flex-column align-items-center p-2">
+            <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 10px;">
+                <img src="{% static 'assets/img/Ace-Logo-png.png' %}" class="img-fluid" style="max-height: 55px;" alt="Ace Logo">
+                <img src="{% static 'assets/img/AMS logo TRANSPARENT.png' %}" class="img-fluid" style="max-height: 50px;" alt="Additional Logo">
+            </div>
+            <img src="{% static 'assets/img/LOGO ACE MICROMATIC.png' %}" class="img-fluid" style="max-height: 55px;" alt="MICROMATIC Logo">
+        </div>
+        <div class="navbar-inner" style="margin-top: 150px;">
+          <div class="collapse navbar-collapse" id="sidenav-collapse-main">
+              <ul class="navbar-nav">
+                  <li class="nav-item">
+                      <a class="nav-link" href="{% url 'cip_register' %}">
+                          <i class="ni ni-single-copy-04 text-primary"></i>
+                          <span class="nav-link-text">CIP Register</span>
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="#" onclick="showTargetAchievers()">
+                          <i class="ni ni-trophy text-yellow"></i>
+                          <span class="nav-link-text">Target Achievers</span>
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="{% url 'logout' %}">
+                          <i class="ni ni-user-run text-red"></i>
+                          <span class="nav-link-text">Logout</span>
+                      </a>
+                  </li>
+              </ul>
+          </div>
+      </div>
+  </div>
+</nav>

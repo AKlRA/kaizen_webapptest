@@ -1,0 +1,306 @@
+{% load static %}
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <title>View Kaizen Details</title>
+      <!-- Argon Core CSS -->
+      <link rel="stylesheet" href="/static/assets/css/argon.css?v=1.2.0" type="text/css">
+      <!-- Fonts -->
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+      <!-- Icons -->
+      <link rel="stylesheet" href="/static/assets/vendor/nucleo/css/nucleo.css" type="text/css">
+      <link rel="stylesheet" href="/static/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" type="text/css">
+   </head>
+   <body>
+      <!-- Main content -->
+      <div class="main-content">
+         <!-- Header -->
+         <div class="header bg-gradient-primary pb-8 pt-5">
+            <div class="container-fluid">
+               <div class="header-body">
+                  <div class="row align-items-center">
+                     <div class="col">
+                        <h6 class="h2 text-black d-inline-block mb-0">Kaizen Details</h6>
+                        <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                                <li class="breadcrumb-item">
+                                    {% if is_finance %}
+                                        <a href="{% url 'finance_dashboard' %}"><i class="fas fa-home"></i></a>
+                                    {% else %}
+                                        <a href="{% url 'hod_dashboard' %}"><i class="fas fa-home"></i></a>
+                                    {% endif %}
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">View Kaizen</li>
+                            </ol>
+                        </nav>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <!-- Page content -->
+         <div class="bg-card-color mt--7">
+            <!-- Basic Information -->
+            <div class="row">
+               <div class="col">
+                  <div class="card shadow">
+                     <div class="card-header bg-transparent">
+                        <h3 class="mb-0">Basic Information</h3>
+                     </div>
+                     <div class="card-body">
+                        <div class="row">
+                           <div class="col-lg-6">
+                              <div class="form-group">
+                                 <label class="form-control-label">Title</label>
+                                 <p class="h4">{{ sheet.title }}</p>
+                              </div>
+                           </div>
+                           <div class="col-lg-6">
+                              <div class="form-group">
+                                 <label class="form-control-label">Area Implemented</label>
+                                 <p class="h4">{{ sheet.area_implemented }}</p>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="col-lg-6">
+                              <div class="form-group">
+                                 <label class="form-control-label">Start Date</label>
+                                 <p>{{ sheet.start_date|date:"Y-m-d" }}</p>
+                              </div>
+                           </div>
+                           <div class="col-lg-6">
+                              <div class="form-group">
+                                 <label class="form-control-label">End Date</label>
+                                 <p>{{ sheet.end_date|date:"Y-m-d" }}</p>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <!-- Problem and Solution -->
+            <div class="row mt-4">
+               <div class="col">
+                  <div class="card shadow">
+                     <div class="card-header bg-transparent">
+                        <h3 class="mb-0">Problem and Solution</h3>
+                     </div>
+                     <div class="card-body">
+                        <div class="row">
+                           <div class="col-lg-12">
+                              <div class="form-group">
+                                 <label class="form-control-label">Problem</label>
+                                 <p>{{ sheet.problem }}</p>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="col-lg-12">
+                              <div class="form-group">
+                                 <label class="form-control-label">Solution</label>
+                                 <p>{{ sheet.idea_solved }}</p>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="col-lg-12">
+                              <div class="form-group">
+                                 <label class="form-control-label">Standardization</label>
+                                 <p>{{ sheet.standardization }}</p>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="col-lg-12">
+                              <div class="form-group">
+                                 <label class="form-control-label">Benefits</label>
+                                 <p>{{ sheet.benefits }}</p>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="col-lg-12">
+                              <div class="form-group">
+                                 <label class="form-control-label">Deployment</label>
+                                 <p>{{ sheet.deployment }}</p>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <!-- Impact Assessment -->
+            <div class="row mt-4">
+               <div class="col">
+                  <div class="card shadow">
+                     <div class="card-header bg-transparent">
+                        <h3 class="mb-0">Benefits</h3>
+                     </div>
+                     <div class="card-body">
+                        {% for impact in impacts %}
+                        {% with impact_info=impact_data|get_impact_data:impact %}
+                        {% if impact_info.benefits_description or impact_info.uom or impact_info.before_implementation or impact_info.after_implementation %}
+                        <div class="impact-section mb-4">
+                           <h4 class="text-primary mb-3">{{ impact|title }}</h4>
+                           <div class="table-responsive">
+                              <table class="table align-items-center table-flush">
+                                 <tbody>
+                                    <tr>
+                                       <td class="font-weight-bold">Benefits Description:</td>
+                                       <td>{{ impact_info.benefits_description }}</td>
+                                    </tr>
+                                    <tr>
+                                       <td class="font-weight-bold">UOM:</td>
+                                       <td>{{ impact_info.uom }}</td>
+                                    </tr>
+                                    <tr>
+                                       <td class="font-weight-bold">Before Implementation:</td>
+                                       <td>{{ impact_info.before_implementation }}</td>
+                                    </tr>
+                                    <tr>
+                                       <td class="font-weight-bold">After Implementation:</td>
+                                       <td>{{ impact_info.after_implementation }}</td>
+                                    </tr>
+                                 </tbody>
+                              </table>
+                           </div>
+                        </div>
+                        {% endif %}
+                        {% endwith %}
+                        {% endfor %}
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <!-- Files and Calculations -->
+            <div class="row mt-4">
+               <div class="col">
+                  <div class="card shadow">
+                     <div class="card-header bg-transparent">
+                        <h3 class="mb-0">Files & Calculations</h3>
+                     </div>
+                     <div class="card-body">
+                        {% if sheet.standardization_file %}
+                        <div class="mb-3">
+                           <h4 class="text-muted">Standardization File</h4>
+                           <a href="{{ sheet.standardization_file.url }}" target="_blank" class="btn btn-primary btn-sm">
+                           <i class="fas fa-download"></i> View Documentation
+                           </a>
+                        </div>
+                        {% endif %}
+                        {% if sheet.cost_calculation %}
+                        <div>
+                           <h4 class="text-muted">Cost Calculation</h4>
+                           <a href="{{ sheet.cost_calculation.url }}" target="_blank" class="btn btn-primary btn-sm">
+                           <i class="fas fa-file-excel"></i> View Cost Calculation
+                           </a>
+                        </div>
+                        {% endif %}
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <!-- Before & After Improvements -->
+            <div class="row mt-4">
+               <div class="col">
+                  <div class="card shadow">
+                     <div class="card-header bg-transparent">
+                        <h3 class="mb-0">Before and After Improvements</h3>
+                     </div>
+                     <div class="card-body">
+                        <div class="row">
+                           <div class="col-xl-6">
+                              <div class="card">
+                                 <div class="card-header">
+                                    <h5 class="h3 mb-0">Before Improvement</h5>
+                                 </div>
+                                 <div class="card-body">
+                                    <p>{{ sheet.before_improvement_text }}</p>
+                                    {% if sheet.before_improvement_image %}
+                                    <div class="mt-3">
+                                       <a href="{{ sheet.before_improvement_image.url }}" target="_blank">
+                                       <img src="{{ sheet.before_improvement_image.url }}" alt="Before Improvement" 
+                                          class="img-fluid rounded shadow">
+                                       </a>
+                                    </div>
+                                    {% endif %}
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col-xl-6">
+                              <div class="card">
+                                 <div class="card-header">
+                                    <h5 class="h3 mb-0">After Improvement</h5>
+                                 </div>
+                                 <div class="card-body">
+                                    <p>{{ sheet.after_improvement_text }}</p>
+                                    {% if sheet.after_improvement_image %}
+                                    <div class="mt-3">
+                                       <a href="{{ sheet.after_improvement_image.url }}" target="_blank">
+                                       <img src="{{ sheet.after_improvement_image.url }}" alt="After Improvement" 
+                                          class="img-fluid rounded shadow">
+                                       </a>
+                                    </div>
+                                    {% endif %}
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <!-- Handwritten Sheet -->
+            {% if sheet.is_handwritten and sheet.handwritten_sheet %}
+            <div class="row mt-4">
+               <div class="col">
+                  <div class="card shadow">
+                     <div class="card-header bg-transparent">
+                        <h3 class="mb-0">Handwritten Kaizen Sheet</h3>
+                     </div>
+                     <div class="card-body">
+                        <div class="text-center">
+                           <a href="{{ sheet.handwritten_sheet.url }}" target="_blank">
+                           <img src="{{ sheet.handwritten_sheet.url }}" alt="Handwritten Sheet" 
+                              class="img-fluid rounded shadow" style="max-width: 300px;">
+                           </a>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            {% endif %}
+         </div>
+      </div>
+      <!-- Core Scripts -->
+      <script src="/static/assets/vendor/jquery/dist/jquery.min.js"></script>
+      <script src="/static/assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+      <script src="/static/assets/js/argon.js?v=1.2.0"></script>
+      <style>
+         .bg-card-color{
+         background:  rgba(255, 248, 248, 0.6)!important;
+         }
+         .bg-gradient-primary {
+         background: 
+         linear-gradient(135deg, transparent 25%, rgba(128, 0, 0, 0.15) 25%, 
+         rgba(128, 0, 0, 0.15) 50%, transparent 50%, transparent 75%, 
+         rgba(128, 0, 0, 0.15) 75%, rgba(128, 0, 0, 0.15)),
+         linear-gradient(45deg, transparent 25%, rgba(128, 0, 0, 0.2) 25%, 
+         rgba(128, 0, 0, 0.2) 50%, transparent 50%, transparent 75%, 
+         rgba(128, 0, 0, 0.2) 75%, rgba(128, 0, 0, 0.2)) !important;
+         }
+         .breadcrumb-item.active {
+         color: rgba(128, 0, 0, 0.7) !important;
+         }
+         .breadcrumb-item a:hover {
+         color: rgba(128, 0, 0, 0.9) !important;
+         }
+      </style>
+   </body>
+</html>

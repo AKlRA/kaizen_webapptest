@@ -1,0 +1,159 @@
+<!-- base-fullscreen.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Ace Designers Ltd - {% block title %}{% endblock %}</title>
+
+  <link rel="stylesheet" href="/static/assets/css/argon.css?v=1.2.0" type="text/css">
+ 
+  <style>
+   :root {
+       --primary-color: #ffe7e7;      /* Maroon */
+       --primary-darker: #ffffff;     /* Darker maroon */
+       --background-light: #ffffff;   /* White */
+       --text-muted: #5d5d5d;        /* Light red */
+   }
+   
+
+   
+   .bg-gradient-primary {
+       background: #ffffff !important;
+       backdrop-filter: blur(5px);
+   }
+   
+   .bg-default {
+       background: radial-gradient(circle at center,
+           rgba(128, 0, 0, 0.8) 0%,
+           rgba(96, 0, 0, 0.9) 100%) !important;
+   }
+   
+   .fill-default {
+       fill: rgba(128, 0, 0, 0.9) !important;
+   }
+   
+   .text-muted {
+       color: var(--text-muted) !important;
+   }
+   
+   .font-weight-bold {
+       color: var(--primary-color) !important;
+       transition: color 0.3s ease;
+   }
+   
+   .font-weight-bold:hover {
+       color: var(--primary-darker) !important;
+   }
+   
+   .card {
+   background: linear-gradient(145deg,
+       rgba(255, 255, 255, 0.7) 20%,
+       rgba(255, 255, 255, 0.4) 90%);
+   backdrop-filter: blur(40px);
+   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.form-control {
+   background: rgba(255, 255, 255, 0.6);
+   border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.form-control:focus {
+   background: rgba(255, 255, 255, 0.8);
+   border-color: rgba(0, 0, 0, 0.2);
+   box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.1);
+}
+   
+   .separator {
+       position: absolute;
+       bottom: 0;
+       left: 0;
+       right: 0;
+       width: 100%;
+       overflow: hidden;
+       z-index: 1;
+   }
+   
+   .content-wrapper {
+       position: relative;
+       z-index: 2;
+   }
+   .btn-maroon {
+       background-color: #800000 !important;
+       border-color: #800000 !important;
+       color: #ffffff !important;
+       transition: all 0.3s ease;
+   }
+
+   .btn-maroon:hover {
+       background-color: #008194 !important;
+       border-color: #008194 !important;
+       color: #ffffff !important;
+       box-shadow: 0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08);
+   }
+   </style>
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="/static/assets/vendor/nucleo/css/nucleo.css">
+  <link rel="stylesheet" href="/static/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css">
+</head>
+
+<body class="bg-default">
+ <div class="main-content">
+   <!-- Header -->
+    
+   <div class="header bg-gradient-primary py-7 py-lg-8">
+     <!-- Left side logos -->
+     <div class="position-absolute" style="top: 0; left: 0; padding: 5px;">
+         <div style="display: flex; align-items: center; gap: 10px;">
+             <img src="{% static 'assets/img/Ace-Logo-png.png' %}" class="img-fluid" style="max-height: 85px; z-index: 1000;" alt="Ace Logo">
+             <img src="{% static 'assets/img/AMS logo TRANSPARENT.png' %}" class="img-fluid" style="max-height: 70px; z-index: 1000;" alt="Additional Logo">
+         </div>
+     </div>
+     
+     <!-- Right corner logo -->
+     <div class="position-absolute" style="top: 10px; right: 0; padding: 5px;">
+       <img src="{% static 'assets/img/LOGO ACE MICROMATIC.png' %}" class="img-fluid" style="max-height: 55px; z-index: 1000;" alt="MICROMATIC Logo">
+   </div>
+   <div class="separator separator-bottom separator-skew">
+     <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
+         <polygon class="fill-default" points="2560 0 2560 100 0 100"></polygon>
+     </svg>
+ </div>
+
+     <div class="container">
+       <div class="header-body text-center mb-7">
+         <div class="row justify-content-center">
+           <h1 class="--text-muted" >Kaizen Management System</h1>
+         </div>
+       </div>
+     </div>
+
+   </div>
+   
+   
+   {% block content %}{% endblock content %}
+
+   <footer class="py-5">
+     <div class="container">
+       <div class="row align-items-center justify-content-xl-between">
+         <div class="col-xl-12">
+           <div class="copyright text-center text-muted">
+             © <script>document.write(new Date().getFullYear())</script> 
+             <a href="#" class="font-weight-bold ml-1">Ace Designers Ltd</a>
+           </div>
+         </div>
+       </div>
+     </div>
+   </footer>
+ </div>
+   
+ {% include "includes/scripts.html" %}
+
+ <!-- Specific JS goes HERE --> 
+ {% block javascripts %}{% endblock javascripts %}
+
+</body>
+</html>
