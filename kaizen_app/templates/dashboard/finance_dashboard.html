@@ -1,172 +1,176 @@
 {% extends 'layouts/base-no-sidenav.html' %}
 {% load static %}
-
 {% block title %} Finance Dashboard {% endblock title %}
-
 <!-- Add necessary CSS -->
 {% block stylesheets %}
 <style>
-.action-buttons {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.status-approved {
-    color: #2dce89;
-    font-weight: 600;
-}
-
-.status-pending {
-    color: #fb6340;
-    font-weight: 600;
-}
-
-.status-rejected {
-    color: #f5365c;
-    font-weight: 600;
-}
-
-/* Adjust main content for no sidenav */
-.main-content {
-    margin-left: 0 !important;
-}
+   .action-buttons {
+   display: flex;
+   gap: 0.5rem;
+   }
+   .status-approved {
+   color: #2dce89;
+   font-weight: 600;
+   }
+   .status-pending {
+   color: #fb6340;
+   font-weight: 600;
+   }
+   .bg-primary {
+   background: radial-gradient(circle at center,
+   rgba(128, 0, 0, 0.8) 0%,
+   rgba(96, 0, 0, 0.9) 100%) !important;
+   }
+   .status-rejected {
+   color: #f5365c;
+   font-weight: 600;
+   }
+   /* Adjust main content for no sidenav */
+   .main-content {
+   margin-left: 0 !important;
+   }
+   .thead-light {
+   background: rgba(255, 242, 242, 0.1) !important;
+   }
+   .thead-light th {
+   color: #333333 !important;
+   border-color: rgba(128, 0, 0, 0.2) !important;
+   }
 </style>
 {% endblock stylesheets %}
-
 {% block content %}
 <!-- Header -->
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 <div class="header bg-primary pb-6">
-    <div class="container-fluid">
-        <div class="header-body">
-            <div class="row align-items-center py-4">
-                <div class="col-lg-6 col-7">
-                    <h6 class="h2 text-white d-inline-block mb-0">Finance Dashboard</h6>
-                    <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
-                        <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                            <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
-                            <li class="breadcrumb-item active">Finance Review</li>
-                        </ol>
-                    </nav>
-                </div>
+   <div class="container-fluid">
+      <div class="header-body">
+         <div class="row align-items-center py-4">
+            <div class="col-lg-6 col-7">
+               <h6 class="h2 text-white d-inline-block mb-0">Finance Dashboard</h6>
+               <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                  <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                     <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+                     <li class="breadcrumb-item active">Finance Review</li>
+                  </ol>
+               </nav>
             </div>
-
-            <!-- Card stats -->
-            <div class="row">
-                <div class="col-xl-4 col-md-6">
-                    <div class="card card-stats">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <h5 class="card-title text-uppercase text-muted mb-0">Pending Approvals</h5>
-                                    <span class="h2 font-weight-bold mb-0">{{ pending_count }}</span>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
-                                        <i class="ni ni-chart-pie-35"></i>
-                                    </div>
-                                </div>
-                            </div>
+         </div>
+         <!-- Card stats -->
+         <div class="row">
+            <div class="col-xl-4 col-md-6">
+               <div class="card card-stats">
+                  <div class="card-body">
+                     <div class="row">
+                        <div class="col">
+                           <h5 class="card-title text-uppercase text-muted mb-0">Pending Approvals</h5>
+                           <span class="h2 font-weight-bold mb-0">{{ pending_count }}</span>
                         </div>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-md-6">
-                    <div class="card card-stats">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <h5 class="card-title text-uppercase text-muted mb-0">Total Reviewed</h5>
-                                    <span class="h2 font-weight-bold mb-0">{{ approved_count }}</span>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
-                                        <i class="ni ni-check-bold"></i>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="col-auto">
+                           <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
+                              <i class="ni ni-chart-pie-35"></i>
+                           </div>
                         </div>
-                    </div>
-                </div>
+                     </div>
+                  </div>
+               </div>
             </div>
-        </div>
-    </div>
+            <div class="col-xl-4 col-md-6">
+               <div class="card card-stats">
+                  <div class="card-body">
+                     <div class="row">
+                        <div class="col">
+                           <h5 class="card-title text-uppercase text-muted mb-0">Total Reviewed</h5>
+                           <span class="h2 font-weight-bold mb-0">{{ approved_count }}</span>
+                        </div>
+                        <div class="col-auto">
+                           <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                              <i class="ni ni-check-bold"></i>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
 </div>
-
 <!-- Page content -->
 <div class="container-fluid mt--6">
-    <!-- Table -->
-    <div class="row">
-        <div class="col">
-            <div class="card">
-                <!-- Card header -->
-                <div class="card-header border-0">
-                    <h3 class="mb-0">High Cost Impact Kaizens</h3>
-                </div>
-                <!-- Light table -->
-                <div class="table-responsive">
-                    <table class="table align-items-center table-flush">
-                        <thead class="thead-light">
-                            <tr>
-                                <th>CIP No</th>
-                                <th>Project Title</th>
-                                <th>Department</th>
-                                <th>Current Cost</th>
-                                <th>Proposed Cost</th>
-                                <th>Cost Difference</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                                <th>Documents</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for kaizen in kaizens %}
-                            {% if kaizen.approval_status == 'finance_pending' %}
-                            <tr>
-                                <td>{{ kaizen.serial_key }}</td>
-                                <td>{{ kaizen.title }}</td>
-                                <td>{{ kaizen.employee.profile.department }}</td>
-                                <td>{{ kaizen.cost_before_implementation }}</td>
-                                <td>{{ kaizen.cost_after_implementation }}</td>
-                                <td>{{ kaizen.get_cost_difference }}</td>
-                                <td>
-                                    <span class="badge badge-warning">Pending Approval</span>
-                                </td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <button onclick="handleFinanceAction('{{ kaizen.id }}', 'approve')" 
-                                                class="btn btn-sm btn-success">
-                                            Approve
-                                        </button>
-                                        <button onclick="handleFinanceAction('{{ kaizen.id }}', 'reject')" 
-                                                class="btn btn-sm btn-danger">
-                                            Reject
-                                        </button>
-                                        <a href="{% url 'view_kaizen' kaizen.id %}" class="btn btn-sm btn-primary">
-                                            <i class="fas fa-eye"></i> View
-                                        </a>
-                                    </div>
-                                </td>
-                                <td>
-                                    {% if kaizen.cost_calculation %}
-                                    <a href="{{ kaizen.cost_calculation.url }}" 
-                                       class="btn btn-sm btn-primary" 
-                                       target="_blank">
-                                        <i class="fas fa-file-pdf"></i> View Calculation
-                                    </a>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% endif %}
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+   <!-- Table -->
+   <div class="row">
+      <div class="col">
+         <div class="card">
+            <!-- Card header -->
+            <div class="card-header border-0">
+               <h3 class="mb-0">High Cost Impact Kaizens</h3>
             </div>
-        </div>
-    </div>
+            <!-- Light table -->
+            <div class="table-responsive">
+               <table class="table align-items-center table-flush">
+                  <thead class="thead-light">
+                     <tr>
+                        <th>CIP No</th>
+                        <th>Project Title</th>
+                        <th>Department</th>
+                        <th>Current Cost</th>
+                        <th>Proposed Cost</th>
+                        <th>Cost Difference</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                        <th>Documents</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     {% for kaizen in kaizens %}
+                     {% if kaizen.approval_status == 'finance_pending' %}
+                     <tr>
+                        <td>{{ kaizen.serial_key }}</td>
+                        <td>{{ kaizen.title }}</td>
+                        <td>{{ kaizen.employee.profile.department }}</td>
+                        <td>{{ kaizen.cost_before_implementation }}</td>
+                        <td>{{ kaizen.cost_after_implementation }}</td>
+                        <td>{{ kaizen.get_cost_difference }}</td>
+                        <td>
+                           <span class="badge badge-warning">Pending Approval</span>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                {% if kaizen.approval_status == 'finance_pending' %}
+                                <button onclick="handleFinanceAction('{{ kaizen.id }}', 'approve')" 
+                                    class="btn btn-sm btn-success">
+                                    Approve
+                                </button>
+                                <button onclick="handleFinanceAction('{{ kaizen.id }}', 'reject')" 
+                                    class="btn btn-sm btn-danger">
+                                    Reject
+                                </button>
+                                {% endif %}
+                                <a href="{% url 'view_kaizen' kaizen.id %}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                            </div>
+                        </td>
+                        <td>
+                           {% if kaizen.cost_calculation %}
+                           <a href="{{ kaizen.cost_calculation.url }}" 
+                              class="btn btn-sm btn-primary" 
+                              target="_blank">
+                           <i class="fas fa-file-pdf"></i> View Calculation
+                           </a>
+                           {% endif %}
+                        </td>
+                     </tr>
+                     {% endif %}
+                     {% endfor %}
+                  </tbody>
+               </table>
+            </div>
+         </div>
+      </div>
+   </div>
 </div>
 {% endblock content %}
-
 {% block javascripts %}
 <script>
 function handleFinanceAction(kaizen_id, action) {
@@ -175,6 +179,9 @@ function handleFinanceAction(kaizen_id, action) {
     }
 
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const button = event.target;
+    button.disabled = true;
+    button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${action === 'approve' ? 'Approving...' : 'Rejecting...'}`;
 
     fetch(`/finance-approve-kaizen/${kaizen_id}/`, {
         method: 'POST',
@@ -190,11 +197,15 @@ function handleFinanceAction(kaizen_id, action) {
             location.reload();
         } else {
             alert('Error: ' + data.error);
+            button.disabled = false;
+            button.innerHTML = action === 'approve' ? 'Approve' : 'Reject';
         }
     })
     .catch(error => {
         console.error('Error:', error);
         alert('An error occurred. Please try again.');
+        button.disabled = false;
+        button.innerHTML = action === 'approve' ? 'Approve' : 'Reject';
     });
 }
 </script>

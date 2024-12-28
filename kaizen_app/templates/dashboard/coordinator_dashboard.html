@@ -1,426 +1,417 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
-
 {% block title %} Coordinator Dashboard {% endblock title %}
 {% block stylesheets %}
 <link href="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.css" rel="stylesheet">
 <style>
-/* Chart Container Styling */
-.container-fluid {
-    padding-top: 2rem;
-}
-
-.chart-row {
-    margin-bottom: 30px;
-}
-
-.bg-gradient-default {
-    background: linear-gradient(87deg, #172b4d 0, #1a174d 100%) !important;
-}
-
-.chart-container {
-    height: 300px;
-    margin: 0 auto;
-    max-width: 500px;
-}
-
-.card-header.bg-transparent {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Chart Canvas Styling */
-.chart-canvas {
-    height: 300px;
-}
-
-/* Card Stats Styling */
-
-
-.card-stats {
-    margin: 0 auto;
-    max-width: 300px;
-    transition: all .15s ease;
-    border: 0;
-    border-radius: 0.375rem;
-    box-shadow: 0 0 2rem 0 rgba(136, 152, 170, .15);
-}
-
-.card-stats:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 7px 14px rgba(50, 50, 93, .1), 0 3px 6px rgba(0, 0, 0, .08);
-}
-
-/* Chart Box Styling */
-.chart-box {
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 1.5rem;
-    background: white;
-    border-radius: .375rem;
-    box-shadow: 0 0 2rem 0 rgba(136, 152, 170, .15);
-}
-
-.chart-title {
-    color: #32325d;
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-}
-
-/* Year Selector Styling */
-.year-selector {
-    margin-bottom: 1.5rem;
-}
-
-.year-selector select {
-    display: block;
-    width: 100%;
-    height: calc(1.5em + 1.25rem + 2px);
-    padding: .625rem .75rem;
-    font-size: .875rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #8898aa;
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid #dee2e6;
-    border-radius: .375rem;
-    transition: all .15s ease-in-out;
-}
-
-.year-selector select:focus {
-    color: #8898aa;
-    background-color: #fff;
-    border-color: #5e72e4;
-    outline: 0;
-    box-shadow: 0 3px 9px rgba(50, 50, 93, 0), 3px 4px 8px rgba(94, 114, 228, .1);
-}
-
-#yearlyPerformanceChart {
-    min-height: 300px;
-}
-
-.card {
-    box-shadow: 0 0 2rem 0 rgba(136, 152, 170, .15);
-    border: 0;
-}
-
-.card-header {
-    padding: 1.25rem 1.5rem;
-    border-bottom: 1px solid rgba(0,0,0,.05);
-}
-
-.card-stats {
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.card-stats:hover {
-    transform: translateY(-3px);
-}
-
-.download-btn {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    padding: 0.5rem 1rem;
-    background: #5e72e4;
-    color: white;
-    border: none;
-    border-radius: 0.375rem;
-    cursor: pointer;
-    z-index: 1;
-}
-
-.download-btn:hover {
-    background: #324cdd;
-}
+   /* Chart Container Styling */
+   .chart-row {
+   margin-bottom: 30px;
+   }
+   .bg-gradient-default {
+   background: linear-gradient(87deg, #172b4d 0, #1a174d 100%) !important;
+   }
+   .chart-container {
+   height: 300px;
+   margin: 0 auto;
+   max-width: 500px;
+   }
+   .card-header.bg-transparent {
+   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+   }
+   /* Chart Canvas Styling */
+   .chart-canvas {
+   height: 300px;
+   }
+   /* Card Stats Styling */
+   .bg-card-color{
+   background:  rgba(255, 248, 248, 0.6)!important;
+   padding-top: 2rem;
+   }
+   .card-stats {
+   margin: 0 auto;
+   max-width: 300px;
+   transition: all .15s ease;
+   border: 0;
+   border-radius: 0.375rem;
+   box-shadow: 0 0 2rem 0 rgba(128, 0, 0, 0.15);
+   }
+   .card-stats:hover {
+   transform: translateY(-1px);
+   box-shadow: 0 7px 14px rgba(128, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, .08);
+   }
+   /* Chart Box Styling */
+   .chart-box {
+   width: 100%;
+   max-width: 600px;
+   margin: 0 auto;
+   padding: 1.5rem;
+   background: white;
+   border-radius: .375rem;
+   box-shadow: 0 0 2rem 0 rgba(136, 152, 170, .15);
+   }
+   .chart-title {
+   color: #800000;
+   }
+   /* Year Selector Styling */
+   .year-selector {
+   margin-bottom: 1.5rem;
+   }
+   .year-selector select {
+   display: block;
+   width: 100%;
+   height: calc(1.5em + 1.25rem + 2px);
+   padding: .625rem .75rem;
+   font-size: .875rem;
+   font-weight: 400;
+   line-height: 1.5;
+   color: #8898aa;
+   background-color: #fff;
+   background-clip: padding-box;
+   border: 1px solid #dee2e6;
+   border-radius: .375rem;
+   transition: all .15s ease-in-out;
+   }
+   .year-selector select:focus {
+   color: #8898aa;
+   background-color: #fff;
+   border-color: #800000;
+   outline: 0;
+   box-shadow: 0 3px 9px rgba(128, 0, 0, 0), 3px 4px 8px rgba(128, 0, 0, .1);
+   }
+   #yearlyPerformanceChart {
+   min-height: 300px;
+   }
+   .card {
+   box-shadow: 0 0 2rem 0 rgba(136, 152, 170, .15);
+   border: 0;
+   }
+   .card-header {
+   padding: 1.25rem 1.5rem;
+   border-bottom: 1px solid rgba(0,0,0,.05);
+   }
+   .card-stats {
+   cursor: pointer;
+   transition: transform 0.2s;
+   }
+   .card-stats:hover {
+   transform: translateY(-3px);
+   }
+   .bg-primary {
+   background: radial-gradient(circle at center,
+   rgba(128, 0, 0, 0.8) 0%,
+   rgba(96, 0, 0, 0.9) 100%) !important;
+   }
+   .download-btn {
+   position: absolute;
+   top: 1rem;
+   right: 1rem;
+   padding: 0.5rem 1rem;
+   background: #800000;
+   color: white;
+   border: none;
+   border-radius: 0.375rem;
+   cursor: pointer;
+   z-index: 1;
+   }
+   .download-btn:hover {
+   background: #008194;
+   }
+   .container-fluid {
+   padding-top: 2rem;
+   }
 </style>
 {% endblock stylesheets %}
-
 {% block content %}
 <!-- Header -->
 <div class="header bg-primary pb-6">
-    <div class="container-fluid">
-        <div class="header-body">
-            <!-- Card stats -->
-            <div class="row">
-                <div class="col-xl-4 col-md-6">
-                    <div class="card card-stats" onclick="showEmployeeStats()">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <h5 class="card-title text-uppercase text-muted mb-0">Total Kaizens</h5>
-                                    <span class="h2 font-weight-bold mb-0">{{ total_kaizens }}</span>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
-                                        <i class="ni ni-active-40"></i>
-                                    </div>
-                                </div>
-                            </div>
+   <div class="container-fluid">
+      <div class="header-body">
+         <!-- Card stats -->
+         <div class="row">
+            <div class="col-xl-4 col-md-6">
+               <div class="card card-stats" onclick="showEmployeeStats()">
+                  <div class="card-body">
+                     <div class="row">
+                        <div class="col">
+                           <h5 class="card-title text-uppercase text-muted mb-0">Total Kaizens</h5>
+                           <span class="h2 font-weight-bold mb-0">{{ total_kaizens }}</span>
                         </div>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-md-6">
-                    <div class="card card-stats">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <h5 class="card-title text-uppercase text-muted mb-0">Pending Approvals</h5>
-                                    <span class="h2 font-weight-bold mb-0">{{ pending_approvals }}</span>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
-                                        <i class="ni ni-chart-pie-35"></i>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="col-auto">
+                           <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                              <i class="ni ni-active-40"></i>
+                           </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-md-6">
-                    <div class="card card-stats">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <h5 class="card-title text-uppercase text-muted mb-0">Completed</h5>
-                                    <span class="h2 font-weight-bold mb-0">{{ coordinator_approved }}</span>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
-                                        <i class="ni ni-check-bold"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                     </div>
+                  </div>
+               </div>
             </div>
-        </div>
-    </div>
+            <div class="col-xl-4 col-md-6">
+               <div class="card card-stats">
+                  <div class="card-body">
+                     <div class="row">
+                        <div class="col">
+                           <h5 class="card-title text-uppercase text-muted mb-0">Pending Approvals</h5>
+                           <span class="h2 font-weight-bold mb-0">{{ pending_approvals }}</span>
+                        </div>
+                        <div class="col-auto">
+                           <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
+                              <i class="ni ni-chart-pie-35"></i>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col-xl-4 col-md-6">
+               <div class="card card-stats">
+                  <div class="card-body">
+                     <div class="row">
+                        <div class="col">
+                           <h5 class="card-title text-uppercase text-muted mb-0">Completed</h5>
+                           <span class="h2 font-weight-bold mb-0">{{ coordinator_approved }}</span>
+                        </div>
+                        <div class="col-auto">
+                           <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                              <i class="ni ni-check-bold"></i>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
 </div>
 <!-- Charts Section -->
-<div class="container-fluid mt--6">
-    <!-- Year Selector -->
-    <div class="row">
-        <div class="col-xl-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="year-selector">
-                        <label for="yearSelect">Select Year: </label>
-                        <select id="yearSelect" class="form-control form-control-sm d-inline-block w-auto ml-2" onchange="updateChartData()">
-                            {% for year in year_range %}
-                                <option value="{{ year }}" {% if year == current_year %}selected{% endif %}>
-                                    {{ year }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
+<div class="bg-card-color mt--6">
+<!-- Year Selector -->
+<div class="row">
+   <div class="col-xl-12">
+      <div class="card">
+         <div class="card-body">
+            <div class="year-selector">
+               <label for="yearSelect">Select Year: </label>
+               <select id="yearSelect" class="form-control form-control-sm d-inline-block w-auto ml-2" onchange="updateChartData()">
+               {% for year in year_range %}
+               <option value="{{ year }}" {% if year == current_year %}selected{% endif %}>
+               {{ year }}
+               </option>
+               {% endfor %}
+               </select>
             </div>
-        </div>
-    </div>
-
-    <!-- Monthly Charts Row -->
-    <div class="row">
-        <div class="col-xl-8">
-            <div class="card">
-                <div class="card-header">
-                    <h6 class="text-uppercase text-muted ls-1 mb-1">Overview</h6>
-                    <h5 class="h3 mb-0">Monthly Submissions</h5>
-                </div>
-                <div class="card-body">
-                    <div class="chart">
-                        <canvas id="monthlyChart" class="chart-canvas"></canvas>
-                    </div>
-                </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- Monthly Charts Row -->
+<div class="row">
+   <div class="col-xl-8">
+      <div class="card">
+         <div class="card-header">
+            <h6 class="text-uppercase text-muted ls-1 mb-1">Overview</h6>
+            <h5 class="h3 mb-0">Monthly Submissions</h5>
+         </div>
+         <div class="card-body">
+            <div class="chart">
+               <canvas id="monthlyChart" class="chart-canvas"></canvas>
             </div>
-        </div>
-        <div class="col-xl-4">
-            <div class="card bg-gradient-default shadow">
-                <div class="card-header bg-transparent">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h6 class="text-uppercase text-light ls-1 mb-1">Status</h6>
-                            <h5 class="h3 mb-0 text-white">Approval Distribution</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="chart">
-                        <canvas id="approvalChart" class="chart-canvas"></canvas>
-                    </div>
-                </div>
+         </div>
+      </div>
+   </div>
+   <div class="col-xl-4">
+      <div class="card bg-gradient-default shadow">
+         <div class="card-header bg-transparent">
+            <div class="row align-items-center">
+               <div class="col">
+                  <h6 class="text-uppercase text-light ls-1 mb-1">Status</h6>
+                  <h5 class="h3 mb-0 text-white">Approval Distribution</h5>
+               </div>
             </div>
-        </div>
-
-        <div class="col-xl-8">
-            <div class="card bg-default">
-                <div class="card-header bg-transparent">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h6 class="text-light text-uppercase ls-1 mb-1">Performance</h6>
-                            <h2 class="text-white mb-0">Monthly Average</h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="chart">
-                        <canvas id="monthlyAverageChart" class="chart-canvas"></canvas>
-                    </div>
-                </div>
+         </div>
+         <div class="card-body">
+            <div class="chart">
+               <canvas id="approvalChart" class="chart-canvas"></canvas>
             </div>
-        </div>
-
-        <div class="col-auto">
-            <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle" type="button" id="downloadDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-download"></i> Download Graph
-                </button>
-                <div class="dropdown-menu" aria-labelledby="downloadDropdown">
-                    <a class="dropdown-item" href="#" onclick="downloadChartData('monthlyChart')">Monthly Submissions</a>
-                    <a class="dropdown-item" href="#" onclick="downloadChartData('approvalChart')">Approval Distribution</a>
-                    <a class="dropdown-item" href="#" onclick="downloadChartData('monthlyAverageChart')">Monthly Average</a>
-                    <a class="dropdown-item" href="#" onclick="downloadChartData('sheetsPerEmployeeChart')">Sheets Per Employee</a>
-                    <a class="dropdown-item" href="#" onclick="downloadChartData('yearlyPerformanceChart')">Yearly Performance</a>
-                </div>
+         </div>
+      </div>
+   </div>
+   <div class="col-xl-8">
+      <div class="card bg-default">
+         <div class="card-header bg-transparent">
+            <div class="row align-items-center">
+               <div class="col">
+                  <h6 class="text-light text-uppercase ls-1 mb-1">Performance</h6>
+                  <h2 class="text-white mb-0">Monthly Average</h2>
+               </div>
             </div>
-        </div>
-    
-        <div class="row">
-            <!-- Sheets Per Employee -->
-            <div class="col-xl-6">
-                <div class="card">
-                    <div class="card-header bg-transparent">
-                        <div class="row align-items-center">
-                            <div class="col">
-                                <h6 class="text-uppercase text-muted ls-1 mb-1">Statistics</h6>
-                                <h5 class="h3 mb-0">Sheets Per Employee</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart">
-                            <canvas id="sheetsPerEmployeeChart" class="chart-canvas"></canvas>
-                        </div>
-                    </div>
-                </div>
+         </div>
+         <div class="card-body">
+            <div class="chart">
+               <canvas id="monthlyAverageChart" class="chart-canvas"></canvas>
             </div>
-        
-            <!-- Yearly Performance -->
-            <div class="col-xl-6">
-                <div class="card">
-                    <div class="card-header bg-transparent">
-                        <div class="row align-items-center">
-                            <div class="col">
-                                <h6 class="text-uppercase text-muted ls-1 mb-1">Overview</h6>
-                                <h5 class="h3 mb-0">Yearly Performance</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart">
-                            <canvas id="yearlyPerformanceChart" class="chart-canvas"></canvas>
-                        </div>
-                    </div>
-                </div>
+         </div>
+      </div>
+   </div>
+   <div class="col-xl-4">
+      <div class="card">
+         <div class="card-header bg-primary">
+            <h4 class="text-white mb-0">
+               <i class="fas fa-download mr-2"></i> Download Graph
+            </h4>
+         </div>
+         <div class="card-body">
+            <div class="list-group list-group-flush text-center">
+               <a href="#" class="list-group-item list-group-item-action" onclick="downloadChartData('monthlyChart')">
+               Monthly Submissions
+               </a>
+               <a href="#" class="list-group-item list-group-item-action" onclick="downloadChartData('approvalChart')">
+               Approval Distribution
+               </a>
+               <a href="#" class="list-group-item list-group-item-action" onclick="downloadChartData('monthlyAverageChart')">
+               Monthly Average
+               </a>
+               <a href="#" class="list-group-item list-group-item-action" onclick="downloadChartData('sheetsPerEmployeeChart')">
+               Sheets Per Employee
+               </a>
+               <a href="#" class="list-group-item list-group-item-action" onclick="downloadChartData('yearlyPerformanceChart')">
+               Yearly Performance
+               </a>
             </div>
-        </div>
+         </div>
+      </div>
+   </div>
+   <div class="row">
+      <!-- Sheets Per Employee -->
+      <div class="col-xl-6">
+         <div class="card">
+            <div class="card-header bg-transparent">
+               <div class="row align-items-center">
+                  <div class="col">
+                     <h6 class="text-uppercase text-muted ls-1 mb-1">Statistics</h6>
+                     <h5 class="h3 mb-0">Sheets Per Employee</h5>
+                  </div>
+               </div>
+            </div>
+            <div class="card-body">
+               <div class="chart">
+                  <canvas id="sheetsPerEmployeeChart" class="chart-canvas"></canvas>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- Yearly Performance -->
+      <div class="col-xl-6">
+         <div class="card">
+            <div class="card-header bg-transparent">
+               <div class="row align-items-center">
+                  <div class="col">
+                     <h6 class="text-uppercase text-muted ls-1 mb-1">Overview</h6>
+                     <h5 class="h3 mb-0">Yearly Performance</h5>
+                  </div>
+               </div>
+            </div>
+            <div class="card-body">
+               <div class="chart">
+                  <canvas id="yearlyPerformanceChart" class="chart-canvas"></canvas>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
 </div>
 <div class="modal fade" id="employeeStatsModal" tabindex="-1" role="dialog" aria-labelledby="employeeStatsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="employeeStatsModalLabel">Employee Statistics</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="employeeStatsModalLabel">Employee Statistics</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="table-responsive">
+               <table class="table align-items-center">
+                  <thead class="thead-light">
+                     <tr>
+                        <th>Employee</th>
+                        <th>Department</th>
+                        <th>Total Submissions</th>
+                        <th>Completed</th>
+                        <th>Pending Approval</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     {% for stat in employee_stats %}
+                     <tr>
+                        <td>{{ stat.username }}</td>
+                        <td>{{ stat.department }}</td>
+                        <td>{{ stat.total_submissions }}</td>
+                        <td>{{ stat.approved }}</td>
+                        <td>{{ stat.pending }}</td>
+                     </tr>
+                     {% endfor %}
+                  </tbody>
+               </table>
             </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table align-items-center">
-                        <thead class="thead-light">
-                            <tr>
-                                <th>Employee</th>
-                                <th>Department</th>
-                                <th>Total Submissions</th>
-                                <th>Completed</th>
-                                <th>Pending Approval</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for stat in employee_stats %}
-                            <tr>
-                                <td>{{ stat.username }}</td>
-                                <td>{{ stat.department }}</td>
-                                <td>{{ stat.total_submissions }}</td>
-                                <td>{{ stat.approved }}</td>
-                                <td>{{ stat.pending }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+         </div>
+      </div>
+   </div>
 </div>
-
 <!-- Target Achievers Modal -->
 <div class="modal fade" id="targetAchieversModal" tabindex="-1" role="dialog" aria-labelledby="targetAchieversModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="targetAchieversModalLabel">Target Achievers</h5>
-                <div class="ml-auto">
-                    <select id="targetYear" class="form-control form-control-sm d-inline-block" style="width: auto;">
-                        {% for year in year_range %}
-                            <option value="{{ year }}" {% if year == current_year %}selected{% endif %}>
-                                {{ year }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                    <select id="targetMonth" class="form-control form-control-sm d-inline-block ml-2" style="width: auto;">
-                        <option value="1">January</option>
-                        <option value="2">February</option>
-                        <option value="3">March</option>
-                        <option value="4">April</option>
-                        <option value="5">May</option>
-                        <option value="6">June</option>
-                        <option value="7">July</option>
-                        <option value="8">August</option>
-                        <option value="9">September</option>
-                        <option value="10">October</option>
-                        <option value="11">November</option>
-                        <option value="12">December</option>
-                    </select>
-                </div>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="targetAchieversModalLabel">Target Achievers</h5>
+            <div class="ml-auto">
+               <select id="targetYear" class="form-control form-control-sm d-inline-block" style="width: auto;">
+               {% for year in year_range %}
+               <option value="{{ year }}" {% if year == current_year %}selected{% endif %}>
+               {{ year }}
+               </option>
+               {% endfor %}
+               </select>
+               <select id="targetMonth" class="form-control form-control-sm d-inline-block ml-2" style="width: auto;">
+                  <option value="1">January</option>
+                  <option value="2">February</option>
+                  <option value="3">March</option>
+                  <option value="4">April</option>
+                  <option value="5">May</option>
+                  <option value="6">June</option>
+                  <option value="7">July</option>
+                  <option value="8">August</option>
+                  <option value="9">September</option>
+                  <option value="10">October</option>
+                  <option value="11">November</option>
+                  <option value="12">December</option>
+               </select>
             </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table align-items-center">
-                        <thead class="thead-light">
-                            <tr>
-                                <th>Sl. No</th>
-                                <th>Department</th>
-                                <th>Area Leader (HOD)</th>
-                                <th>Kaizen Coordinator</th>
-                                <th>Monthly Target</th>
-                                <th>Completed</th>
-                                <th>Achievement Rate</th>
-                            </tr>
-                        </thead>
-                        <tbody id="targetAchieversBody"></tbody>
-                    </table>
-                </div>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="table-responsive">
+               <table class="table align-items-center">
+                  <thead class="thead-light">
+                     <tr>
+                        <th>Sl. No</th>
+                        <th>Department</th>
+                        <th>Area Leader (HOD)</th>
+                        <th>Kaizen Coordinator</th>
+                        <th>Monthly Target</th>
+                        <th>Completed</th>
+                        <th>Achievement Rate</th>
+                     </tr>
+                  </thead>
+                  <tbody id="targetAchieversBody"></tbody>
+               </table>
             </div>
-        </div>
-    </div>
+         </div>
+      </div>
+   </div>
 </div>
 {% block javascripts %}
 {{ block.super }}
@@ -429,1077 +420,1069 @@
 <script src="https://unpkg.com/exceljs/dist/exceljs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Get initial data from template context
-    const initialData = {
-        months: JSON.parse('{{ months|safe }}'),
-        submissions: JSON.parse('{{ monthly_submissions|safe }}'),
-        completions: JSON.parse('{{ monthly_completions|safe }}'),
-        academicYears: JSON.parse('{{ academic_years|safe }}'),
-        yearlyAverages: JSON.parse('{{ academic_year_counts|safe }}'),
-        completed: '{{ completed_count }}',
-        hodPending: '{{ hod_pending_count }}',
-        coordinatorPending: '{{ coordinator_pending_count }}',
-        financePending: '{{ finance_pending_count }}',
-        currentMonth: '{{ current_month }}'
-    };
-
-    // Store chart references globally
-    window.monthlyChart = null;
-
-    // Initialize charts
-    initCharts(initialData);
-});
-// Store chart references globally
-let charts = {
-    monthlyChart: null,
-    approvalChart: null,
-    monthlyAverageChart: null,
-    sheetsPerEmployeeChart: null,
-    yearlyPerformanceChart: null
-};
-// Chart configuration
-const chartConfig = {
-    monthlySubmissions: {
-        type: 'bar',
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            },
-            tooltips: {
-                mode: 'index',
-                intersect: false
-            }
-        }
-    }
-};
-
-const approvalCtx = document.getElementById('approvalChart').getContext('2d');
-charts.approvalChart = new Chart(approvalCtx, {
-    type: 'pie',
-    data: {
-        labels: ['Completed', 'HOD Approval Pending', 'Coordinator Approval Pending', 'Finance Approval Pending'],
-        datasets: [{
-            data: [
-                '{{ completed_count }}',
-                '{{ hod_pending_count }}',
-                '{{ coordinator_pending_count }}',
-                '{{ finance_pending_count }}'
-            ],
-            backgroundColor: ['#2dce89', '#fb6340', '#5e72e4', '#f5365c'],
-            borderWidth: 0
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        legend: {
-            position: 'bottom',
-            labels: {
-                fontColor: '#fff',
-                fontSize: 12,
-                padding: 20
-            }
-        },
-        tooltips: {
-            callbacks: {
-                label: function(tooltipItem, data) {
-                    const dataset = data.datasets[tooltipItem.datasetIndex];
-                    const total = dataset.data.reduce((acc, curr) => acc + Number(curr), 0);
-                    const value = dataset.data[tooltipItem.index];
-                    const percentage = ((value * 100) / total).toFixed(1);
-                    return `${data.labels[tooltipItem.index]}: ${value} (${percentage}%)`;
-                }
-            }
-        }
-    }
-});
-
-// Monthly Averages Chart
-const avgCtx = document.getElementById('monthlyAverageChart').getContext('2d');
-const monthlyAverages = JSON.parse('{{ monthly_averages|safe }}');
-
-charts.monthlyAverageChart = new Chart(avgCtx, {
-    type: 'bar',
-    data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        datasets: [
-            {
-                label: 'Monthly Average',
-                data: monthlyAverages,
-                backgroundColor: '#5e72e4',
-                datalabels: {
-                    anchor: 'end',
-                    align: 'end',
-                    formatter: function(value) {
-                        return value.toFixed(2);
-                    },
-                    font: {
-                        weight: 'bold'
-                    }
-                }
-            },
-            {
-                label: 'Trend',
-                data: monthlyAverages,
-                type: 'line',
-                fill: false,
-                borderColor: '#2dce89',
-                tension: 0.4,
-                pointRadius: 0,
-                datalabels: {
-                    display: false
-                }
-            }
-        ]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            datalabels: {
-                display: function(context) {
-                    return context.dataset.type !== 'line';
-                }
-            }
-        },
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true,
-                    suggestedMax: Math.max(...monthlyAverages) + 1
-                }
-            }]
-        }
-    }
-});
-
-
-// Sheets Per Employee Chart
-const sheetsPerEmployeeCtx = document.getElementById('sheetsPerEmployeeChart').getContext('2d');
-const monthlyCompletions = JSON.parse('{{ monthly_completions|safe }}');
-const totalEmployees = '{{ total_employees }}';
-
-const sheetsPerEmployee = monthlyCompletions.map(completions => 
-    totalEmployees > 0 ? (completions / totalEmployees).toFixed(2) : 0
-);
-
-charts.sheetsPerEmployeeChart = new Chart(sheetsPerEmployeeCtx, {
-    type: 'bar',
-    data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        datasets: [{
-            label: 'Sheets Per Employee',
-            data: sheetsPerEmployee,
-            backgroundColor: '#5e72e4',
-            borderColor: '#5e72e4',
-            borderWidth: 1,
-            datalabels: {
-                anchor: 'end',
-                align: 'top',
-                formatter: Math.round,
-                font: {
-                    weight: 'bold'
-                },
-                padding: {
-                    top: 10
-                }
-            }
-        }, {
-            label: 'Target',
-            data: Array(12).fill(1),
-            type: 'line',
-            borderColor: '#2dce89',
-            borderWidth: 2,
-            fill: false,
-            pointRadius: 0,
-            datalabels: {
-                display: false
-            }
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            datalabels: {
-                display: function(context) {
-                    return context.dataset.type !== 'line';
-                }
-            }
-        },
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true,
-                    suggestedMax: Math.max(...sheetsPerEmployee.map(Number)) + 1
-                }
-            }]
-        }
-    }
-});
-
-// Yearly Performance Chart
-const yearlyCtx = document.getElementById('yearlyPerformanceChart').getContext('2d');
-const currentMonth = parseInt('{{ current_month }}');
-const currentYear = new Date().getFullYear();
-
-function calculateYearlyAverages() {
-    // Get current academic year
-    const currentAcademicYear = currentMonth >= 4 ? currentYear : currentYear - 1;
-    const yearlyData = [];
-    let labels = [];
-
-    // Only calculate for current academic year since we only have current year's data
-    const startMonth = 3; // April (0-based)
-    let sum = 0;
-    let count = 0;
-
-    // Calculate for current academic year
-    for (let month = 0; month < 12; month++) {
-        const actualMonth = (startMonth + month) % 12;
-        
-        // Only include months up to current month
-        if (actualMonth > currentMonth - 1) {
-            break;
-        }
-        
-        const monthValue = monthlyAverages[actualMonth];
-        if (monthValue !== null && monthValue !== undefined) {
-            sum += monthValue;
-            count++;
-        }
-    }
-
-    // Calculate average only if we have data
-    const yearAverage = count > 0 ? sum / count : 0;
-    yearlyData.push(yearAverage);
-    labels.push(`AY ${currentAcademicYear}-${currentAcademicYear + 1}`);
-
-    return { data: yearlyData, labels };
-}
-
-const { data: yearlyAverages, labels: yearLabels } = calculateYearlyAverages();
-
-// Calculate trend line (if we have more than one point)
-function calculateTrendLine(data) {
-    if (data.length <= 1) return data; // Return same data if we only have one point
-    
-    const n = data.length;
-    const coords = data.map((y, x) => ({ x, y: Math.max(0, y) }));
-    
-    const sumX = coords.reduce((sum, p) => sum + p.x, 0);
-    const sumY = coords.reduce((sum, p) => sum + p.y, 0);
-    const sumXY = coords.reduce((sum, p) => sum + (p.x * p.y), 0);
-    const sumXX = coords.reduce((sum, p) => sum + (p.x * p.x), 0);
-    
-    const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
-    const intercept = Math.max(0, (sumY - slope * sumX) / n);
-    
-    return data.map((_, x) => Math.max(0, slope * x + intercept));
-}
-
-const trendLineData = calculateTrendLine(yearlyAverages);
-
-charts.yearlyPerformanceChart = new Chart(yearlyCtx, {
-    type: 'bar',
-    data: {
-        labels: yearLabels,
-        datasets: [
-            {
-                label: 'Average Kaizens per Month',
-                data: yearlyAverages,
-                backgroundColor: '#5e72e4',
-                borderColor: '#5e72e4',
-                borderWidth: 1,
-                datalabels: {
-                    anchor: 'end',
-                    align: 'end',
-                    formatter: function(value) {
-                        return value.toFixed(2);
-                    },
-                    font: {
-                        weight: 'bold'
-                    }
-                }
-            },
-            {
-                label: 'Trend',
-                data: trendLineData,
-                type: 'line',
-                fill: false,
-                borderColor: '#2dce89',
-                tension: 0.4,
-                pointRadius: 0,
-                datalabels: {
-                    display: false
-                }
-            }
-        ]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            y: {
-                beginAtZero: true,
-                min: 0,
-                grid: {
-                    drawBorder: false
-                },
-                suggestedMax: Math.max(...yearlyAverages) + 1
-            },
-            x: {
-                grid: {
-                    drawBorder: false
-                }
-            }
-        },
-        plugins: {
-            legend: {
-                position: 'bottom'
-            },
-            tooltip: {
-                callbacks: {
-                    label: function(context) {
-                        if (context.dataset.type === 'line') {
-                            return `Trend: ${context.parsed.y.toFixed(2)}`;
-                        }
-                        return `Average: ${context.parsed.y.toFixed(2)}`;
-                    }
-                }
-            }
-        }
-    }
-});
-
-// Monthly Submissions Chart
-const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
-charts.monthlyChart = new Chart(monthlyCtx, {
-    type: 'bar',
-    data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        datasets: [{
-            label: 'Submitted',
-            data: JSON.parse('{{ monthly_submissions|safe }}'),
-            backgroundColor: '#5e72e4',
-            datalabels: {
-                anchor: 'end',
-                align: 'top',
-                formatter: Math.round,
-                font: {
-                    weight: 'bold'
-                },
-                padding: {
-                    top: 10
-                }
-            }
-        }, {
-            label: 'Completed',
-            data: JSON.parse('{{ monthly_completions|safe }}'),
-            backgroundColor: '#2dce89',
-            datalabels: {
-                anchor: 'end',
-                align: 'top',
-                formatter: Math.round,
-                font: {
-                    weight: 'bold'
-                },
-                padding: {
-                    top: 10
-                }
-            }
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            datalabels: {
-                display: function(context) {
-                    return context.dataset.type !== 'line';
-                }
-            }
-        },
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true,
-                    suggestedMax: Math.max(...JSON.parse('{{ monthly_submissions|safe }}'), ...JSON.parse('{{ monthly_completions|safe }}')) + 10
-                }
-            }]
-        }
-    }
-});
-
-// Update the updateChartData function
-function updateChartData() {
-    const selectedYear = document.getElementById('yearSelect').value;
-    
-    fetch(`/get-yearly-data/${selectedYear}/`)
-        .then(response => response.json())
-        .then(data => {
-            // Update Monthly Submissions Chart
-            if (charts.monthlyChart) {
-                charts.monthlyChart.data.datasets[0].data = data.submissions;
-                charts.monthlyChart.data.datasets[1].data = data.completions;
-                charts.monthlyChart.update();
-            }
-
-            // Update Monthly Average Chart
-            if (charts.monthlyAverageChart) {
-                const monthlyAverages = calculateMonthlyAverages(data.completions);
-                charts.monthlyAverageChart.data.datasets[0].data = monthlyAverages;
-                charts.monthlyAverageChart.data.datasets[1].data = monthlyAverages;
-                charts.monthlyAverageChart.update();
-            }
-
-            // Update Sheets Per Employee Chart
-            if (charts.sheetsPerEmployeeChart) {
-                const sheetsPerEmployee = data.completions.map(completions => 
-                    totalEmployees > 0 ? (completions / totalEmployees).toFixed(2) : 0
-                );
-                charts.sheetsPerEmployeeChart.data.datasets[0].data = sheetsPerEmployee;
-                charts.sheetsPerEmployeeChart.update();
-            }
-
-            // Update Approval Distribution Chart
-            if (charts.approvalChart) {
-                charts.approvalChart.data.datasets[0].data = [
-                    data.completed_count,
-                    data.hod_pending_count,
-                    data.coordinator_pending_count,
-                    data.finance_pending_count
-                ];
-                charts.approvalChart.update();
-            }
-        })
-        .catch(error => {
-            console.error('Error updating charts:', error);
-            alert('Error updating charts. Please try again.');
-        });
-}
-
-// Helper function to calculate monthly averages
-function calculateMonthlyAverages(completions) {
-    let cumulative = 0;
-    return completions.map((count, index) => {
-        cumulative += count;
-        return ((cumulative / (index + 1)) || 0).toFixed(2);
-    });
-}
-
-
-// Helper function to get chart title
-function getChartTitle(chartId) {
-    switch(chartId) {
-        case 'monthlyChart':
-            return 'Monthly Submissions';
-        case 'approvalChart':
-            return 'Approval Distribution';
-        case 'monthlyAverageChart':
-            return 'Monthly Average';
-        case 'sheetsPerEmployeeChart':
-            return 'Sheets Per Employee';
-        case 'yearlyPerformanceChart':
-            return 'Yearly Performance';
-        default:
-            return 'Chart Data';
-    }
-}
-
-// Modal Functions
-function showEmployeeStats() {
-    $('#employeeStatsModal').modal({
-        backdrop: 'static',
-        keyboard: false
-    });
-}
-
-function showTargetAchievers() {
-    // Set current date
-    const now = new Date();
-    const yearSelect = document.getElementById('targetYear');
-    const monthSelect = document.getElementById('targetMonth');
-    
-    // Set defaults
-    yearSelect.value = now.getFullYear();
-    monthSelect.value = now.getMonth() + 1;
-    
-    // Show modal
-    $('#targetAchieversModal').modal('show');
-    
-    // Load data
-    loadTargetAchievers();
-}
-
-async function loadTargetAchievers() {
-    const tbody = document.getElementById('targetAchieversBody');
-    tbody.innerHTML = '';
-
-    try {
-        const year = document.getElementById('targetYear').value;
-        const month = document.getElementById('targetMonth').value;
-
-        const response = await fetch(`/get-department-data/${year}/${month}/`);
-        const data = await response.json();
-
-        if (!data.success) {
-            throw new Error(data.error);
-        }
-
-        // Clear existing buttons if any
-        const existingButtons = document.querySelector('.target-achievers-buttons');
-        if (existingButtons) existingButtons.remove();
-
-        // Add buttons below the table
-        const buttonContainer = document.createElement('div');
-        buttonContainer.className = 'mt-3 text-right target-achievers-buttons';
-        buttonContainer.innerHTML = `
-            <button class="btn btn-primary mr-2" onclick="saveCoordinators()">Save</button>
-            <button class="btn btn-secondary" onclick="downloadTargetAchievers()">Download</button>
-        `;
-        document.querySelector('#targetAchieversModal .modal-body').appendChild(buttonContainer);
-
-        // Update table header
-        document.querySelector('#targetAchieversModal thead tr').innerHTML = `
-            <th>Sl. No</th>
-            <th>Area</th>
-            <th>Area Leader (HOD)</th>
-            <th>Kaizen Coordinator</th>
-            <th>Monthly Target</th>
-            <th>Completed</th>
-            <th>Kaizen Sheets Per Employee</th>
-        `;
-
-        data.departments
-            .sort((a, b) => {
-                // Calculate ratios with error checking
-                const aRatio = a.monthly_target ? (a.completed / a.monthly_target) : 0;
-                const bRatio = b.monthly_target ? (b.completed / b.monthly_target) : 0;
-                
-                // Handle NaN cases
-                if (isNaN(aRatio)) return 1;  // Move NaN to end
-                if (isNaN(bRatio)) return -1; // Move NaN to end
-                
-                return bRatio - aRatio; // Sort in descending order
-            })
-            .forEach((dept, index) => {
-                // Calculate ratio with error checking
-                const sheetsPerEmployee = dept.monthly_target ? 
-                    (dept.completed / dept.monthly_target).toFixed(2) : 
-                    "0.00";
-
-                tbody.insertRow().innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${dept.name}</td>
-                    <td>${dept.hod_name}</td>
-                    <td>
-                        <input type="text" 
-                            class="form-control coordinator-input" 
-                            data-department="${dept.name}"
-                            value="${dept.kaizen_coordinator || ''}"
-                        />
-                    </td>
-                    <td>${dept.monthly_target || 0}</td>
-                    <td>${dept.completed || 0}</td>
-                    <td>${sheetsPerEmployee}</td>
-                `;
-            });
-
-    } catch (error) {
-        console.error('Error loading target achievers:', error);
-        alert('Error loading data: ' + error.message);
-    }
-}
-
-// Keep existing save and download functions
-async function saveCoordinators() {
-    const inputs = document.querySelectorAll('.coordinator-input');
-    const data = {};
-
-    inputs.forEach(input => {
-        const department = input.dataset.department;
-        const coordinatorName = input.value.trim();
-        data[department] = coordinatorName;
-    });
-
-    try {
-        const response = await fetch('{% url "save_kaizen_coordinators" %}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-            body: JSON.stringify(data)
-        });
-
-        const result = await response.json();
-        if (result.success) {
-            alert('Kaizen Coordinators updated successfully');
-        } else {
-            alert('Error updating coordinators: ' + result.error);
-        }
-    } catch (error) {
-        console.error('Error saving coordinators:', error);
-        alert('Error saving coordinators');
-    }
-}
-
-async function downloadTargetAchievers() {
-    try {
-        const workbook = new ExcelJS.Workbook();
-        const year = document.getElementById('targetYear').value;
-        const month = document.getElementById('targetMonth').value;
-        
-        // Get month name
-        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December'];
-        const monthName = monthNames[parseInt(month) - 1];
-        
-        // Fetch template
-        const response = await fetch('{% url "get_excel_template" "target achievers.xlsx" %}');
-        if (!response.ok) throw new Error('Failed to fetch template');
-        const templateBuffer = await response.arrayBuffer();
-        
-        await workbook.xlsx.load(templateBuffer);
-        const worksheet = workbook.getWorksheet(1);
-        
-        if (!worksheet) {
-            throw new Error('Worksheet not found in template');
-        }
-
-        // Write header data
-        worksheet.getCell('M2').value = parseInt(year);
-        worksheet.getCell('K2').value = parseInt(month);
-        worksheet.getCell('B5').value = `Kaizen Target Achievers for ${monthName} ${year}`;
-        
-        // Get table data
-        const tableRows = document.querySelectorAll('#targetAchieversBody tr');
-        
-        // Write data rows
-        tableRows.forEach((row, index) => {
-            const columns = row.querySelectorAll('td');
-            const rowNum = index + 8; // Start from row 8
-            
-            // Sl No
-            worksheet.getCell(`B${rowNum}`).value = parseInt(columns[0].textContent);
-            
-            // Department
-            worksheet.getCell(`C${rowNum}`).value = columns[1].textContent;
-            
-            // Area Leader
-            worksheet.getCell(`F${rowNum}`).value = columns[2].textContent;
-            
-            // Kaizen Coordinator
-            worksheet.getCell(`H${rowNum}`).value = columns[3].querySelector('input').value;
-            
-            // Monthly Target
-            worksheet.getCell(`K${rowNum}`).value = parseInt(columns[4].textContent);
-            
-            // Completed
-            worksheet.getCell(`M${rowNum}`).value = parseInt(columns[5].textContent);
-            
-            // Kaizens per Employee
-            worksheet.getCell(`O${rowNum}`).value = parseFloat(columns[6].textContent);
-            worksheet.getCell(`O${rowNum}`).numFmt = '0.00';
-        });
-
-        const buffer = await workbook.xlsx.writeBuffer();
-        const blob = new Blob([buffer], { 
-            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
-        });
-        saveAs(blob, `target_achievers_${monthName}_${year}.xlsx`);
-
-    } catch (error) {
-        console.error('Error generating Excel file:', error);
-        alert(`Error generating Excel file: ${error.message}`);
-    }
-}
-
-// Add event listeners for the year and month selectors
-document.getElementById('targetYear').addEventListener('change', loadTargetAchievers);
-document.getElementById('targetMonth').addEventListener('change', loadTargetAchievers);
-
-async function saveCoordinators() {
-    const inputs = document.querySelectorAll('.coordinator-input');
-    const data = {};
-
-    inputs.forEach(input => {
-        const department = input.dataset.department;
-        const coordinatorName = input.value.trim();
-        data[department] = coordinatorName;
-    });
-
-    try {
-        const response = await fetch('{% url "save_kaizen_coordinators" %}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-            body: JSON.stringify(data)
-        });
-
-        const result = await response.json();
-        if (result.success) {
-            alert('Kaizen Coordinators updated successfully');
-        } else {
-            alert('Error updating coordinators: ' + result.error);
-        }
-    } catch (error) {
-        console.error('Error saving coordinators:', error);
-        alert('Error saving coordinators');
-    }
-}
-
-async function downloadChartData(chartId) {
-    if (chartId === 'approvalChart') {
-        try {
-            const workbook = new ExcelJS.Workbook();
-            const selectedYear = document.getElementById('yearSelect').value;
-            
-            // Fetch template
-            const response = await fetch('{% url "get_excel_template" "total kaizen.xlsx" %}');
-            if (!response.ok) throw new Error('Failed to fetch template');
-            const templateBuffer = await response.arrayBuffer();
-            
-            await workbook.xlsx.load(templateBuffer);
-            const worksheet = workbook.getWorksheet(1);
-            
-            if (!worksheet) {
-                throw new Error('Worksheet not found in template');
-            }
-
-            // Write data to specified cells
-            worksheet.getCell('L1').value = parseInt(selectedYear);
-            worksheet.getCell('N10').value = parseInt('{{ total_kaizens }}');
-            worksheet.getCell('N11').value = parseInt('{{ completed_count }}');
-            worksheet.getCell('N12').value = parseInt('{{ pending_approvals }}');
-            worksheet.getCell('N14').value = parseInt('{{ hod_pending_count }}');
-            worksheet.getCell('N16').value = parseInt('{{ coordinator_pending_count }}');
-            worksheet.getCell('N18').value = parseInt('{{ finance_pending_count }}');
-
-            // Add chart image
-            const chart = charts[chartId];
-            const imageId = workbook.addImage({
-                base64: chart.toBase64Image(),
-                extension: 'png',
-            });
-            
-            worksheet.addImage(imageId, {
-                tl: { col: 2, row: 9 },
-                ext: { width: 500, height: 300 }
-            });
-
-            const buffer = await workbook.xlsx.writeBuffer();
-            const blob = new Blob([buffer], { 
-                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
-            });
-            saveAs(blob, `approval_distribution_${selectedYear}.xlsx`);
-
-        } catch (error) {
-            console.error('Error details:', error);
-            alert(`Error generating Excel file: ${error.message}`);
-        }
-    }
-
-    if (chartId === 'monthlyChart') {
-        try {
-            const workbook = new ExcelJS.Workbook();
-            const selectedYear = document.getElementById('yearSelect').value;
-            
-            // Fetch template
-            const response = await fetch('{% url "get_excel_template" "monthly submissions.xlsx" %}');
-            if (!response.ok) throw new Error('Failed to fetch template');
-            const templateBuffer = await response.arrayBuffer();
-            
-            await workbook.xlsx.load(templateBuffer);
-            const worksheet = workbook.getWorksheet(1);
-            
-            if (!worksheet) {
-                throw new Error('Worksheet not found in template');
-            }
-
-            // Write data to specified cells
-            const yearCell = worksheet.getCell('K1');
-            yearCell.value = parseInt(selectedYear);
-            yearCell.font = { name: 'Arial', size: 22, bold: true };
-            
-            const months = ['C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'];
-            const submissions = JSON.parse('{{ monthly_submissions|safe }}');
-            const completions = JSON.parse('{{ monthly_completions|safe }}');
-            
-            months.forEach((col, index) => {
-                worksheet.getCell(`${col}8`).value = submissions[index];
-                worksheet.getCell(`${col}9}`).value = completions[index];
-            });
-
-            // Add chart image
-            const chart = charts[chartId];
-            const imageId = workbook.addImage({
-                base64: chart.toBase64Image(),
-                extension: 'png',
-            });
-            
-            worksheet.addImage(imageId, {
-                tl: { col: 1, row: 11 },
-                ext: { width: 800, height: 450 }
-            });
-
-            const buffer = await workbook.xlsx.writeBuffer();
-            const blob = new Blob([buffer], { 
-                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
-            });
-            saveAs(blob, `monthly_submissions_${selectedYear}.xlsx`);
-
-        } catch (error) {
-            console.error('Error details:', error);
-            alert(`Error generating Excel file: ${error.message}`);
-        }
-    }
-
-    if (chartId === 'sheetsPerEmployeeChart') {
-        try {
-            const workbook = new ExcelJS.Workbook();
-            const selectedYear = document.getElementById('yearSelect').value;
-            
-            // Fetch template
-            const response = await fetch('{% url "get_excel_template" "per emp and monthly sub.xlsx" %}');
-            if (!response.ok) throw new Error('Failed to fetch template');
-            const templateBuffer = await response.arrayBuffer();
-            
-            await workbook.xlsx.load(templateBuffer);
-            const worksheet = workbook.getWorksheet(1);
-            
-            if (!worksheet) {
-                throw new Error('Worksheet not found in template');
-            }
-
-            // Write data to specified cells
-            const yearCell = worksheet.getCell('J2');
-            yearCell.value = parseInt(selectedYear);
-            
-
-            // Add chart images
-            const employeeChart = charts['monthlyChart'];
-            const employeeImageId = workbook.addImage({
-                base64: employeeChart.toBase64Image(),
-                extension: 'png',
-            });
-            
-            worksheet.addImage(employeeImageId, {
-                tl: { col: 1, row: 7 },
-                ext: { width: 475, height: 300 }
-            });
-
-            const perEmployeeChart = charts['sheetsPerEmployeeChart'];
-            const perEmployeeImageId = workbook.addImage({
-                base64: perEmployeeChart.toBase64Image(),
-                extension: 'png',
-            });
-            
-            worksheet.addImage(perEmployeeImageId, {
-                tl: { col: 8, row: 7 },
-                ext: { width: 475, height: 300 }
-            });
-
-            const buffer = await workbook.xlsx.writeBuffer();
-            const blob = new Blob([buffer], { 
-                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
-            });
-            saveAs(blob, `per_employee_sheet_${selectedYear}.xlsx`);
-
-        } catch (error) {
-            console.error('Error details:', error);
-            alert(`Error generating Excel file: ${error.message}`);
-        }
-    }
-    if (chartId === 'monthlyAverageChart') {
-        try {
-            const workbook = new ExcelJS.Workbook();
-            const selectedYear = document.getElementById('yearSelect').value;
-            
-            // Fetch template
-            const response = await fetch('{% url "get_excel_template" "monthly average.xlsx" %}');
-            if (!response.ok) throw new Error('Failed to fetch template');
-            const templateBuffer = await response.arrayBuffer();
-            
-            await workbook.xlsx.load(templateBuffer);
-            const worksheet = workbook.getWorksheet(1);
-            
-            if (!worksheet) {
-                throw new Error('Worksheet not found in template');
-            }
-
-            // Write data to specified cells
-            const yearCell = worksheet.getCell('K1');
-            yearCell.value = parseInt(selectedYear);
-            yearCell.font = { name: 'Arial', size: 22, bold: true };
-            
-            const months = ['C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'];
-            const monthlyAverages = JSON.parse('{{ monthly_averages|safe }}');
-            
-            months.forEach((col, index) => {
-                worksheet.getCell(`${col}8`).value = monthlyAverages[index];
-            });
-
-            // Add chart image
-            const chart = charts[chartId];
-            const imageId = workbook.addImage({
-                base64: chart.toBase64Image(),
-                extension: 'png',
-            });
-            
-            worksheet.addImage(imageId, {
-                tl: { col: 1, row: 11 },
-                ext: { width: 800, height: 450 }
-            });
-
-            const buffer = await workbook.xlsx.writeBuffer();
-            const blob = new Blob([buffer], { 
-                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
-            });
-            saveAs(blob, `monthly_average_${selectedYear}.xlsx`);
-
-        } catch (error) {
-            console.error('Error details:', error);
-            alert(`Error generating Excel file: ${error.message}`);
-        }
-    }
-
-    if (chartId === 'yearlyPerformanceChart') {
-    try {
-        const workbook = new ExcelJS.Workbook();
-        const selectedYear = document.getElementById('yearSelect').value;
-        
-        // Fetch template
-        const response = await fetch('{% url "get_excel_template" "yearly average.xlsx" %}');
-        if (!response.ok) throw new Error('Failed to fetch template');
-        const templateBuffer = await response.arrayBuffer();
-        
-        await workbook.xlsx.load(templateBuffer);
-        const worksheet = workbook.getWorksheet(1);
-        
-        if (!worksheet) {
-            throw new Error('Worksheet not found in template');
-        }
-
-        // Write data to specified cells
-        const yearCell = worksheet.getCell('K1');
-        yearCell.value = parseInt(selectedYear);
-        yearCell.font = { name: 'Arial', size: 22, bold: true };
-        
-        // Calculate current and previous academic years
-        const currentAcademicYear = currentMonth >= 4 ? currentYear : currentYear - 1;
-        const academicYears = [];
-        const yearlyValues = [];
-        
-        // Generate last 4 academic years
-        for(let i = 3; i >= 0; i--) {
-            const year = currentAcademicYear - i;
-            academicYears.push(`AY ${year}-${year + 1}`);
-            // Only current year has data, rest are zero
-            yearlyValues.push(i === 0 ? yearlyAverages[0] : 0);
-        }
-        
-        // Column mapping for cells
-        const columns = ['C', 'D', 'E', 'F'];
-        
-        // Plot academic years in row 3 and data in row 8
-        columns.forEach((col, index) => {
-            // Academic year headings in row 3
-            worksheet.getCell(`${col}3`).value = academicYears[index];
-            worksheet.getCell(`${col}3`).font = { bold: true };
-            
-            // Yearly averages in row 8
-            worksheet.getCell(`${col}8`).value = yearlyValues[index];
-            worksheet.getCell(`${col}8`).numFmt = '0.0000';
-        });
-
-        // Add chart image at B12
-        const chart = charts[chartId];
-        const imageId = workbook.addImage({
-            base64: chart.toBase64Image(),
-            extension: 'png',
-        });
-        
-        worksheet.addImage(imageId, {
-            tl: { col: 1, row: 11 },
-            ext: { width: 800, height: 450 }
-        });
-
-        const buffer = await workbook.xlsx.writeBuffer();
-        const blob = new Blob([buffer], { 
-            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
-        });
-        saveAs(blob, `yearly_average_${selectedYear}.xlsx`);
-
-    } catch (error) {
-        console.error('Error details:', error);
-        alert(`Error generating Excel file: ${error.message}`);
-    }
-}
-}
-
-
-// Table Search Function
-function setupTableSearch(inputId, tableId) {
-    document.getElementById(inputId)?.addEventListener('keyup', function() {
-        const searchText = this.value.toLowerCase();
-        const rows = document.getElementById(tableId)?.getElementsByTagName('tr') || [];
-        
-        Array.from(rows).slice(1).forEach(row => {
-            const text = Array.from(row.getElementsByTagName('td'))
-                .map(cell => cell.textContent.toLowerCase())
-                .join(' ');
-            row.style.display = text.includes(searchText) ? '' : 'none';
-        });
-    });
-}
+   document.addEventListener('DOMContentLoaded', function() {
+       // Get initial data from template context
+       const initialData = {
+           months: JSON.parse('{{ months|safe }}'),
+           submissions: JSON.parse('{{ monthly_submissions|safe }}'),
+           completions: JSON.parse('{{ monthly_completions|safe }}'),
+           academicYears: JSON.parse('{{ academic_years|safe }}'),
+           yearlyAverages: JSON.parse('{{ academic_year_counts|safe }}'),
+           completed: '{{ completed_count }}',
+           hodPending: '{{ hod_pending_count }}',
+           coordinatorPending: '{{ coordinator_pending_count }}',
+           financePending: '{{ finance_pending_count }}',
+           currentMonth: '{{ current_month }}'
+       };
+   
+       // Store chart references globally
+       window.monthlyChart = null;
+   
+       // Initialize charts
+       initCharts(initialData);
+   });
+   // Store chart references globally
+   let charts = {
+       monthlyChart: null,
+       approvalChart: null,
+       monthlyAverageChart: null,
+       sheetsPerEmployeeChart: null,
+       yearlyPerformanceChart: null
+   };
+   // Chart configuration
+   const chartConfig = {
+       monthlySubmissions: {
+           type: 'bar',
+           options: {
+               responsive: true,
+               maintainAspectRatio: false,
+               scales: {
+                   yAxes: [{
+                       ticks: {
+                           beginAtZero: true
+                       }
+                   }]
+               },
+               tooltips: {
+                   mode: 'index',
+                   intersect: false
+               }
+           }
+       }
+   };
+   
+   const approvalCtx = document.getElementById('approvalChart').getContext('2d');
+   charts.approvalChart = new Chart(approvalCtx, {
+       type: 'pie',
+       data: {
+           labels: ['Completed', 'HOD Approval Pending', 'Coordinator Approval Pending', 'Finance Approval Pending'],
+           datasets: [{
+               data: [
+                   '{{ completed_count }}',
+                   '{{ hod_pending_count }}',
+                   '{{ coordinator_pending_count }}',
+                   '{{ finance_pending_count }}'
+               ],
+               backgroundColor: ['#2dce89', '#fb6340', '#5e72e4', '#f5365c'],
+               borderWidth: 0
+           }]
+       },
+       options: {
+           responsive: true,
+           maintainAspectRatio: false,
+           legend: {
+               position: 'bottom',
+               labels: {
+                   fontColor: '#fff',
+                   fontSize: 12,
+                   padding: 20
+               }
+           },
+           tooltips: {
+               callbacks: {
+                   label: function(tooltipItem, data) {
+                       const dataset = data.datasets[tooltipItem.datasetIndex];
+                       const total = dataset.data.reduce((acc, curr) => acc + Number(curr), 0);
+                       const value = dataset.data[tooltipItem.index];
+                       const percentage = ((value * 100) / total).toFixed(1);
+                       return `${data.labels[tooltipItem.index]}: ${value} (${percentage}%)`;
+                   }
+               }
+           }
+       }
+   });
+   
+   // Monthly Averages Chart
+   const avgCtx = document.getElementById('monthlyAverageChart').getContext('2d');
+   const monthlyAverages = JSON.parse('{{ monthly_averages|safe }}');
+   
+   charts.monthlyAverageChart = new Chart(avgCtx, {
+       type: 'bar',
+       data: {
+           labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+           datasets: [
+               {
+                   label: 'Monthly Average',
+                   data: monthlyAverages,
+                   backgroundColor: '#5e72e4',
+                   datalabels: {
+                       anchor: 'end',
+                       align: 'end',
+                       formatter: function(value) {
+                           return value.toFixed(2);
+                       },
+                       font: {
+                           weight: 'bold'
+                       }
+                   }
+               },
+               {
+                   label: 'Trend',
+                   data: monthlyAverages,
+                   type: 'line',
+                   fill: false,
+                   borderColor: '#2dce89',
+                   tension: 0.4,
+                   pointRadius: 0,
+                   datalabels: {
+                       display: false
+                   }
+               }
+           ]
+       },
+       options: {
+           responsive: true,
+           maintainAspectRatio: false,
+           plugins: {
+               datalabels: {
+                   display: function(context) {
+                       return context.dataset.type !== 'line';
+                   }
+               }
+           },
+           scales: {
+               yAxes: [{
+                   ticks: {
+                       beginAtZero: true,
+                       suggestedMax: Math.max(...monthlyAverages) + 1
+                   }
+               }]
+           }
+       }
+   });
+   
+   
+   // Sheets Per Employee Chart
+   const sheetsPerEmployeeCtx = document.getElementById('sheetsPerEmployeeChart').getContext('2d');
+   const monthlyCompletions = JSON.parse('{{ monthly_completions|safe }}');
+   const totalEmployees = '{{ total_employees }}';
+   
+   const sheetsPerEmployee = monthlyCompletions.map(completions => 
+       totalEmployees > 0 ? (completions / totalEmployees).toFixed(2) : 0
+   );
+   
+   charts.sheetsPerEmployeeChart = new Chart(sheetsPerEmployeeCtx, {
+       type: 'bar',
+       data: {
+           labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+           datasets: [{
+               label: 'Sheets Per Employee',
+               data: sheetsPerEmployee,
+               backgroundColor: '#5e72e4',
+               borderColor: '#5e72e4',
+               borderWidth: 1,
+               datalabels: {
+                   anchor: 'end',
+                   align: 'top',
+                   formatter: Math.round,
+                   font: {
+                       weight: 'bold'
+                   },
+                   padding: {
+                       top: 10
+                   }
+               }
+           }, {
+               label: 'Target',
+               data: Array(12).fill(1),
+               type: 'line',
+               borderColor: '#2dce89',
+               borderWidth: 2,
+               fill: false,
+               pointRadius: 0,
+               datalabels: {
+                   display: false
+               }
+           }]
+       },
+       options: {
+           responsive: true,
+           maintainAspectRatio: false,
+           plugins: {
+               datalabels: {
+                   display: function(context) {
+                       return context.dataset.type !== 'line';
+                   }
+               }
+           },
+           scales: {
+               yAxes: [{
+                   ticks: {
+                       beginAtZero: true,
+                       suggestedMax: Math.max(...sheetsPerEmployee.map(Number)) + 1
+                   }
+               }]
+           }
+       }
+   });
+   
+   // Yearly Performance Chart
+   const yearlyCtx = document.getElementById('yearlyPerformanceChart').getContext('2d');
+   const currentMonth = parseInt('{{ current_month }}');
+   const currentYear = new Date().getFullYear();
+   
+   function calculateYearlyAverages() {
+       // Get current academic year
+       const currentAcademicYear = currentMonth >= 4 ? currentYear : currentYear - 1;
+       const yearlyData = [];
+       let labels = [];
+   
+       // Only calculate for current academic year since we only have current year's data
+       const startMonth = 3; // April (0-based)
+       let sum = 0;
+       let count = 0;
+   
+       // Calculate for current academic year
+       for (let month = 0; month < 12; month++) {
+           const actualMonth = (startMonth + month) % 12;
+           
+           // Only include months up to current month
+           if (actualMonth > currentMonth - 1) {
+               break;
+           }
+           
+           const monthValue = monthlyAverages[actualMonth];
+           if (monthValue !== null && monthValue !== undefined) {
+               sum += monthValue;
+               count++;
+           }
+       }
+   
+       // Calculate average only if we have data
+       const yearAverage = count > 0 ? sum / count : 0;
+       yearlyData.push(yearAverage);
+       labels.push(`AY ${currentAcademicYear}-${currentAcademicYear + 1}`);
+   
+       return { data: yearlyData, labels };
+   }
+   
+   const { data: yearlyAverages, labels: yearLabels } = calculateYearlyAverages();
+   
+   // Calculate trend line (if we have more than one point)
+   function calculateTrendLine(data) {
+       if (data.length <= 1) return data; // Return same data if we only have one point
+       
+       const n = data.length;
+       const coords = data.map((y, x) => ({ x, y: Math.max(0, y) }));
+       
+       const sumX = coords.reduce((sum, p) => sum + p.x, 0);
+       const sumY = coords.reduce((sum, p) => sum + p.y, 0);
+       const sumXY = coords.reduce((sum, p) => sum + (p.x * p.y), 0);
+       const sumXX = coords.reduce((sum, p) => sum + (p.x * p.x), 0);
+       
+       const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+       const intercept = Math.max(0, (sumY - slope * sumX) / n);
+       
+       return data.map((_, x) => Math.max(0, slope * x + intercept));
+   }
+   
+   const trendLineData = calculateTrendLine(yearlyAverages);
+   
+   charts.yearlyPerformanceChart = new Chart(yearlyCtx, {
+       type: 'bar',
+       data: {
+           labels: yearLabels,
+           datasets: [
+               {
+                   label: 'Average Kaizens per Month',
+                   data: yearlyAverages,
+                   backgroundColor: '#5e72e4',
+                   borderColor: '#5e72e4',
+                   borderWidth: 1,
+                   datalabels: {
+                       anchor: 'end',
+                       align: 'end',
+                       formatter: function(value) {
+                           return value.toFixed(2);
+                       },
+                       font: {
+                           weight: 'bold'
+                       }
+                   }
+               },
+               {
+                   label: 'Trend',
+                   data: trendLineData,
+                   type: 'line',
+                   fill: false,
+                   borderColor: '#2dce89',
+                   tension: 0.4,
+                   pointRadius: 0,
+                   datalabels: {
+                       display: false
+                   }
+               }
+           ]
+       },
+       options: {
+           responsive: true,
+           maintainAspectRatio: false,
+           scales: {
+               y: {
+                   beginAtZero: true,
+                   min: 0,
+                   grid: {
+                       drawBorder: false
+                   },
+                   suggestedMax: Math.max(...yearlyAverages) + 1
+               },
+               x: {
+                   grid: {
+                       drawBorder: false
+                   }
+               }
+           },
+           plugins: {
+               legend: {
+                   position: 'bottom'
+               },
+               tooltip: {
+                   callbacks: {
+                       label: function(context) {
+                           if (context.dataset.type === 'line') {
+                               return `Trend: ${context.parsed.y.toFixed(2)}`;
+                           }
+                           return `Average: ${context.parsed.y.toFixed(2)}`;
+                       }
+                   }
+               }
+           }
+       }
+   });
+   
+   // Monthly Submissions Chart
+   const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+   charts.monthlyChart = new Chart(monthlyCtx, {
+       type: 'bar',
+       data: {
+           labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+           datasets: [{
+               label: 'Submitted',
+               data: JSON.parse('{{ monthly_submissions|safe }}'),
+               backgroundColor: '#5e72e4',
+               datalabels: {
+                   anchor: 'end',
+                   align: 'top',
+                   formatter: Math.round,
+                   font: {
+                       weight: 'bold'
+                   },
+                   padding: {
+                       top: 10
+                   }
+               }
+           }, {
+               label: 'Completed',
+               data: JSON.parse('{{ monthly_completions|safe }}'),
+               backgroundColor: '#2dce89',
+               datalabels: {
+                   anchor: 'end',
+                   align: 'top',
+                   formatter: Math.round,
+                   font: {
+                       weight: 'bold'
+                   },
+                   padding: {
+                       top: 10
+                   }
+               }
+           }]
+       },
+       options: {
+           responsive: true,
+           maintainAspectRatio: false,
+           plugins: {
+               datalabels: {
+                   display: function(context) {
+                       return context.dataset.type !== 'line';
+                   }
+               }
+           },
+           scales: {
+               yAxes: [{
+                   ticks: {
+                       beginAtZero: true,
+                       suggestedMax: Math.max(...JSON.parse('{{ monthly_submissions|safe }}'), ...JSON.parse('{{ monthly_completions|safe }}')) + 10
+                   }
+               }]
+           }
+       }
+   });
+   
+   // Update the updateChartData function
+   function updateChartData() {
+       const selectedYear = document.getElementById('yearSelect').value;
+       
+       fetch(`/get-yearly-data/${selectedYear}/`)
+           .then(response => response.json())
+           .then(data => {
+               // Update Monthly Submissions Chart
+               if (charts.monthlyChart) {
+                   charts.monthlyChart.data.datasets[0].data = data.submissions;
+                   charts.monthlyChart.data.datasets[1].data = data.completions;
+                   charts.monthlyChart.update();
+               }
+   
+               // Update Monthly Average Chart
+               if (charts.monthlyAverageChart) {
+                   const monthlyAverages = calculateMonthlyAverages(data.completions);
+                   charts.monthlyAverageChart.data.datasets[0].data = monthlyAverages;
+                   charts.monthlyAverageChart.data.datasets[1].data = monthlyAverages;
+                   charts.monthlyAverageChart.update();
+               }
+   
+               // Update Sheets Per Employee Chart
+               if (charts.sheetsPerEmployeeChart) {
+                   const sheetsPerEmployee = data.completions.map(completions => 
+                       totalEmployees > 0 ? (completions / totalEmployees).toFixed(2) : 0
+                   );
+                   charts.sheetsPerEmployeeChart.data.datasets[0].data = sheetsPerEmployee;
+                   charts.sheetsPerEmployeeChart.update();
+               }
+   
+               // Update Approval Distribution Chart
+               if (charts.approvalChart) {
+                   charts.approvalChart.data.datasets[0].data = [
+                       data.completed_count,
+                       data.hod_pending_count,
+                       data.coordinator_pending_count,
+                       data.finance_pending_count
+                   ];
+                   charts.approvalChart.update();
+               }
+           })
+           .catch(error => {
+               console.error('Error updating charts:', error);
+               alert('Error updating charts. Please try again.');
+           });
+   }
+   
+   // Helper function to calculate monthly averages
+   function calculateMonthlyAverages(completions) {
+       let cumulative = 0;
+       return completions.map((count, index) => {
+           cumulative += count;
+           return ((cumulative / (index + 1)) || 0).toFixed(2);
+       });
+   }
+   
+   
+   // Helper function to get chart title
+   function getChartTitle(chartId) {
+       switch(chartId) {
+           case 'monthlyChart':
+               return 'Monthly Submissions';
+           case 'approvalChart':
+               return 'Approval Distribution';
+           case 'monthlyAverageChart':
+               return 'Monthly Average';
+           case 'sheetsPerEmployeeChart':
+               return 'Sheets Per Employee';
+           case 'yearlyPerformanceChart':
+               return 'Yearly Performance';
+           default:
+               return 'Chart Data';
+       }
+   }
+   
+   // Modal Functions
+   function showEmployeeStats() {
+       $('#employeeStatsModal').modal({
+           backdrop: 'static',
+           keyboard: false
+       });
+   }
+   
+   function showTargetAchievers() {
+       // Set current date
+       const now = new Date();
+       const yearSelect = document.getElementById('targetYear');
+       const monthSelect = document.getElementById('targetMonth');
+       
+       // Set defaults
+       yearSelect.value = now.getFullYear();
+       monthSelect.value = now.getMonth() + 1;
+       
+       // Show modal
+       $('#targetAchieversModal').modal('show');
+       
+       // Load data
+       loadTargetAchievers();
+   }
+   
+   async function loadTargetAchievers() {
+       const tbody = document.getElementById('targetAchieversBody');
+       tbody.innerHTML = '';
+   
+       try {
+           const year = document.getElementById('targetYear').value;
+           const month = document.getElementById('targetMonth').value;
+   
+           const response = await fetch(`/get-department-data/${year}/${month}/`);
+           const data = await response.json();
+   
+           if (!data.success) {
+               throw new Error(data.error);
+           }
+   
+           // Clear existing buttons if any
+           const existingButtons = document.querySelector('.target-achievers-buttons');
+           if (existingButtons) existingButtons.remove();
+   
+           // Add buttons below the table
+           const buttonContainer = document.createElement('div');
+           buttonContainer.className = 'mt-3 text-right target-achievers-buttons';
+           buttonContainer.innerHTML = `
+               <button class="btn btn-primary mr-2" onclick="saveCoordinators()">Save</button>
+               <button class="btn btn-secondary" onclick="downloadTargetAchievers()">Download</button>
+           `;
+           document.querySelector('#targetAchieversModal .modal-body').appendChild(buttonContainer);
+   
+           // Update table header
+           document.querySelector('#targetAchieversModal thead tr').innerHTML = `
+               <th>Sl. No</th>
+               <th>Area</th>
+               <th>Area Leader (HOD)</th>
+               <th>Kaizen Coordinator</th>
+               <th>Monthly Target</th>
+               <th>Completed</th>
+               <th>Kaizen Sheets Per Employee</th>
+           `;
+   
+           data.departments
+               .sort((a, b) => {
+                   // Calculate ratios with error checking
+                   const aRatio = a.monthly_target ? (a.completed / a.monthly_target) : 0;
+                   const bRatio = b.monthly_target ? (b.completed / b.monthly_target) : 0;
+                   
+                   // Handle NaN cases
+                   if (isNaN(aRatio)) return 1;  // Move NaN to end
+                   if (isNaN(bRatio)) return -1; // Move NaN to end
+                   
+                   return bRatio - aRatio; // Sort in descending order
+               })
+               .forEach((dept, index) => {
+                   // Calculate ratio with error checking
+                   const sheetsPerEmployee = dept.monthly_target ? 
+                       (dept.completed / dept.monthly_target).toFixed(2) : 
+                       "0.00";
+   
+                   tbody.insertRow().innerHTML = `
+                       <td>${index + 1}</td>
+                       <td>${dept.name}</td>
+                       <td>${dept.hod_name}</td>
+                       <td>
+                           <input type="text" 
+                               class="form-control coordinator-input" 
+                               data-department="${dept.name}"
+                               value="${dept.kaizen_coordinator || ''}"
+                           />
+                       </td>
+                       <td>${dept.monthly_target || 0}</td>
+                       <td>${dept.completed || 0}</td>
+                       <td>${sheetsPerEmployee}</td>
+                   `;
+               });
+   
+       } catch (error) {
+           console.error('Error loading target achievers:', error);
+           alert('Error loading data: ' + error.message);
+       }
+   }
+   
+   // Keep existing save and download functions
+   async function saveCoordinators() {
+       const inputs = document.querySelectorAll('.coordinator-input');
+       const data = {};
+   
+       inputs.forEach(input => {
+           const department = input.dataset.department;
+           const coordinatorName = input.value.trim();
+           data[department] = coordinatorName;
+       });
+   
+       try {
+           const response = await fetch('{% url "save_kaizen_coordinators" %}', {
+               method: 'POST',
+               headers: {
+                   'Content-Type': 'application/json',
+                   'X-CSRFToken': '{{ csrf_token }}'
+               },
+               body: JSON.stringify(data)
+           });
+   
+           const result = await response.json();
+           if (result.success) {
+               alert('Kaizen Coordinators updated successfully');
+           } else {
+               alert('Error updating coordinators: ' + result.error);
+           }
+       } catch (error) {
+           console.error('Error saving coordinators:', error);
+           alert('Error saving coordinators');
+       }
+   }
+   
+   async function downloadTargetAchievers() {
+       try {
+           const workbook = new ExcelJS.Workbook();
+           const year = document.getElementById('targetYear').value;
+           const month = document.getElementById('targetMonth').value;
+           
+           // Get month name
+           const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+               'July', 'August', 'September', 'October', 'November', 'December'];
+           const monthName = monthNames[parseInt(month) - 1];
+           
+           // Fetch template
+           const response = await fetch('{% url "get_excel_template" "target achievers.xlsx" %}');
+           if (!response.ok) throw new Error('Failed to fetch template');
+           const templateBuffer = await response.arrayBuffer();
+           
+           await workbook.xlsx.load(templateBuffer);
+           const worksheet = workbook.getWorksheet(1);
+           
+           if (!worksheet) {
+               throw new Error('Worksheet not found in template');
+           }
+   
+           // Write header data
+           worksheet.getCell('M2').value = parseInt(year);
+           worksheet.getCell('K2').value = parseInt(month);
+           worksheet.getCell('B5').value = `Kaizen Target Achievers for ${monthName} ${year}`;
+           
+           // Get table data
+           const tableRows = document.querySelectorAll('#targetAchieversBody tr');
+           
+           // Write data rows
+           tableRows.forEach((row, index) => {
+               const columns = row.querySelectorAll('td');
+               const rowNum = index + 8; // Start from row 8
+               
+               // Sl No
+               worksheet.getCell(`B${rowNum}`).value = parseInt(columns[0].textContent);
+               
+               // Department
+               worksheet.getCell(`C${rowNum}`).value = columns[1].textContent;
+               
+               // Area Leader
+               worksheet.getCell(`F${rowNum}`).value = columns[2].textContent;
+               
+               // Kaizen Coordinator
+               worksheet.getCell(`H${rowNum}`).value = columns[3].querySelector('input').value;
+               
+               // Monthly Target
+               worksheet.getCell(`K${rowNum}`).value = parseInt(columns[4].textContent);
+               
+               // Completed
+               worksheet.getCell(`M${rowNum}`).value = parseInt(columns[5].textContent);
+               
+               // Kaizens per Employee
+               worksheet.getCell(`O${rowNum}`).value = parseFloat(columns[6].textContent);
+               worksheet.getCell(`O${rowNum}`).numFmt = '0.00';
+           });
+   
+           const buffer = await workbook.xlsx.writeBuffer();
+           const blob = new Blob([buffer], { 
+               type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+           });
+           saveAs(blob, `target_achievers_${monthName}_${year}.xlsx`);
+   
+       } catch (error) {
+           console.error('Error generating Excel file:', error);
+           alert(`Error generating Excel file: ${error.message}`);
+       }
+   }
+   
+   // Add event listeners for the year and month selectors
+   document.getElementById('targetYear').addEventListener('change', loadTargetAchievers);
+   document.getElementById('targetMonth').addEventListener('change', loadTargetAchievers);
+   
+   async function saveCoordinators() {
+       const inputs = document.querySelectorAll('.coordinator-input');
+       const data = {};
+   
+       inputs.forEach(input => {
+           const department = input.dataset.department;
+           const coordinatorName = input.value.trim();
+           data[department] = coordinatorName;
+       });
+   
+       try {
+           const response = await fetch('{% url "save_kaizen_coordinators" %}', {
+               method: 'POST',
+               headers: {
+                   'Content-Type': 'application/json',
+                   'X-CSRFToken': '{{ csrf_token }}'
+               },
+               body: JSON.stringify(data)
+           });
+   
+           const result = await response.json();
+           if (result.success) {
+               alert('Kaizen Coordinators updated successfully');
+           } else {
+               alert('Error updating coordinators: ' + result.error);
+           }
+       } catch (error) {
+           console.error('Error saving coordinators:', error);
+           alert('Error saving coordinators');
+       }
+   }
+   
+   async function downloadChartData(chartId) {
+       if (chartId === 'approvalChart') {
+           try {
+               const workbook = new ExcelJS.Workbook();
+               const selectedYear = document.getElementById('yearSelect').value;
+               
+               // Fetch template
+               const response = await fetch('{% url "get_excel_template" "total kaizen.xlsx" %}');
+               if (!response.ok) throw new Error('Failed to fetch template');
+               const templateBuffer = await response.arrayBuffer();
+               
+               await workbook.xlsx.load(templateBuffer);
+               const worksheet = workbook.getWorksheet(1);
+               
+               if (!worksheet) {
+                   throw new Error('Worksheet not found in template');
+               }
+   
+               // Write data to specified cells
+               worksheet.getCell('L1').value = parseInt(selectedYear);
+               worksheet.getCell('N10').value = parseInt('{{ total_kaizens }}');
+               worksheet.getCell('N11').value = parseInt('{{ completed_count }}');
+               worksheet.getCell('N12').value = parseInt('{{ pending_approvals }}');
+               worksheet.getCell('N14').value = parseInt('{{ hod_pending_count }}');
+               worksheet.getCell('N16').value = parseInt('{{ coordinator_pending_count }}');
+               worksheet.getCell('N18').value = parseInt('{{ finance_pending_count }}');
+   
+               // Add chart image
+               const chart = charts[chartId];
+               const imageId = workbook.addImage({
+                   base64: chart.toBase64Image(),
+                   extension: 'png',
+               });
+               
+               worksheet.addImage(imageId, {
+                   tl: { col: 2, row: 9 },
+                   ext: { width: 500, height: 300 }
+               });
+   
+               const buffer = await workbook.xlsx.writeBuffer();
+               const blob = new Blob([buffer], { 
+                   type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+               });
+               saveAs(blob, `approval_distribution_${selectedYear}.xlsx`);
+   
+           } catch (error) {
+               console.error('Error details:', error);
+               alert(`Error generating Excel file: ${error.message}`);
+           }
+       }
+   
+       if (chartId === 'monthlyChart') {
+           try {
+               const workbook = new ExcelJS.Workbook();
+               const selectedYear = document.getElementById('yearSelect').value;
+               
+               // Fetch template
+               const response = await fetch('{% url "get_excel_template" "monthly submissions.xlsx" %}');
+               if (!response.ok) throw new Error('Failed to fetch template');
+               const templateBuffer = await response.arrayBuffer();
+               
+               await workbook.xlsx.load(templateBuffer);
+               const worksheet = workbook.getWorksheet(1);
+               
+               if (!worksheet) {
+                   throw new Error('Worksheet not found in template');
+               }
+   
+               // Write data to specified cells
+               const yearCell = worksheet.getCell('K1');
+               yearCell.value = parseInt(selectedYear);
+               yearCell.font = { name: 'Arial', size: 22, bold: true };
+               
+               const months = ['C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'];
+               const submissions = JSON.parse('{{ monthly_submissions|safe }}');
+               const completions = JSON.parse('{{ monthly_completions|safe }}');
+               
+               months.forEach((col, index) => {
+                   worksheet.getCell(`${col}8`).value = submissions[index];
+                   worksheet.getCell(`${col}9}`).value = completions[index];
+               });
+   
+               // Add chart image
+               const chart = charts[chartId];
+               const imageId = workbook.addImage({
+                   base64: chart.toBase64Image(),
+                   extension: 'png',
+               });
+               
+               worksheet.addImage(imageId, {
+                   tl: { col: 1, row: 11 },
+                   ext: { width: 800, height: 450 }
+               });
+   
+               const buffer = await workbook.xlsx.writeBuffer();
+               const blob = new Blob([buffer], { 
+                   type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+               });
+               saveAs(blob, `monthly_submissions_${selectedYear}.xlsx`);
+   
+           } catch (error) {
+               console.error('Error details:', error);
+               alert(`Error generating Excel file: ${error.message}`);
+           }
+       }
+   
+       if (chartId === 'sheetsPerEmployeeChart') {
+           try {
+               const workbook = new ExcelJS.Workbook();
+               const selectedYear = document.getElementById('yearSelect').value;
+               
+               // Fetch template
+               const response = await fetch('{% url "get_excel_template" "per emp and monthly sub.xlsx" %}');
+               if (!response.ok) throw new Error('Failed to fetch template');
+               const templateBuffer = await response.arrayBuffer();
+               
+               await workbook.xlsx.load(templateBuffer);
+               const worksheet = workbook.getWorksheet(1);
+               
+               if (!worksheet) {
+                   throw new Error('Worksheet not found in template');
+               }
+   
+               // Write data to specified cells
+               const yearCell = worksheet.getCell('J2');
+               yearCell.value = parseInt(selectedYear);
+               
+   
+               // Add chart images
+               const employeeChart = charts['monthlyChart'];
+               const employeeImageId = workbook.addImage({
+                   base64: employeeChart.toBase64Image(),
+                   extension: 'png',
+               });
+               
+               worksheet.addImage(employeeImageId, {
+                   tl: { col: 1, row: 7 },
+                   ext: { width: 475, height: 300 }
+               });
+   
+               const perEmployeeChart = charts['sheetsPerEmployeeChart'];
+               const perEmployeeImageId = workbook.addImage({
+                   base64: perEmployeeChart.toBase64Image(),
+                   extension: 'png',
+               });
+               
+               worksheet.addImage(perEmployeeImageId, {
+                   tl: { col: 8, row: 7 },
+                   ext: { width: 475, height: 300 }
+               });
+   
+               const buffer = await workbook.xlsx.writeBuffer();
+               const blob = new Blob([buffer], { 
+                   type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+               });
+               saveAs(blob, `per_employee_sheet_${selectedYear}.xlsx`);
+   
+           } catch (error) {
+               console.error('Error details:', error);
+               alert(`Error generating Excel file: ${error.message}`);
+           }
+       }
+       if (chartId === 'monthlyAverageChart') {
+           try {
+               const workbook = new ExcelJS.Workbook();
+               const selectedYear = document.getElementById('yearSelect').value;
+               
+               // Fetch template
+               const response = await fetch('{% url "get_excel_template" "monthly average.xlsx" %}');
+               if (!response.ok) throw new Error('Failed to fetch template');
+               const templateBuffer = await response.arrayBuffer();
+               
+               await workbook.xlsx.load(templateBuffer);
+               const worksheet = workbook.getWorksheet(1);
+               
+               if (!worksheet) {
+                   throw new Error('Worksheet not found in template');
+               }
+   
+               // Write data to specified cells
+               const yearCell = worksheet.getCell('K1');
+               yearCell.value = parseInt(selectedYear);
+               yearCell.font = { name: 'Arial', size: 22, bold: true };
+               
+               const months = ['C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'];
+               const monthlyAverages = JSON.parse('{{ monthly_averages|safe }}');
+               
+               months.forEach((col, index) => {
+                   worksheet.getCell(`${col}8`).value = monthlyAverages[index];
+               });
+   
+               // Add chart image
+               const chart = charts[chartId];
+               const imageId = workbook.addImage({
+                   base64: chart.toBase64Image(),
+                   extension: 'png',
+               });
+               
+               worksheet.addImage(imageId, {
+                   tl: { col: 1, row: 11 },
+                   ext: { width: 800, height: 450 }
+               });
+   
+               const buffer = await workbook.xlsx.writeBuffer();
+               const blob = new Blob([buffer], { 
+                   type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+               });
+               saveAs(blob, `monthly_average_${selectedYear}.xlsx`);
+   
+           } catch (error) {
+               console.error('Error details:', error);
+               alert(`Error generating Excel file: ${error.message}`);
+           }
+       }
+   
+       if (chartId === 'yearlyPerformanceChart') {
+       try {
+           const workbook = new ExcelJS.Workbook();
+           const selectedYear = document.getElementById('yearSelect').value;
+           
+           // Fetch template
+           const response = await fetch('{% url "get_excel_template" "yearly average.xlsx" %}');
+           if (!response.ok) throw new Error('Failed to fetch template');
+           const templateBuffer = await response.arrayBuffer();
+           
+           await workbook.xlsx.load(templateBuffer);
+           const worksheet = workbook.getWorksheet(1);
+           
+           if (!worksheet) {
+               throw new Error('Worksheet not found in template');
+           }
+   
+           // Write data to specified cells
+           const yearCell = worksheet.getCell('K1');
+           yearCell.value = parseInt(selectedYear);
+           yearCell.font = { name: 'Arial', size: 22, bold: true };
+           
+           // Calculate current and previous academic years
+           const currentAcademicYear = currentMonth >= 4 ? currentYear : currentYear - 1;
+           const academicYears = [];
+           const yearlyValues = [];
+           
+           // Generate last 4 academic years
+           for(let i = 3; i >= 0; i--) {
+               const year = currentAcademicYear - i;
+               academicYears.push(`AY ${year}-${year + 1}`);
+               // Only current year has data, rest are zero
+               yearlyValues.push(i === 0 ? yearlyAverages[0] : 0);
+           }
+           
+           // Column mapping for cells
+           const columns = ['C', 'D', 'E', 'F'];
+           
+           // Plot academic years in row 3 and data in row 8
+           columns.forEach((col, index) => {
+               // Academic year headings in row 3
+               worksheet.getCell(`${col}3`).value = academicYears[index];
+               worksheet.getCell(`${col}3`).font = { bold: true };
+               
+               // Yearly averages in row 8
+               worksheet.getCell(`${col}8`).value = yearlyValues[index];
+               worksheet.getCell(`${col}8`).numFmt = '0.0000';
+           });
+   
+           // Add chart image at B12
+           const chart = charts[chartId];
+           const imageId = workbook.addImage({
+               base64: chart.toBase64Image(),
+               extension: 'png',
+           });
+           
+           worksheet.addImage(imageId, {
+               tl: { col: 1, row: 11 },
+               ext: { width: 800, height: 450 }
+           });
+   
+           const buffer = await workbook.xlsx.writeBuffer();
+           const blob = new Blob([buffer], { 
+               type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+           });
+           saveAs(blob, `yearly_average_${selectedYear}.xlsx`);
+   
+       } catch (error) {
+           console.error('Error details:', error);
+           alert(`Error generating Excel file: ${error.message}`);
+       }
+   }
+   }
+   
+   
+   // Table Search Function
+   function setupTableSearch(inputId, tableId) {
+       document.getElementById(inputId)?.addEventListener('keyup', function() {
+           const searchText = this.value.toLowerCase();
+           const rows = document.getElementById(tableId)?.getElementsByTagName('tr') || [];
+           
+           Array.from(rows).slice(1).forEach(row => {
+               const text = Array.from(row.getElementsByTagName('td'))
+                   .map(cell => cell.textContent.toLowerCase())
+                   .join(' ');
+               row.style.display = text.includes(searchText) ? '' : 'none';
+           });
+       });
+   }
 </script>
 {% endblock javascripts %}
 {% endblock content %}
-
 <style>
-    .coordinator-input {
-        min-width: 150px;
-        padding: 4px 8px;
-        border: 1px solid #dee2e6;
-        border-radius: 4px;
-    }
-    
-    .coordinator-input:focus {
-        border-color: #5e72e4;
-        outline: none;
-        box-shadow: 0 0 0 0.2rem rgba(94,114,228,.25);
-    }
-    .dropdown {
-    margin-left: 15px;
-}
-
-.dropdown-menu {
-    min-width: 200px;
-}
-
-.dropdown-item {
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-}
-
-.dropdown-item:hover {
-    background-color: #f6f9fc;
-}
-    
-    </style>
-
-
+   .coordinator-input {
+   min-width: 150px;
+   padding: 4px 8px;
+   border: 1px solid #dee2e6;
+   border-radius: 4px;
+   }
+   .coordinator-input:focus {
+   border-color: #5e72e4;
+   outline: none;
+   box-shadow: 0 0 0 0.2rem rgba(94,114,228,.25);
+   }
+   .dropdown {
+   margin-left: 15px;
+   }
+   .dropdown-menu {
+   min-width: 200px;
+   }
+   .dropdown-item {
+   padding: 0.5rem 1rem;
+   font-size: 0.875rem;
+   }
+   .dropdown-item:hover {
+   background-color: #f6f9fc;
+   }
+</style>

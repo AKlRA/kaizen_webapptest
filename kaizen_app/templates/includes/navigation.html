@@ -36,8 +36,7 @@
           <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <div class="media align-items-center">
               <span class="avatar avatar-sm rounded-circle">
-                <img alt="Image placeholder" src="/static/assets/img/theme/team-4.jpg">
-              </span>
+                <i class="fas fa-user-circle" style="font-size: 36px; color: #f4f5f7;"></i>              </span>
               <div class="media-body ml-2 d-none d-lg-block">
                 <span class="mb-0 text-sm font-weight-bold">
                   {{ request.user.username }}
@@ -61,63 +60,79 @@
   </div>
 </nav>
 <script>
-function searchContent(searchText) {
-    // Remove existing highlights
-    const highlights = document.getElementsByClassName('search-highlight');
-    while(highlights.length > 0) {
-        const parent = highlights[0].parentNode;
-        parent.innerHTML = parent.innerHTML.replace(/<mark class="search-highlight">(.*?)<\/mark>/g, '$1');
-    }
-
-    if (!searchText.trim()) return;
-
-    const searchRegex = new RegExp(searchText, 'gi');
-    const walker = document.createTreeWalker(
-        document.body,
-        NodeFilter.SHOW_TEXT,
-        null,
-        false
-    );
-
-    let node;
-    let matches = [];
-
-    // Find all text matches
-    while(node = walker.nextNode()) {
-        if (node.nodeValue.match(searchRegex)) {
-            matches.push(node);
-        }
-    }
-
-    // If matches found, highlight and scroll to first match
-    if (matches.length > 0) {
-        // Highlight all matches
-        matches.forEach(node => {
-            const highlightedText = node.nodeValue.replace(
-                searchRegex,
-                match => `<mark class="search-highlight">${match}</mark>`
-            );
-            const span = document.createElement('span');
-            span.innerHTML = highlightedText;
-            node.parentNode.replaceChild(span, node);
-        });
-
-        // Scroll to first match
-        const firstMatch = document.getElementsByClassName('search-highlight')[0];
-        if (firstMatch) {
-            firstMatch.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center'
-            });
-        }
-    }
-}
-</script>
+  // Debounce function to limit search frequency
+  function debounce(func, wait) {
+      let timeout;
+      return function (...args) {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => func.apply(this, args), wait);
+      };
+  }
+  
+  // Improved search function with debounce
+  const searchContent = debounce(function(searchText) {
+      // Remove existing highlights
+      const highlights = document.getElementsByClassName('search-highlight');
+      while(highlights.length > 0) {
+          const parent = highlights[0].parentNode;
+          parent.innerHTML = parent.innerHTML.replace(/<mark class="search-highlight">(.*?)<\/mark>/g, '$1');
+      }
+  
+      if (!searchText.trim()) return;
+  
+      try {
+          const searchRegex = new RegExp(searchText, 'gi');
+          const contentNodes = document.querySelectorAll('td, th, p, h1, h2, h3, h4, h5, h6, span:not(.search-highlight)');
+          let firstMatch = null;
+  
+          contentNodes.forEach(node => {
+              if (!node.hasChildNodes() || node.children.length === 0) {
+                  const text = node.textContent;
+                  if (text.match(searchRegex)) {
+                      const highlightedText = text.replace(
+                          searchRegex,
+                          match => `<mark class="search-highlight">${match}</mark>`
+                      );
+                      node.innerHTML = highlightedText;
+                      
+                      if (!firstMatch) {
+                          firstMatch = node.querySelector('.search-highlight');
+                      }
+                  }
+              }
+          });
+  
+          // Scroll to first match if found
+          if (firstMatch) {
+              firstMatch.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'center'
+              });
+          }
+      } catch (error) {
+          console.error('Search error:', error);
+      }
+  }, 300); // 300ms debounce delay
+  </script>
 
 <style>
-.search-highlight {
-    background-color: #ffd700;
-    padding: 2px;
-    border-radius: 2px;
-}
-</style>
+  .search-highlight {
+      background-color: rgba(255, 215, 0, 0.5);
+      padding: 2px;
+      border-radius: 2px;
+      color: inherit;
+  }
+  
+  .search-highlight:hover {
+      background-color: rgba(255, 215, 0, 0.7);
+  }
+  
+  #searchInput {
+      transition: all 0.3s ease;
+  }
+  
+  #searchInput:focus {
+      border-color: #800000;
+      box-shadow: 0 0 0 0.2rem rgba(128, 0, 0, 0.25);
+  }
+  </style>

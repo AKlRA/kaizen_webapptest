@@ -1,1303 +1,1313 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Employee Dashboard</title>
-    {% load static %}
-    
-    <!-- Argon Core CSS -->
-    <link rel="stylesheet" href="/static/assets/css/argon.css?v=1.2.0" type="text/css">
-    <!-- Fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
-    <!-- Icons -->
-    <link rel="stylesheet" href="/static/assets/vendor/nucleo/css/nucleo.css" type="text/css">
-    <link rel="stylesheet" href="/static/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" type="text/css">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{% static 'css/employee_dashboard.css' %}">
-</head>
-
-<body class="bg-default">
-    <!-- Main content -->
-    <div class="main-content">
-        <!-- Header -->
-        <div class="header bg-gradient-primary pb-8 pt-5">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <title>Employee Dashboard</title>
+      {% load static %}
+      <!-- Argon Core CSS -->
+      <link rel="stylesheet" href="/static/assets/css/argon.css?v=1.2.0" type="text/css">
+      <!-- Fonts -->
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+      <!-- Icons -->
+      <link rel="stylesheet" href="/static/assets/vendor/nucleo/css/nucleo.css" type="text/css">
+      <link rel="stylesheet" href="/static/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" type="text/css">
+      <!-- Custom CSS -->
+      <style>
+         .bg-default {
+         background: 
+         rgba(255, 255, 255, 0.8)!important;
+         }
+         .bg-card-color{
+         background:  rgba(255, 248, 248, 0.6)!important;
+         }
+         .bg-gradient-default {
+         background: 
+         linear-gradient(135deg, transparent 25%, rgba(128, 0, 0, 0.15) 25%, 
+         rgba(128, 0, 0, 0.15) 50%, transparent 50%, transparent 75%, 
+         rgba(128, 0, 0, 0.15) 75%, rgba(128, 0, 0, 0.15)),
+         linear-gradient(45deg, transparent 25%, rgba(128, 0, 0, 0.2) 25%, 
+         rgba(128, 0, 0, 0.2) 50%, transparent 50%, transparent 75%, 
+         rgba(128, 0, 0, 0.2) 75%, rgba(128, 0, 0, 0.2)) !important;
+         background-size: 20px 20px;
+         background-color: white;
+         position: relative;
+         height: 120px;
+         margin-bottom: 30px;
+         padding: 20px 0;
+         }
+         .thead-light {
+         background: rgba(255, 242, 242, 0.1) !important;
+         }
+         .thead-light th {
+         color: #333333 !important;
+         border-color: rgba(128, 0, 0, 0.2) !important;
+         }
+         .main-content {
+         background: white;
+         }
+         .btn-maroon {
+         background-color: #800000 !important;
+         border-color: #800000 !important;
+         color: #ffffff !important;
+         transition: all 0.3s ease;
+         }
+         .btn-maroon:hover {
+         background-color: #008194 !important;
+         border-color: #008194 !important;
+         color: #ffffff !important;
+         box-shadow: 0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08);
+         }
+      </style>
+   </head>
+   <body class="bg-default">
+      <!-- Main content -->
+      <div class="main-content">
+         <!-- Header -->
+         <div class="bg-gradient-default pb-8 pt-5">
             <div class="container-fluid">
-                <div class="header-body">
-                    <div class="row">
-                        <div class="col-xl-12">
-                            <div class="card card-stats">
-                                <div class="card-body">
-                                    <h2 class="mb-4">Welcome, {{ request.user.username }}</h2>
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#upload-modal">
-                                        <i class="ni ni-cloud-upload-96"></i> Upload Kaizen Sheet Image
-                                    </button>
-                                </div>
-                            </div>
+               <div class="header-body">
+                  <div class="row">
+                     <div class="col-xl-12">
+                        <div class="card card-stats">
+                           <div class="card-body d-flex justify-content-between align-items-center">
+                              <h2 class="mb-0">Welcome, {{ request.user.username }}</h2>
+                              <div>
+                                 <button type="button" class="btn btn-maroon mr-3" data-toggle="modal" data-target="#upload-modal">
+                                 <i class="ni ni-cloud-upload-96"></i> Upload Kaizen Sheet Image
+                                 </button>
+                                 <a href="{% url 'logout' %}" class="btn btn-danger">
+                                 <i class="ni ni-user-run"></i> Logout
+                                 </a>
+                              </div>
+                           </div>
                         </div>
-                    </div>
-                </div>
+                     </div>
+                  </div>
+               </div>
             </div>
-        </div>
-        
-        <!-- Update the Modal section -->
-        <div class="modal fade" id="upload-modal" tabindex="-1" role="dialog" aria-labelledby="upload-modal-label" aria-hidden="true">
+         </div>
+         <!-- Update the Modal section -->
+         <div class="modal fade" id="upload-modal" tabindex="-1" role="dialog" aria-labelledby="upload-modal-label" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="upload-modal-label">Upload Handwritten Kaizen Sheet</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="handwritten-form" method="post" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <input type="hidden" name="form_type" value="handwritten">
-                            <div class="form-group">
-                                <label class="form-control-label" for="handwritten_title">Title</label>
-                                <input type="text" id="handwritten_title" name="handwritten_title" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-control-label">Upload Sheet</label>
-                                <div class="custom-file">
-                                    <input type="file" id="handwritten_sheet" name="handwritten_sheet" accept="image/*" required>
-                                </div>
-                            </div>
-                            <div class="text-center">
-                                <button type="button" onclick="uploadHandwrittenSheet()" class="btn btn-primary">Submit</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-            <!-- Main Form Card -->
-            <div class="card bg-secondary shadow">
-                <div class="card-header bg-white border-0">
-                    <h3 class="mb-0">Kaizen Sheet Submission</h3>
-                </div>
-                <div class="card-body">
-                    <form id="main-kaizen-form" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h5 class="modal-title" id="upload-modal-label">Upload Handwritten Kaizen Sheet</h5>
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                     <span aria-hidden="true">&times;</span>
+                     </button>
+                  </div>
+                  <div class="modal-body">
+                     <form id="handwritten-form" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-                        
-                        <!-- Basic Information -->
-                        <div class="pl-lg-4">
-                            <h6 class="heading-small text-muted mb-4">Basic Information</h6>
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="id_title">Title</label>
-                                        <input type="text" id="id_title" name="title" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="id_area_implemented">Area Implemented</label>
-                                        <input type="text" id="id_area_implemented" name="area_implemented" class="form-control" required>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Team Section -->
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="id_team_member2_id">Team Member ID</label>
-                                        <input type="text" id="id_team_member2_id" name="team_member2_id" class="form-control" placeholder="Enter team member's ID">
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="id_team_member2">Team Member Name</label>
-                                        <input type="text" id="id_team_member2" name="team_member2" class="form-control" placeholder="Enter team member's name">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Date Section -->
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="id_start_date">Start Date</label>
-                                        <input type="date" id="id_start_date" name="start_date" class="form-control" required>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="id_end_date">End Date</label>
-                                        <input type="date" id="id_end_date" name="end_date" class="form-control" required>
-                                    </div>
-                                </div>
-                            </div>
+                        <input type="hidden" name="form_type" value="handwritten">
+                        <div class="form-group">
+                           <label class="form-control-label" for="handwritten_title">Title</label>
+                           <input type="text" id="handwritten_title" name="handwritten_title" class="form-control" required>
                         </div>
-                        <div class="pl-lg-4">
-                            <h6 class="heading-small text-muted mb-4">Project Details</h6>
-                            
-                            <!-- Problem Section -->
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="id_problem">Problem</label>
-                                        <textarea class="form-control" id="id_problem" name="problem" rows="3" required></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        
-                            <!-- Idea/Solution Section -->
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="id_idea_solved">Idea/Solution</label>
-                                        <textarea class="form-control" id="id_idea_solved" name="idea_solved" rows="3" required></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        
-                            <!-- Standardization Section -->
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="id_standardization">Standardization</label>
-                                        <textarea class="form-control" id="id_standardization" name="standardization" rows="3" required></textarea>
-                                        <div class="custom-file mt-3">
-                                            <input type="file" class="custom-file-input" id="id_standardization_file" 
-                                                   name="standardization_file" accept=".pdf,.xlsx,.xls,.jpg,.jpeg,.png">
-                                            <label class="custom-file-label" for="id_standardization_file"></label>
-                                            <small class="form-text text-muted">Upload Image/Excel/PDF documentation</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        
-                            <!-- Benefits Section -->
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="id_benefits">Benefits</label>
-                                        <textarea class="form-control" id="id_benefits" name="benefits" rows="3"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        
-                            <!-- Deployment Section -->
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="id_deployment">Deployment</label>
-                                        <textarea class="form-control" id="id_deployment" name="deployment" rows="3" required></textarea>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="form-group">
+                           <label class="form-control-label">Upload Sheet</label>
+                           <div class="custom-file">
+                              <input type="file" id="handwritten_sheet" name="handwritten_sheet" accept="image/*" required>
+                           </div>
                         </div>
-                        
-                        <hr class="my-4">
-                        
-                        <!-- Horizontal Deployment Section -->
-                        <div class="pl-lg-4">
-                            <h6 class="heading-small text-muted mb-4">Deployment Options</h6>
-                            <div class="custom-control custom-checkbox mb-3">
-                                <input type="checkbox" 
-                                       class="custom-control-input" 
-                                       id="id_horizontal_deployment"
-                                       name="id_horizontal_deployment"
-                                       onclick="toggleHorizontalDeployment(this)">
-                                <label class="custom-control-label" for="id_horizontal_deployment">
-                                    Horizontal Deployment
-                                </label>
-                            </div>
-                            
-                            <div id="horizontal_deployment_fields" style="display: none;">
-                                <div class="department-list">
-                                    {% for dept in departments %}
-                                        {% if dept != request.user.profile.department %}
-                                        <div class="custom-control custom-checkbox mb-2">
-                                            <input type="checkbox" 
-                                                   class="custom-control-input input-horizontal" 
-                                                   id="dept_{{ dept }}" 
-                                                   name="horizontal_departments" 
-                                                   value="{{ dept }}"
-                                                   disabled>
-                                            <label class="custom-control-label" for="dept_{{ dept }}">
-                                                {{ dept }}
-                                            </label>
-                                        </div>
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                            </div>
+                        <div class="text-center">
+                           <button type="button" onclick="uploadHandwrittenSheet()" class="btn btn-maroon">Submit</button>
                         </div>
-
-        <hr class="my-4">
-
-<!-- Before/After Improvement Section -->
-<div class="pl-lg-4">
-    <h6 class="heading-small text-muted mb-4">Improvement Documentation</h6>
-    <div class="row">
-        <!-- Before Improvement -->
-        <div class="col-xl-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="h3 mb-0">Before Improvement</h5>
-                </div>
-                <div class="card-body">
-                    <div class="form-group">
-                        <label class="form-control-label" for="id_before_improvement_text">Description</label>
-                        <textarea class="form-control" id="id_before_improvement_text" name="before_improvement_text" rows="3" required></textarea>
-                        <div class="custom-file mt-3">
-                            <input type="file" class="custom-file-input" id="id_before_improvement_image" 
-                                   name="before_improvement_image" accept="image/*">
-                            <label class="custom-file-label" for="id_before_improvement_image"></label>
-                        </div>
-                        <div class="mt-3">
-                            <img id="before-improvement-preview" src="#" alt="Before Improvement" 
+                     </form>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- Main Form Card -->
+      <div class="card bg-card-color shadow">
+      <div class="card-header bg-white border-0">
+         <h3 class="mb-0">Kaizen Sheet Submission</h3>
+      </div>
+      <div class="card-body">
+      <form id="main-kaizen-form" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+         {% csrf_token %}
+         <!-- Basic Information -->
+         <div class="pl-lg-4">
+            <h6 class="heading-small text-muted mb-4">Basic Information</h6>
+            <div class="row">
+               <div class="col-lg-6">
+                  <div class="form-group">
+                     <label class="form-control-label" for="id_title">Title</label>
+                     <input type="text" id="id_title" name="title" class="form-control">
+                  </div>
+               </div>
+               <div class="col-lg-6">
+                  <div class="form-group">
+                     <label class="form-control-label" for="id_area_implemented">Area Implemented</label>
+                     <input type="text" id="id_area_implemented" name="area_implemented" class="form-control" required>
+                  </div>
+               </div>
+            </div>
+            <!-- Team Section -->
+            <div class="row">
+               <div class="col-lg-6">
+                  <div class="form-group">
+                     <label class="form-control-label" for="id_team_member2_id">Team Member ID</label>
+                     <input type="text" id="id_team_member2_id" name="team_member2_id" class="form-control" placeholder="Enter team member's ID">
+                  </div>
+               </div>
+               <div class="col-lg-6">
+                  <div class="form-group">
+                     <label class="form-control-label" for="id_team_member2">Team Member Name</label>
+                     <input type="text" id="id_team_member2" name="team_member2" class="form-control" placeholder="Enter team member's name">
+                  </div>
+               </div>
+            </div>
+            <!-- Date Section -->
+            <div class="row">
+               <div class="col-lg-6">
+                  <div class="form-group">
+                     <label class="form-control-label" for="id_start_date">Start Date</label>
+                     <input type="date" id="id_start_date" name="start_date" class="form-control" required>
+                  </div>
+               </div>
+               <div class="col-lg-6">
+                  <div class="form-group">
+                     <label class="form-control-label" for="id_end_date">End Date</label>
+                     <input type="date" id="id_end_date" name="end_date" class="form-control" required>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="pl-lg-4">
+            <h6 class="heading-small text-muted mb-4">Project Details</h6>
+            <!-- Problem Section -->
+            <div class="row">
+               <div class="col-lg-12">
+                  <div class="form-group">
+                     <label class="form-control-label" for="id_problem">Problem</label>
+                     <textarea class="form-control" id="id_problem" name="problem" rows="3" required></textarea>
+                  </div>
+               </div>
+            </div>
+            <!-- Idea/Solution Section -->
+            <div class="row">
+               <div class="col-lg-12">
+                  <div class="form-group">
+                     <label class="form-control-label" for="id_idea_solved">Idea/Solution</label>
+                     <textarea class="form-control" id="id_idea_solved" name="idea_solved" rows="3" required></textarea>
+                  </div>
+               </div>
+            </div>
+            <!-- Standardization Section -->
+            <div class="row">
+               <div class="col-lg-12">
+                  <div class="form-group">
+                     <label class="form-control-label" for="id_standardization">Standardization</label>
+                     <textarea class="form-control" id="id_standardization" name="standardization" rows="3" required></textarea>
+                     <div class="custom-file mt-3">
+                        <input type="file" class="custom-file-input" id="id_standardization_file" 
+                           name="standardization_file" accept=".pdf,.xlsx,.xls,.jpg,.jpeg,.png">
+                        <label class="custom-file-label" for="id_standardization_file"></label>
+                        <small class="form-text text-muted">Upload Image/Excel/PDF documentation</small>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <!-- Benefits Section -->
+            <div class="row">
+               <div class="col-lg-12">
+                  <div class="form-group">
+                     <label class="form-control-label" for="id_benefits">Benefits</label>
+                     <textarea class="form-control" id="id_benefits" name="benefits" rows="3"></textarea>
+                  </div>
+               </div>
+            </div>
+            <!-- Deployment Section -->
+            <div class="row">
+               <div class="col-lg-12">
+                  <div class="form-group">
+                     <label class="form-control-label" for="id_deployment">Deployment</label>
+                     <textarea class="form-control" id="id_deployment" name="deployment" rows="3" required></textarea>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <hr class="my-4">
+         <!-- Horizontal Deployment Section -->
+         <div class="pl-lg-4">
+            <h6 class="heading-small text-muted mb-4">Deployment Options</h6>
+            <div class="custom-control custom-checkbox mb-3">
+               <input type="checkbox" 
+                  class="custom-control-input" 
+                  id="id_horizontal_deployment"
+                  name="id_horizontal_deployment"
+                  onclick="toggleHorizontalDeployment(this)">
+               <label class="custom-control-label" for="id_horizontal_deployment">
+               Horizontal Deployment
+               </label>
+            </div>
+            <div id="horizontal_deployment_fields" style="display: none;">
+               <div class="department-list">
+                  {% for dept in departments %}
+                  {% if dept != request.user.profile.department %}
+                  <div class="custom-control custom-checkbox mb-2">
+                     <input type="checkbox" 
+                        class="custom-control-input input-horizontal" 
+                        id="dept_{{ dept }}" 
+                        name="horizontal_departments" 
+                        value="{{ dept }}"
+                        disabled>
+                     <label class="custom-control-label" for="dept_{{ dept }}">
+                     {{ dept }}
+                     </label>
+                  </div>
+                  {% endif %}
+                  {% endfor %}
+               </div>
+            </div>
+         </div>
+         <hr class="my-4">
+         <!-- Before/After Improvement Section -->
+         <div class="pl-lg-4">
+            <h6 class="heading-small text-muted mb-4">Improvement Documentation</h6>
+            <div class="row">
+               <!-- Before Improvement -->
+               <div class="col-xl-6">
+                  <div class="card">
+                     <div class="card-header">
+                        <h5 class="h3 mb-0">Before Improvement</h5>
+                     </div>
+                     <div class="card-body">
+                        <div class="form-group">
+                           <label class="form-control-label" for="id_before_improvement_text">Description</label>
+                           <textarea class="form-control" id="id_before_improvement_text" name="before_improvement_text" rows="3" required></textarea>
+                           <div class="custom-file mt-3">
+                              <input type="file" class="custom-file-input" id="id_before_improvement_image" 
+                                 name="before_improvement_image" accept="image/*">
+                              <label class="custom-file-label" for="id_before_improvement_image"></label>
+                           </div>
+                           <div class="mt-3">
+                              <img id="before-improvement-preview" src="#" alt="Before Improvement" 
                                  class="img-fluid rounded shadow" style="display: none; max-width: 200px;">
+                           </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- After Improvement -->
-        <div class="col-xl-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="h3 mb-0">After Improvement</h5>
-                </div>
-                <div class="card-body">
-                    <div class="form-group">
-                        <label class="form-control-label" for="id_after_improvement_text">Description</label>
-                        <textarea class="form-control" id="id_after_improvement_text" name="after_improvement_text" rows="3" required></textarea>
-                        <div class="custom-file mt-3">
-                            <input type="file" class="custom-file-input" id="id_after_improvement_image" 
-                                   name="after_improvement_image" accept="image/*">
-                            <label class="custom-file-label" for="id_after_improvement_image"></label>
-                        </div>
-                        <div class="mt-3">
-                            <img id="after-improvement-preview" src="#" alt="After Improvement" 
+                     </div>
+                  </div>
+               </div>
+               <!-- After Improvement -->
+               <div class="col-xl-6">
+                  <div class="card">
+                     <div class="card-header">
+                        <h5 class="h3 mb-0">After Improvement</h5>
+                     </div>
+                     <div class="card-body">
+                        <div class="form-group">
+                           <label class="form-control-label" for="id_after_improvement_text">Description</label>
+                           <textarea class="form-control" id="id_after_improvement_text" name="after_improvement_text" rows="3" required></textarea>
+                           <div class="custom-file mt-3">
+                              <input type="file" class="custom-file-input" id="id_after_improvement_image" 
+                                 name="after_improvement_image" accept="image/*">
+                              <label class="custom-file-label" for="id_after_improvement_image"></label>
+                           </div>
+                           <div class="mt-3">
+                              <img id="after-improvement-preview" src="#" alt="After Improvement" 
                                  class="img-fluid rounded shadow" style="display: none; max-width: 200px;">
+                           </div>
                         </div>
-                    </div>
-                </div>
+                     </div>
+                  </div>
+               </div>
             </div>
-        </div>
-    </div>
-</div>
-
-<hr class="my-4">
-
-<!-- Impact Assessment Section -->
-<div class="pl-lg-4">
-    <h6 class="heading-small text-muted mb-4">Impact Assessment</h6>
-    
-    <!-- Safety Impact -->
-    <div class="card mb-3">
-        <div class="card-header" id="heading_safety">
-            <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" 
-                       id="id_impacts_safety" 
-                       onclick="handleCheckboxClick('safety')">
-                <label class="custom-control-label" for="id_impacts_safety">
-                    Safety
-                </label>
+         </div>
+         <hr class="my-4">
+         <!-- Impact Assessment Section -->
+         <div class="pl-lg-4">
+            <h6 class="heading-small text-muted mb-4">Impact Assessment</h6>
+            <!-- Safety Impact -->
+            <div class="card mb-3">
+               <div class="card-header" id="heading_safety">
+                  <div class="custom-control custom-checkbox">
+                     <input type="checkbox" class="custom-control-input" 
+                        id="id_impacts_safety" 
+                        onclick="handleCheckboxClick('safety')">
+                     <label class="custom-control-label" for="id_impacts_safety">
+                     Safety
+                     </label>
+                  </div>
+               </div>
+               <div id="safety_fields" class="collapse" style="display: none;">
+                  <div class="card-body">
+                     <div class="row">
+                        <div class="col-lg-12">
+                           <div class="form-group">
+                              <label class="form-control-label">Benefits Description</label>
+                              <input type="text" id="id_safety_benefits_description" 
+                                 name="safety_benefits_description" 
+                                 class="form-control">
+                           </div>
+                        </div>
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <label class="form-control-label">UOM</label>
+                              <input type="text" id="id_safety_uom" 
+                                 name="safety_uom" 
+                                 class="form-control">
+                           </div>
+                        </div>
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <label class="form-control-label">Before Implementation</label>
+                              <input type="text" id="id_safety_before_implementation" 
+                                 name="safety_before_implementation" 
+                                 class="form-control">
+                           </div>
+                        </div>
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <label class="form-control-label">After Implementation</label>
+                              <input type="text" id="id_safety_after_implementation" 
+                                 name="safety_after_implementation" 
+                                 class="form-control">
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
             </div>
-        </div>
-        <div id="safety_fields" class="collapse" style="display: none;">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="form-group">
-                            <label class="form-control-label">Benefits Description</label>
-                            <input type="text" id="id_safety_benefits_description" 
-                                   name="safety_benefits_description" 
-                                   class="form-control">
+            <!-- Quality Impact -->
+            <div class="card mb-3">
+               <div class="card-header" id="heading_quality">
+                  <div class="custom-control custom-checkbox">
+                     <input type="checkbox" class="custom-control-input" 
+                        id="id_impacts_quality" 
+                        onclick="handleCheckboxClick('quality')">
+                     <label class="custom-control-label" for="id_impacts_quality">
+                     Quality
+                     </label>
+                  </div>
+               </div>
+               <div id="quality_fields" class="collapse" style="display: none;">
+                  <div class="card-body">
+                     <div class="row">
+                        <div class="col-lg-12">
+                           <div class="form-group">
+                              <label class="form-control-label">Benefits Description</label>
+                              <input type="text" id="id_quality_benefits_description" 
+                                 name="quality_benefits_description" 
+                                 class="form-control">
+                           </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-control-label">UOM</label>
-                            <input type="text" id="id_safety_uom" 
-                                   name="safety_uom" 
-                                   class="form-control">
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <label class="form-control-label">UOM</label>
+                              <input type="text" id="id_quality_uom" 
+                                 name="quality_uom" 
+                                 class="form-control">
+                           </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-control-label">Before Implementation</label>
-                            <input type="text" id="id_safety_before_implementation" 
-                                   name="safety_before_implementation" 
-                                   class="form-control">
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <label class="form-control-label">Before Implementation</label>
+                              <input type="text" id="id_quality_before_implementation" 
+                                 name="quality_before_implementation" 
+                                 class="form-control">
+                           </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-control-label">After Implementation</label>
-                            <input type="text" id="id_safety_after_implementation" 
-                                   name="safety_after_implementation" 
-                                   class="form-control">
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <label class="form-control-label">After Implementation</label>
+                              <input type="text" id="id_quality_after_implementation" 
+                                 name="quality_after_implementation" 
+                                 class="form-control">
+                           </div>
                         </div>
-                    </div>
-                </div>
+                     </div>
+                  </div>
+               </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Quality Impact -->
-    <div class="card mb-3">
-        <div class="card-header" id="heading_quality">
-            <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" 
-                       id="id_impacts_quality" 
-                       onclick="handleCheckboxClick('quality')">
-                <label class="custom-control-label" for="id_impacts_quality">
-                    Quality
-                </label>
+            <!-- Productivity Impact -->
+            <div class="card mb-3">
+               <div class="card-header" id="heading_productivity">
+                  <div class="custom-control custom-checkbox">
+                     <input type="checkbox" class="custom-control-input" 
+                        id="id_impacts_productivity" 
+                        onclick="handleCheckboxClick('productivity')">
+                     <label class="custom-control-label" for="id_impacts_productivity">
+                     Productivity
+                     </label>
+                  </div>
+               </div>
+               <div id="productivity_fields" class="collapse" style="display: none;">
+                  <div class="card-body">
+                     <div class="row">
+                        <div class="col-lg-12">
+                           <div class="form-group">
+                              <label class="form-control-label">Benefits Description</label>
+                              <input type="text" id="id_productivity_benefits_description" 
+                                 name="productivity_benefits_description" 
+                                 class="form-control">
+                           </div>
+                        </div>
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <label class="form-control-label">UOM</label>
+                              <input type="text" id="id_productivity_uom" 
+                                 name="productivity_uom" 
+                                 class="form-control">
+                           </div>
+                        </div>
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <label class="form-control-label">Before Implementation</label>
+                              <input type="text" id="id_productivity_before_implementation" 
+                                 name="productivity_before_implementation" 
+                                 class="form-control">
+                           </div>
+                        </div>
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <label class="form-control-label">After Implementation</label>
+                              <input type="text" id="id_productivity_after_implementation" 
+                                 name="productivity_after_implementation" 
+                                 class="form-control">
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
             </div>
-        </div>
-        <div id="quality_fields" class="collapse" style="display: none;">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="form-group">
-                            <label class="form-control-label">Benefits Description</label>
-                            <input type="text" id="id_quality_benefits_description" 
-                                   name="quality_benefits_description" 
-                                   class="form-control">
+            <!-- Delivery Impact -->
+            <div class="card mb-3">
+               <div class="card-header" id="heading_delivery">
+                  <div class="custom-control custom-checkbox">
+                     <input type="checkbox" class="custom-control-input" 
+                        id="id_impacts_delivery" 
+                        onclick="handleCheckboxClick('delivery')">
+                     <label class="custom-control-label" for="id_impacts_delivery">
+                     Delivery
+                     </label>
+                  </div>
+               </div>
+               <div id="delivery_fields" class="collapse" style="display: none;">
+                  <div class="card-body">
+                     <div class="row">
+                        <div class="col-lg-12">
+                           <div class="form-group">
+                              <label class="form-control-label">Benefits Description</label>
+                              <input type="text" id="id_delivery_benefits_description" 
+                                 name="delivery_benefits_description" 
+                                 class="form-control">
+                           </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-control-label">UOM</label>
-                            <input type="text" id="id_quality_uom" 
-                                   name="quality_uom" 
-                                   class="form-control">
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <label class="form-control-label">UOM</label>
+                              <input type="text" id="id_delivery_uom" 
+                                 name="delivery_uom" 
+                                 class="form-control">
+                           </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-control-label">Before Implementation</label>
-                            <input type="text" id="id_quality_before_implementation" 
-                                   name="quality_before_implementation" 
-                                   class="form-control">
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <label class="form-control-label">Before Implementation</label>
+                              <input type="text" id="id_delivery_before_implementation" 
+                                 name="delivery_before_implementation" 
+                                 class="form-control">
+                           </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-control-label">After Implementation</label>
-                            <input type="text" id="id_quality_after_implementation" 
-                                   name="quality_after_implementation" 
-                                   class="form-control">
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <label class="form-control-label">After Implementation</label>
+                              <input type="text" id="id_delivery_after_implementation" 
+                                 name="delivery_after_implementation" 
+                                 class="form-control">
+                           </div>
                         </div>
-                    </div>
-                </div>
+                     </div>
+                  </div>
+               </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Productivity Impact -->
-    <div class="card mb-3">
-        <div class="card-header" id="heading_productivity">
-            <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" 
-                       id="id_impacts_productivity" 
-                       onclick="handleCheckboxClick('productivity')">
-                <label class="custom-control-label" for="id_impacts_productivity">
-                    Productivity
-                </label>
+            <!-- Cost Impact -->
+            <div class="card mb-3">
+               <div class="card-header" id="heading_cost">
+                  <div class="custom-control custom-checkbox">
+                     <input type="checkbox" class="custom-control-input" 
+                        id="id_impacts_cost" 
+                        onclick="handleCheckboxClick('cost')">
+                     <label class="custom-control-label" for="id_impacts_cost">
+                     Cost
+                     </label>
+                  </div>
+               </div>
+               <div id="cost_fields" class="collapse" style="display: none;">
+                  <div class="card-body">
+                     <div class="row">
+                        <div class="col-lg-12">
+                           <div class="form-group">
+                              <label class="form-control-label">Benefits Description</label>
+                              <input type="text" id="id_cost_benefits_description" 
+                                 name="cost_benefits_description" 
+                                 class="form-control">
+                           </div>
+                        </div>
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <label class="form-control-label">UOM</label>
+                              <input type="text" id="id_cost_uom" 
+                                 name="cost_uom" 
+                                 class="form-control">
+                           </div>
+                        </div>
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <label class="form-control-label">Before Implementation (₹)</label>
+                              <input type="number" 
+                                 id="id_cost_before_implementation" 
+                                 name="cost_before_implementation" 
+                                 class="form-control"
+                                 onchange="checkApprovalRequirements()"
+                                 min="0"
+                                 step="1">
+                           </div>
+                        </div>
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <label class="form-control-label">After Implementation (₹)</label>
+                              <input type="number" 
+                                 id="id_cost_after_implementation" 
+                                 name="cost_after_implementation" 
+                                 class="form-control"
+                                 onchange="checkApprovalRequirements()"
+                                 min="0"
+                                 step="1">
+                           </div>
+                        </div>
+                     </div>
+                     <!-- Additional cost-specific fields -->
+                     <div class="row mt-3">
+                        <div class="col-12">
+                           <div class="custom-file">
+                              <input type="file" class="custom-file-input" id="id_cost_calculation" 
+                                 name="cost_calculation" accept=".xlsx,.xls,image/*">
+                              <label class="custom-file-label" for="id_cost_calculation"></label>
+                           </div>
+                           <small class="form-text text-muted">Upload Excel sheet or image for cost calculations</small>
+                           <div id="cost-approval-message" class="alert mt-3" style="display: none;"></div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
             </div>
-        </div>
-        <div id="productivity_fields" class="collapse" style="display: none;">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="form-group">
-                            <label class="form-control-label">Benefits Description</label>
-                            <input type="text" id="id_productivity_benefits_description" 
-                                   name="productivity_benefits_description" 
-                                   class="form-control">
+            <!-- Morale Impact -->
+            <div class="card mb-3">
+               <div class="card-header" id="heading_morale">
+                  <div class="custom-control custom-checkbox">
+                     <input type="checkbox" class="custom-control-input" 
+                        id="id_impacts_morale" 
+                        onclick="handleCheckboxClick('morale')">
+                     <label class="custom-control-label" for="id_impacts_morale">
+                     Morale
+                     </label>
+                  </div>
+               </div>
+               <div id="morale_fields" class="collapse" style="display: none;">
+                  <div class="card-body">
+                     <div class="row">
+                        <div class="col-lg-12">
+                           <div class="form-group">
+                              <label class="form-control-label">Benefits Description</label>
+                              <input type="text" id="id_morale_benefits_description" 
+                                 name="morale_benefits_description" 
+                                 class="form-control">
+                           </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-control-label">UOM</label>
-                            <input type="text" id="id_productivity_uom" 
-                                   name="productivity_uom" 
-                                   class="form-control">
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <label class="form-control-label">UOM</label>
+                              <input type="text" id="id_morale_uom" 
+                                 name="morale_uom" 
+                                 class="form-control">
+                           </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-control-label">Before Implementation</label>
-                            <input type="text" id="id_productivity_before_implementation" 
-                                   name="productivity_before_implementation" 
-                                   class="form-control">
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <label class="form-control-label">Before Implementation</label>
+                              <input type="text" id="id_morale_before_implementation" 
+                                 name="morale_before_implementation" 
+                                 class="form-control">
+                           </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-control-label">After Implementation</label>
-                            <input type="text" id="id_productivity_after_implementation" 
-                                   name="productivity_after_implementation" 
-                                   class="form-control">
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <label class="form-control-label">After Implementation</label>
+                              <input type="text" id="id_morale_after_implementation" 
+                                 name="morale_after_implementation" 
+                                 class="form-control">
+                           </div>
                         </div>
-                    </div>
-                </div>
+                     </div>
+                  </div>
+               </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Delivery Impact -->
-    <div class="card mb-3">
-        <div class="card-header" id="heading_delivery">
-            <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" 
-                       id="id_impacts_delivery" 
-                       onclick="handleCheckboxClick('delivery')">
-                <label class="custom-control-label" for="id_impacts_delivery">
-                    Delivery
-                </label>
+            <!-- Environment Impact -->
+            <div class="card mb-3">
+               <div class="card-header" id="heading_environment">
+                  <div class="custom-control custom-checkbox">
+                     <input type="checkbox" class="custom-control-input" 
+                        id="id_impacts_environment" 
+                        onclick="handleCheckboxClick('environment')">
+                     <label class="custom-control-label" for="id_impacts_environment">
+                     Environment
+                     </label>
+                  </div>
+               </div>
+               <div id="environment_fields" class="collapse" style="display: none;">
+                  <div class="card-body">
+                     <div class="row">
+                        <div class="col-lg-12">
+                           <div class="form-group">
+                              <label class="form-control-label">Benefits Description</label>
+                              <input type="text" id="id_environment_benefits_description" 
+                                 name="environment_benefits_description" 
+                                 class="form-control">
+                           </div>
+                        </div>
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <label class="form-control-label">UOM</label>
+                              <input type="text" id="id_environment_uom" 
+                                 name="environment_uom" 
+                                 class="form-control">
+                           </div>
+                        </div>
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <label class="form-control-label">Before Implementation</label>
+                              <input type="text" id="id_environment_before_implementation" 
+                                 name="environment_before_implementation" 
+                                 class="form-control">
+                           </div>
+                        </div>
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <label class="form-control-label">After Implementation</label>
+                              <input type="text" id="id_environment_after_implementation" 
+                                 name="environment_after_implementation" 
+                                 class="form-control">
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
             </div>
-        </div>
-        <div id="delivery_fields" class="collapse" style="display: none;">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="form-group">
-                            <label class="form-control-label">Benefits Description</label>
-                            <input type="text" id="id_delivery_benefits_description" 
-                                   name="delivery_benefits_description" 
-                                   class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-control-label">UOM</label>
-                            <input type="text" id="id_delivery_uom" 
-                                   name="delivery_uom" 
-                                   class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-control-label">Before Implementation</label>
-                            <input type="text" id="id_delivery_before_implementation" 
-                                   name="delivery_before_implementation" 
-                                   class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-control-label">After Implementation</label>
-                            <input type="text" id="id_delivery_after_implementation" 
-                                   name="delivery_after_implementation" 
-                                   class="form-control">
-                        </div>
-                    </div>
-                </div>
+            <!-- Form Actions -->
+            <div class="text-center mt-4">
+               <button type="submit" class="btn btn-maroon">Submit Kaizen</button>
+               <button type="button" onclick="downloadCurrentFields()" class="btn btn-info ml-2">
+               <i class="ni ni-cloud-download-95"></i> Download Excel
+               </button>
             </div>
-        </div>
-    </div>
-
-    <!-- Cost Impact -->
-    <div class="card mb-3">
-        <div class="card-header" id="heading_cost">
-            <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" 
-                       id="id_impacts_cost" 
-                       onclick="handleCheckboxClick('cost')">
-                <label class="custom-control-label" for="id_impacts_cost">
-                    Cost
-                </label>
-            </div>
-        </div>
-        <div id="cost_fields" class="collapse" style="display: none;">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="form-group">
-                            <label class="form-control-label">Benefits Description</label>
-                            <input type="text" id="id_cost_benefits_description" 
-                                   name="cost_benefits_description" 
-                                   class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-control-label">UOM</label>
-                            <input type="text" id="id_cost_uom" 
-                                   name="cost_uom" 
-                                   class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-control-label">Before Implementation (₹)</label>
-                            <input type="number" 
-                                   id="id_cost_before_implementation" 
-                                   name="cost_before_implementation" 
-                                   class="form-control"
-                                   onchange="checkApprovalRequirements()"
-                                   min="0"
-                                   step="1">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-control-label">After Implementation (₹)</label>
-                            <input type="number" 
-                                   id="id_cost_after_implementation" 
-                                   name="cost_after_implementation" 
-                                   class="form-control"
-                                   onchange="checkApprovalRequirements()"
-                                   min="0"
-                                   step="1">
-                        </div>
-                    </div>
-                </div>
-                <!-- Additional cost-specific fields -->
-                <div class="row mt-3">
-                    <div class="col-12">
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="id_cost_calculation" 
-                                   name="cost_calculation" accept=".xlsx,.xls,image/*">
-                            <label class="custom-file-label" for="id_cost_calculation"></label>
-                        </div>
-                        <small class="form-text text-muted">Upload Excel sheet or image for cost calculations</small>
-                        <div id="cost-approval-message" class="alert mt-3" style="display: none;"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Morale Impact -->
-    <div class="card mb-3">
-        <div class="card-header" id="heading_morale">
-            <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" 
-                       id="id_impacts_morale" 
-                       onclick="handleCheckboxClick('morale')">
-                <label class="custom-control-label" for="id_impacts_morale">
-                    Morale
-                </label>
-            </div>
-        </div>
-        <div id="morale_fields" class="collapse" style="display: none;">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="form-group">
-                            <label class="form-control-label">Benefits Description</label>
-                            <input type="text" id="id_morale_benefits_description" 
-                                   name="morale_benefits_description" 
-                                   class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-control-label">UOM</label>
-                            <input type="text" id="id_morale_uom" 
-                                   name="morale_uom" 
-                                   class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-control-label">Before Implementation</label>
-                            <input type="text" id="id_morale_before_implementation" 
-                                   name="morale_before_implementation" 
-                                   class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-control-label">After Implementation</label>
-                            <input type="text" id="id_morale_after_implementation" 
-                                   name="morale_after_implementation" 
-                                   class="form-control">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Environment Impact -->
-    <div class="card mb-3">
-        <div class="card-header" id="heading_environment">
-            <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" 
-                       id="id_impacts_environment" 
-                       onclick="handleCheckboxClick('environment')">
-                <label class="custom-control-label" for="id_impacts_environment">
-                    Environment
-                </label>
-            </div>
-        </div>
-        <div id="environment_fields" class="collapse" style="display: none;">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="form-group">
-                            <label class="form-control-label">Benefits Description</label>
-                            <input type="text" id="id_environment_benefits_description" 
-                                   name="environment_benefits_description" 
-                                   class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-control-label">UOM</label>
-                            <input type="text" id="id_environment_uom" 
-                                   name="environment_uom" 
-                                   class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-control-label">Before Implementation</label>
-                            <input type="text" id="id_environment_before_implementation" 
-                                   name="environment_before_implementation" 
-                                   class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-control-label">After Implementation</label>
-                            <input type="text" id="id_environment_after_implementation" 
-                                   name="environment_after_implementation" 
-                                   class="form-control">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-</div>
-<!-- Form Actions -->
-<div class="text-center mt-4">
-    <button type="submit" class="btn btn-primary">Submit Kaizen</button>
-    <button type="button" onclick="downloadCurrentFields()" class="btn btn-info ml-2">
-        <i class="ni ni-cloud-download-95"></i> Download Excel
-    </button>
-</div>
-</form>
-
-<!-- Edit Kaizen Section -->
-<div class="card mt-4">
-    <div class="card-header">
-        <h3 class="mb-0">Edit Kaizen</h3>
-    </div>
-    <div class="card-body">
-        <div class="form-group">
-            <select id="kaizen-select" name="kaizen_id" class="form-control" onchange="fetchKaizenData(this.value)">
-                <option value="">Select a Kaizen</option>
-                {% for kaizen in kaizen_list %}
-                <option value="{{ kaizen.id }}">{{ kaizen.title }}</option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
-</div>
-
-<!-- Submissions Status Table -->
-<div class="card mt-4">
-    <div class="card-header border-0">
-        <h3 class="mb-0">My Submissions Status</h3>
-    </div>
-    <div class="table-responsive">
-        <table class="table align-items-center table-flush">
-            <thead class="thead-light">
-                <tr>
-                    <th scope="col">Title</th>
-                    <th scope="col">Submission Date</th>
-                    <th scope="col">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for sheet in kaizen_sheets %}
-                <tr>
-                    <td>{{ sheet.title }}</td>
-                    <td>{{ sheet.created_at|date:"Y-m-d" }}</td>
-                    <td>
-                        {% if sheet.approval_status == 'completed' %}
-                            <span class="badge badge-success">Completed</span>
-                        {% elif sheet.approval_status == 'finance_rejected' %}
-                            <span class="badge badge-danger">Rejected by Finance</span>
-                        {% elif sheet.approval_status == 'finance_pending' %}
-                            <span class="badge badge-warning">Finance Approval Pending</span>
-                        {% elif sheet.approval_status == 'coordinator_pending' %}
-                            <span class="badge badge-info">Coordinator Approval Pending</span>
-                        {% elif sheet.approval_status == 'hod_approved' %}
-                            {% if sheet.get_cost_difference > 100000 %}
-                                <span class="badge badge-warning">Finance Approval Pending</span>
-                            {% elif sheet.get_cost_difference > 45000 %}
-                                <span class="badge badge-info">Coordinator Approval Pending</span>
-                            {% else %}
-                                <span class="badge badge-success">Completed</span>
-                            {% endif %}
-                        {% elif sheet.approval_status == 'pending' %}
-                            <span class="badge badge-secondary">HOD Approval Pending</span>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<!-- Core Scripts -->
-<script src="/static/assets/vendor/jquery/dist/jquery.min.js"></script>
-<script src="/static/assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="/static/assets/js/argon.js?v=1.2.0"></script>    
-<script>
-
-
-// Common sections array
-const SECTIONS = ['safety', 'quality', 'productivity', 'delivery', 'cost', 'morale', 'environment'];
-
-// Enable/disable inputs based on checkbox state
-function toggleInputs(checkbox, benefit) {
-    const inputs = document.querySelectorAll(`.input-${benefit}`);
-    inputs.forEach(input => input.disabled = !checkbox.checked);
-}
-
-// Show/hide fields based on checkbox state
-function toggleFields(section) {
-    const checkbox = document.getElementById(`id_impacts_${section}`);
-    const fields = document.getElementById(`${section}_fields`);
-    fields.style.display = checkbox.checked ? 'block' : 'none';
-}
-
-// Set field value with null check
-function setFieldValue(fieldId, value) {
-    const element = document.getElementById(fieldId);
-    if (element) element.value = value || '';
-}
-
-// Set checkbox state
-function setCheckboxState(fieldId, value) {
-    const element = document.getElementById(fieldId);
-    if (element) element.checked = value || false;
-}
-
-// Set image preview
-function setImagePreview(previewId, imageUrl) {
-    const preview = document.getElementById(previewId);
-    if (preview) {
-        preview.src = imageUrl;
-        preview.style.display = 'block';
-    }
-}
-
-// Show file note
-function showFileNote(inputId, filename) {
-    const input = document.getElementById(inputId);
-    if (!input) return;
-
-    // Remove existing note if any
-    const existingNote = input.parentNode.querySelector('.file-note');
-    if (existingNote) existingNote.remove();
-
-    const fileNote = document.createElement('p');
-    fileNote.className = 'file-note';
-    fileNote.textContent = `Current file: ${filename.split('/').pop()}`;
-    input.parentNode.insertBefore(fileNote, input.nextSibling);
-}
-
-function showDeploymentModal() {
-    document.getElementById('deploymentModal').style.display = 'block';
-}
-
-function deployHorizontally() {
-    const selectedDepts = [];
-    document.querySelectorAll('.dept-checkbox input:checked').forEach(checkbox => {
-        selectedDepts.push(checkbox.value);
-    });
-
-    if (selectedDepts.length === 0) {
-        alert('Please select at least one department');
-        return;
-    }
-
-    const sheetId = document.getElementById('sheet_id').value;
-    
-    fetch('/deploy-horizontally/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-        },
-        body: JSON.stringify({
-            sheet_id: sheetId,
-            departments: selectedDepts
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Successfully deployed to selected departments');
-            document.getElementById('deploymentModal').style.display = 'none';
-        } else {
-            alert('Error: ' + data.error);
-        }
-    });
-}
-
-// Fetch and populate Kaizen data
-function handleCheckboxClick(section) {
-toggleFields(section);
-}   
-
-function hasImpactData(data, section) {
-    const fields = ['benefits_description', 'uom', 'before_implementation', 'after_implementation'];
-    return fields.some(field => {
-        const value = data[`${section}_${field}`];
-        return value && value.trim() !== '';
-    });
-}
-
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', () => {
-    SECTIONS.forEach(toggleFields);
-});
-    // Helper functions
-    function clearImagePreview(previewId) {
-        const preview = document.getElementById(previewId);
-        if (preview) {
-            preview.src = '#';
-            preview.style.display = 'none';
-        }
-    }
-    
-    function setImagePreview(previewId, imageUrl) {
-        const preview = document.getElementById(previewId);
-        if (preview) {
-            preview.src = imageUrl;
-            preview.style.display = 'block';
-            console.log(`Setting ${previewId} to:`, imageUrl);
-        }
-    }
-    
-    function showFileNote(inputId, filename) {
-        const input = document.getElementById(inputId);
-        if (!input) return;
-    
-        // Remove existing note
-        const existingNote = input.parentNode.querySelector('.file-note');
-        if (existingNote) existingNote.remove();
-    
-        const fileNote = document.createElement('p');
-        fileNote.className = 'file-note';
-        fileNote.textContent = `Current file: ${filename.split('/').pop()}`;
-        input.parentNode.insertBefore(fileNote, input.nextSibling);
-        console.log(`Setting file note for ${inputId}:`, filename);
-    }
-    
-    // Form validation
-    function validateForm() {
-        if (event.target.id === 'main-kaizen-form') {
-            const formData = new FormData(document.getElementById('main-kaizen-form'));
-            console.log('Form data:');
-            for (let [key, value] of formData.entries()) {
-                console.log(key, value);
-            }
-            // ... rest of validation
-        }
-        return true;
-    }
-
-    function toggleHorizontalDeployment(checkbox) {
-        const fields = document.getElementById('horizontal_deployment_fields');
-        fields.style.display = checkbox.checked ? 'block' : 'none';
-        
-        const inputs = document.querySelectorAll('.input-horizontal');
-        inputs.forEach(input => {
-            input.disabled = !checkbox.checked;
-        });
-        
-        // Debug log
-        console.log('Horizontal deployment toggled:', checkbox.checked);
-        if (checkbox.checked) {
-            console.log('Enabled departments:', 
-                Array.from(document.querySelectorAll('.input-horizontal:checked'))
-                    .map(cb => cb.value)
-            );
-        }
-    }
-    
-    // Main fetch function
-    function fetchKaizenData(kaizenId) {
-    if (!kaizenId) return;
-    
-    const form = document.querySelector('form');
-    form.style.opacity = '0.5';
-    
-    // Clear existing previews and notes
-    clearImagePreview('before-improvement-preview');
-    clearImagePreview('after-improvement-preview');
-    document.querySelectorAll('.file-note').forEach(note => note.remove());
-    
-    fetch(`/fetch-kaizen-sheet/${kaizenId}/`, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest',
-        }
-    })
-    .then(response => {
-        if (!response.ok) throw new Error('Network response was not ok');
-        return response.json();
-    })
-    .then(data => {
-        console.log('Fetched data:', data);
-
-        // Handle impact sections first
-// In fetchKaizenData, replace the SECTIONS.forEach section with:
-const impacts = ['safety', 'quality', 'productivity', 'delivery', 'cost', 'morale', 'environment'];
-        impacts.forEach(impact => {
-            // Check if any field has data
-            const shouldCheck = hasImpactData(data, impact);
-            
-            // Set checkbox state based on field data
-            const checkbox = document.getElementById(`id_impacts_${impact}`);
-            if (checkbox) {
-                checkbox.checked = shouldCheck;
-                
-                // Show/hide fields
-                const fields = document.getElementById(`${impact}_fields`);
-                if (fields) {
-                    fields.style.display = shouldCheck ? 'block' : 'none';
-                }
-                
-                // Populate fields
-                ['benefits_description', 'uom', 'before_implementation', 'after_implementation']
-                    .forEach(fieldType => {
-                        const fieldId = `id_${impact}_${fieldType}`;
-                        const element = document.getElementById(fieldId);
-                        if (element) {
-                            element.value = data[`${impact}_${fieldType}`] || '';
-                        }
-                    });
-            }
-        });
-        // Handle horizontal deployment similar to impacts
-        const horizCheckbox = document.getElementById('id_horizontal_deployment');
-        const hasDeployments = data.horizontal_departments && data.horizontal_departments.length > 0;
-        
-        if (horizCheckbox) {
-            horizCheckbox.checked = hasDeployments;
-            const fields = document.getElementById('horizontal_deployment_fields');
-            if (fields) {
-                fields.style.display = hasDeployments ? 'block' : 'none';
-            }
-            
-            // Set department checkboxes
-            const deptBoxes = document.querySelectorAll('input[name="horizontal_departments"]');
-            deptBoxes.forEach(box => {
-                box.checked = data.horizontal_departments.includes(box.value);
-                box.disabled = !hasDeployments;
-            });
-        }
-        // Handle basic fields
-        ['title', 'area_implemented', 'start_date', 'end_date', 'problem', 
-        'idea_solved', 'standardization', 'benefits', 'deployment',
-        'team_member2_id', 'team_member2'].forEach(field => {  // Using team_member2 fields correctly
-            const element = document.getElementById(`id_${field}`);
-            if (element) {
-                element.value = data[field] || '';
-            }
-        });
-
-        // Handle improvement texts
-        const beforeText = document.getElementById('id_before_improvement_text');
-        if (beforeText) {
-            beforeText.value = data.before_improvement_text || '';
-        }
-
-        const afterText = document.getElementById('id_after_improvement_text');
-        if (afterText) {
-            afterText.value = data.after_improvement_text || '';
-        }
-
-        // Handle files and images
-        if (data.standardization_file) {
-            showFileNote('id_standardization_file', data.standardization_file);
-        }
-
-        if (data.before_improvement_image) {
-            setImagePreview('before-improvement-preview', data.before_improvement_image);
-        }
-
-        if (data.after_improvement_image) {
-            setImagePreview('after-improvement-preview', data.after_improvement_image);
-        }
-
-        if (data.cost_calculation) {
-            showFileNote('id_cost_calculation', data.cost_calculation);
-        }
-
-        form.style.opacity = '1';
-    })
-    .catch(error => {
-        console.error('Error fetching Kaizen data:', error);
-        form.style.opacity = '1';
-        alert('Error loading Kaizen data. Please try again.');
-
-
-
-    });
-}
-    
-function downloadCurrentFields() {
-    const kaizenId = document.getElementById('kaizen-select').value;
-    
-    if (!kaizenId) {
-        alert('Please select a Kaizen to download');
-        return;
-    }
-    
-    // Show loading state on button
-    const downloadBtn = document.querySelector('.btn-info');
-    const originalHtml = downloadBtn.innerHTML;
-    downloadBtn.innerHTML = '<i class="ni ni-settings-gear-65 spin"></i> Downloading...';
-    downloadBtn.disabled = true;
-
-    // Add spinner animation
-    const style = document.createElement('style');
-    style.textContent = `
-        .spin {
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            100% { transform: rotate(360deg); }
-        }
-    `;
-    document.head.appendChild(style);
-
-    // Request the Excel file
-    fetch(`/download-kaizen-sheet/${kaizenId}/`)
-        .then(response => {
-            if (!response.ok) throw new Error('Network response was not ok');
-            return response.blob();
-        })
-        .then(blob => {
-            // Create and trigger download
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            a.href = url;
-            a.download = `Kaizen_Sheet_${kaizenId}.xlsx`;
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            
-            // Reset button state
-            downloadBtn.innerHTML = originalHtml;
-            downloadBtn.disabled = false;
-        })
-        .catch(error => {
-            console.error('Download error:', error);
-            alert('Error downloading file. Please try again.');
-            downloadBtn.innerHTML = originalHtml;
-            downloadBtn.disabled = false;
-        });
-}
-
-// Initialize Bootstrap components
-$(document).ready(function() {
-    // Initialize Bootstrap modal
-    $('#upload-modal').modal({
-        backdrop: 'static',
-        keyboard: false,
-        show: false
-    });
-
-    // Update modal trigger
-    $('#upload-kaizen-btn').click(function() {
-        $('#upload-modal').modal('show');
-    });
-
-    // Add event listener for handwritten form submission
-    $('#handwritten-form').on('submit', function(e) {
-        e.preventDefault();
-        uploadHandwrittenSheet();
-    });
-});
-
-// In your employee_dashboard.html script section
-const modal = document.getElementById("upload-modal");
-const btn = document.getElementById("upload-kaizen-btn");
-const span = document.getElementsByClassName("close")[0];
-
-btn.onclick = () => modal.style.display = "block";
-span.onclick = () => modal.style.display = "none";
-window.onclick = (event) => {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-};
-
-function uploadHandwrittenSheet() {
-    const formData = new FormData();
-    const title = document.getElementById('handwritten_title').value;
-    const sheet = document.getElementById('handwritten_sheet').files[0];
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    const submitBtn = document.querySelector('#handwritten-form .btn-primary'); // Updated selector
-    
-    if (!title || !sheet) {
-        alert('Please fill in all required fields for handwritten sheet');
-        return;
-    }
-    
-    formData.append('handwritten_title', title);
-    formData.append('handwritten_sheet', sheet);
-    formData.append('form_type', 'handwritten');
-    
-    // Disable button and show loading state
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Uploading...';
-    
-    fetch('/upload-handwritten-sheet/', {  // Make sure this URL matches your Django URL
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-CSRFToken': csrfToken
-        },
-        credentials: 'same-origin'
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Show success message with Argon styling
-            alert(`Handwritten sheet uploaded successfully!\nSerial Key: ${data.serial_key}`);
-            $('#upload-modal').modal('hide'); // Using Bootstrap modal
-            document.getElementById('handwritten-form').reset();
-            location.reload(); // Refresh to show new submission
-        } else {
-            alert('Error: ' + (data.error || 'Unknown error occurred'));
-        }
-    })
-    .catch(error => {
-        console.error('Upload error:', error);
-        alert('Error uploading sheet: ' + error.message);
-    })
-    .finally(() => {
-        // Reset button state
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = 'Submit';
-    });
-}
-
-
-function checkApprovalRequirements() {
-    const beforeCost = parseFloat(document.getElementById('id_cost_before_implementation').value) || 0;
-    const afterCost = parseFloat(document.getElementById('id_cost_after_implementation').value) || 0;
-    const costDifference = Math.abs(beforeCost - afterCost);
-    const messageContainer = document.getElementById('cost-approval-message');
-    
-    if (!messageContainer) {
-        const container = document.createElement('div');
-        container.id = 'cost-approval-message';
-        container.className = 'alert mt-3';
-        document.getElementById('cost_fields').querySelector('.card-body').appendChild(container);
-    }
-    
-    let message = '';
-    let messageClass = '';
-    
-    if (costDifference > 100000) {
-        message = `
-            <div class="approval-flow">
-                <p><strong>Approval Flow Required:</strong></p>
-                <ol>
-                    <li>HOD Approval</li>
-                    <li>Finance Approval</li>
-                    <li>Coordinator Approval</li>
-                </ol>
-                <p class="text-danger">Finance approval required (Above ₹1,00,000)</p>
-            </div>`;
-        messageClass = 'alert-danger';
-    } else if (costDifference > 45000) {
-        message = `
-            <div class="approval-flow">
-                <p><strong>Approval Flow Required:</strong></p>
-                <ol>
-                    <li>HOD Approval</li>
-                    <li>Coordinator Approval</li>
-                </ol>
-                <p class="text-warning">Coordinator approval required (Above ₹45,000)</p>
-            </div>`;
-        messageClass = 'alert-warning';
-    } else if (costDifference > 0) {
-        message = `
-            <div class="approval-flow">
-                <p><strong>Approval Flow Required:</strong></p>
-                <ol>
-                    <li>HOD Approval</li>
-                </ol>
-                <p class="text-info">HOD approval required</p>
-            </div>`;
-        messageClass = 'alert-info';
-    }
-    
-    messageContainer.className = `alert mt-3 ${messageClass}`;
-    messageContainer.innerHTML = message;
-}
-
-function toggleDeploymentModal() {
-    const modal = document.getElementById('deploymentModal');
-    const deptList = modal.querySelector('.department-list');
-    modal.style.display = 'block';
-    deptList.style.display = 'block';
-}
-
-function closeDeploymentModal() {
-    const modal = document.getElementById('deploymentModal');
-    const deptList = modal.querySelector('.department-list');
-    modal.style.display = 'none';
-    deptList.style.display = 'none';
-}
-
-// Update window click handler
-window.onclick = (event) => {
-    if (event.target.className === 'modal') {
-        closeDeploymentModal();
-    }
-};
-    </script>
-    </div>
-    <style>
-        .approval-flow {
-            font-size: 0.9rem;
-        }
-        
-        .approval-flow ol {
-            margin: 10px 0;
-            padding-left: 20px;
-        }
-        
-        .approval-flow li {
-            margin-bottom: 5px;
-        }
-        
-        .approval-flow p:last-child {
-            margin-bottom: 0;
-            font-weight: 600;
-        }
-        
-        input[type="number"] {
-            appearance: textfield;
-            -moz-appearance: textfield;
-        }
-        
-        input[type="number"]::-webkit-outer-spin-button,
-        input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        </style>
-</body>
+      </form>
+      <!-- Edit Kaizen Section -->
+      <div class="card mt-4">
+      <div class="card-header">
+      <h3 class="mb-0">Edit Kaizen</h3>
+      </div>
+      <div class="card-body">
+      <div class="form-group">
+      <select id="kaizen-select" name="kaizen_id" class="form-control" onchange="fetchKaizenData(this.value)">
+      <option value="">Select a Kaizen</option>
+      {% for kaizen in kaizen_list %}
+      <option value="{{ kaizen.id }}">{{ kaizen.title }}</option>
+      {% endfor %}
+      </select>
+      </div>
+      </div>
+      </div>
+      <!-- Submissions Status Table -->
+      <div class="card mt-4">
+      <div class="card-header border-0">
+      <h3 class="mb-0">My Submissions Status</h3>
+      </div>
+      <div class="table-responsive">
+      <table class="table align-items-center table-flush">
+      <thead class="thead-light">
+      <tr>
+      <th scope="col">Title</th>
+      <th scope="col">Submission Date</th>
+      <th scope="col">Status</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for sheet in kaizen_sheets %}
+      <tr>
+      <td>{{ sheet.title }}</td>
+      <td>{{ sheet.created_at|date:"Y-m-d" }}</td>
+      <td>
+        {% if sheet.approval_status == 'completed' %}
+            <span class="badge badge-success">Completed</span>
+        {% elif sheet.approval_status == 'rejected_by_hod' %}
+            <span class="badge badge-danger">Rejected by HOD</span>
+        {% elif sheet.approval_status == 'rejected_by_coordinator' %}
+            <span class="badge badge-danger">Rejected by Coordinator</span>
+        {% elif sheet.approval_status == 'rejected_by_finance' %}
+            <span class="badge badge-danger">Rejected by Finance</span>
+        {% elif sheet.approval_status == 'finance_pending' %}
+            <span class="badge badge-warning">Finance Approval Pending</span>
+        {% elif sheet.approval_status == 'coordinator_pending' %}
+            <span class="badge badge-info">Coordinator Approval Pending</span>
+        {% else %}
+            <span class="badge badge-secondary">HOD Approval Pending</span>
+        {% endif %}
+    </td>
+      </tr>
+      {% endfor %}
+      </tbody>
+      </table>
+      </div>
+      </div>
+      <!-- Core Scripts -->
+      <script src="/static/assets/vendor/jquery/dist/jquery.min.js"></script>
+      <script src="/static/assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+      <script src="/static/assets/js/argon.js?v=1.2.0"></script>    
+      <script>
+         // Common sections array
+         const SECTIONS = ['safety', 'quality', 'productivity', 'delivery', 'cost', 'morale', 'environment'];
+         
+         // Enable/disable inputs based on checkbox state
+         function toggleInputs(checkbox, benefit) {
+             const inputs = document.querySelectorAll(`.input-${benefit}`);
+             inputs.forEach(input => input.disabled = !checkbox.checked);
+         }
+         
+         // Show/hide fields based on checkbox state
+         function toggleFields(section) {
+             const checkbox = document.getElementById(`id_impacts_${section}`);
+             const fields = document.getElementById(`${section}_fields`);
+             fields.style.display = checkbox.checked ? 'block' : 'none';
+         }
+         
+         // Set field value with null check
+         function setFieldValue(fieldId, value) {
+             const element = document.getElementById(fieldId);
+             if (element) element.value = value || '';
+         }
+         
+         // Set checkbox state
+         function setCheckboxState(fieldId, value) {
+             const element = document.getElementById(fieldId);
+             if (element) element.checked = value || false;
+         }
+         
+         // Set image preview
+         function setImagePreview(previewId, imageUrl) {
+             const preview = document.getElementById(previewId);
+             if (preview) {
+                 preview.src = imageUrl;
+                 preview.style.display = 'block';
+             }
+         }
+         
+         // Show file note
+         function showFileNote(inputId, filename) {
+             const input = document.getElementById(inputId);
+             if (!input) return;
+         
+             // Remove existing note if any
+             const existingNote = input.parentNode.querySelector('.file-note');
+             if (existingNote) existingNote.remove();
+         
+             const fileNote = document.createElement('p');
+             fileNote.className = 'file-note';
+             fileNote.textContent = `Current file: ${filename.split('/').pop()}`;
+             input.parentNode.insertBefore(fileNote, input.nextSibling);
+         }
+         
+         function showDeploymentModal() {
+             document.getElementById('deploymentModal').style.display = 'block';
+         }
+         
+         function deployHorizontally() {
+             const selectedDepts = [];
+             document.querySelectorAll('.dept-checkbox input:checked').forEach(checkbox => {
+                 selectedDepts.push(checkbox.value);
+             });
+         
+             if (selectedDepts.length === 0) {
+                 alert('Please select at least one department');
+                 return;
+             }
+         
+             const sheetId = document.getElementById('sheet_id').value;
+             
+             fetch('/deploy-horizontally/', {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/json',
+                     'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                 },
+                 body: JSON.stringify({
+                     sheet_id: sheetId,
+                     departments: selectedDepts
+                 })
+             })
+             .then(response => response.json())
+             .then(data => {
+                 if (data.success) {
+                     alert('Successfully deployed to selected departments');
+                     document.getElementById('deploymentModal').style.display = 'none';
+                 } else {
+                     alert('Error: ' + data.error);
+                 }
+             });
+         }
+         
+         // Fetch and populate Kaizen data
+         function handleCheckboxClick(section) {
+         toggleFields(section);
+         }   
+         
+         function hasImpactData(data, section) {
+             const fields = ['benefits_description', 'uom', 'before_implementation', 'after_implementation'];
+             return fields.some(field => {
+                 const value = data[`${section}_${field}`];
+                 return value && value.trim() !== '';
+             });
+         }
+         
+         // Initialize on page load
+         document.addEventListener('DOMContentLoaded', () => {
+             SECTIONS.forEach(toggleFields);
+         });
+             // Helper functions
+             function clearImagePreview(previewId) {
+                 const preview = document.getElementById(previewId);
+                 if (preview) {
+                     preview.src = '#';
+                     preview.style.display = 'none';
+                 }
+             }
+             
+             function setImagePreview(previewId, imageUrl) {
+                 const preview = document.getElementById(previewId);
+                 if (preview) {
+                     preview.src = imageUrl;
+                     preview.style.display = 'block';
+                     console.log(`Setting ${previewId} to:`, imageUrl);
+                 }
+             }
+             
+             function showFileNote(inputId, filename) {
+                 const input = document.getElementById(inputId);
+                 if (!input) return;
+             
+                 // Remove existing note
+                 const existingNote = input.parentNode.querySelector('.file-note');
+                 if (existingNote) existingNote.remove();
+             
+                 const fileNote = document.createElement('p');
+                 fileNote.className = 'file-note';
+                 fileNote.textContent = `Current file: ${filename.split('/').pop()}`;
+                 input.parentNode.insertBefore(fileNote, input.nextSibling);
+                 console.log(`Setting file note for ${inputId}:`, filename);
+             }
+             
+             // Form validation
+             function validateForm() {
+                 if (event.target.id === 'main-kaizen-form') {
+                     const formData = new FormData(document.getElementById('main-kaizen-form'));
+                     console.log('Form data:');
+                     for (let [key, value] of formData.entries()) {
+                         console.log(key, value);
+                     }
+                     // ... rest of validation
+                 }
+                 return true;
+             }
+         
+             function toggleHorizontalDeployment(checkbox) {
+                 const fields = document.getElementById('horizontal_deployment_fields');
+                 fields.style.display = checkbox.checked ? 'block' : 'none';
+                 
+                 const inputs = document.querySelectorAll('.input-horizontal');
+                 inputs.forEach(input => {
+                     input.disabled = !checkbox.checked;
+                 });
+                 
+                 // Debug log
+                 console.log('Horizontal deployment toggled:', checkbox.checked);
+                 if (checkbox.checked) {
+                     console.log('Enabled departments:', 
+                         Array.from(document.querySelectorAll('.input-horizontal:checked'))
+                             .map(cb => cb.value)
+                     );
+                 }
+             }
+             
+             // Main fetch function
+             function fetchKaizenData(kaizenId) {
+             if (!kaizenId) return;
+             
+             const form = document.querySelector('form');
+             form.style.opacity = '0.5';
+             
+             // Clear existing previews and notes
+             clearImagePreview('before-improvement-preview');
+             clearImagePreview('after-improvement-preview');
+             document.querySelectorAll('.file-note').forEach(note => note.remove());
+             
+             fetch(`/fetch-kaizen-sheet/${kaizenId}/`, {
+                 method: 'GET',
+                 headers: {
+                     'Accept': 'application/json',
+                     'X-Requested-With': 'XMLHttpRequest',
+                 }
+             })
+             .then(response => {
+                 if (!response.ok) throw new Error('Network response was not ok');
+                 return response.json();
+             })
+             .then(data => {
+                 console.log('Fetched data:', data);
+         
+                 // Handle impact sections first
+         // In fetchKaizenData, replace the SECTIONS.forEach section with:
+         const impacts = ['safety', 'quality', 'productivity', 'delivery', 'cost', 'morale', 'environment'];
+                 impacts.forEach(impact => {
+                     // Check if any field has data
+                     const shouldCheck = hasImpactData(data, impact);
+                     
+                     // Set checkbox state based on field data
+                     const checkbox = document.getElementById(`id_impacts_${impact}`);
+                     if (checkbox) {
+                         checkbox.checked = shouldCheck;
+                         
+                         // Show/hide fields
+                         const fields = document.getElementById(`${impact}_fields`);
+                         if (fields) {
+                             fields.style.display = shouldCheck ? 'block' : 'none';
+                         }
+                         
+                         // Populate fields
+                         ['benefits_description', 'uom', 'before_implementation', 'after_implementation']
+                             .forEach(fieldType => {
+                                 const fieldId = `id_${impact}_${fieldType}`;
+                                 const element = document.getElementById(fieldId);
+                                 if (element) {
+                                     element.value = data[`${impact}_${fieldType}`] || '';
+                                 }
+                             });
+                     }
+                 });
+                 // Handle horizontal deployment similar to impacts
+                 const horizCheckbox = document.getElementById('id_horizontal_deployment');
+                 const hasDeployments = data.horizontal_departments && data.horizontal_departments.length > 0;
+                 
+                 if (horizCheckbox) {
+                     horizCheckbox.checked = hasDeployments;
+                     const fields = document.getElementById('horizontal_deployment_fields');
+                     if (fields) {
+                         fields.style.display = hasDeployments ? 'block' : 'none';
+                     }
+                     
+                     // Set department checkboxes
+                     const deptBoxes = document.querySelectorAll('input[name="horizontal_departments"]');
+                     deptBoxes.forEach(box => {
+                         box.checked = data.horizontal_departments.includes(box.value);
+                         box.disabled = !hasDeployments;
+                     });
+                 }
+                 // Handle basic fields
+                 ['title', 'area_implemented', 'start_date', 'end_date', 'problem', 
+                 'idea_solved', 'standardization', 'benefits', 'deployment',
+                 'team_member2_id', 'team_member2'].forEach(field => {  // Using team_member2 fields correctly
+                     const element = document.getElementById(`id_${field}`);
+                     if (element) {
+                         element.value = data[field] || '';
+                     }
+                 });
+         
+                 // Handle improvement texts
+                 const beforeText = document.getElementById('id_before_improvement_text');
+                 if (beforeText) {
+                     beforeText.value = data.before_improvement_text || '';
+                 }
+         
+                 const afterText = document.getElementById('id_after_improvement_text');
+                 if (afterText) {
+                     afterText.value = data.after_improvement_text || '';
+                 }
+         
+                 // Handle files and images
+                 if (data.standardization_file) {
+                     showFileNote('id_standardization_file', data.standardization_file);
+                 }
+         
+                 if (data.before_improvement_image) {
+                     setImagePreview('before-improvement-preview', data.before_improvement_image);
+                 }
+         
+                 if (data.after_improvement_image) {
+                     setImagePreview('after-improvement-preview', data.after_improvement_image);
+                 }
+         
+                 if (data.cost_calculation) {
+                     showFileNote('id_cost_calculation', data.cost_calculation);
+                 }
+         
+                 form.style.opacity = '1';
+             })
+             .catch(error => {
+                 console.error('Error fetching Kaizen data:', error);
+                 form.style.opacity = '1';
+                 alert('Error loading Kaizen data. Please try again.');
+         
+         
+         
+             });
+         }
+             
+         function downloadCurrentFields() {
+             const kaizenId = document.getElementById('kaizen-select').value;
+             
+             if (!kaizenId) {
+                 alert('Please select a Kaizen to download');
+                 return;
+             }
+             
+             // Show loading state on button
+             const downloadBtn = document.querySelector('.btn-info');
+             const originalHtml = downloadBtn.innerHTML;
+             downloadBtn.innerHTML = '<i class="ni ni-settings-gear-65 spin"></i> Downloading...';
+             downloadBtn.disabled = true;
+         
+             // Add spinner animation
+             const style = document.createElement('style');
+             style.textContent = `
+                 .spin {
+                     animation: spin 1s linear infinite;
+                 }
+                 @keyframes spin {
+                     100% { transform: rotate(360deg); }
+                 }
+             `;
+             document.head.appendChild(style);
+         
+             // Request the Excel file
+             fetch(`/download-kaizen-sheet/${kaizenId}/`)
+                 .then(response => {
+                     if (!response.ok) throw new Error('Network response was not ok');
+                     return response.blob();
+                 })
+                 .then(blob => {
+                     // Create and trigger download
+                     const url = window.URL.createObjectURL(blob);
+                     const a = document.createElement('a');
+                     a.style.display = 'none';
+                     a.href = url;
+                     a.download = `Kaizen_Sheet_${kaizenId}.xlsx`;
+                     document.body.appendChild(a);
+                     a.click();
+                     window.URL.revokeObjectURL(url);
+                     
+                     // Reset button state
+                     downloadBtn.innerHTML = originalHtml;
+                     downloadBtn.disabled = false;
+                 })
+                 .catch(error => {
+                     console.error('Download error:', error);
+                     alert('Error downloading file. Please try again.');
+                     downloadBtn.innerHTML = originalHtml;
+                     downloadBtn.disabled = false;
+                 });
+         }
+         
+         // Initialize Bootstrap components
+         $(document).ready(function() {
+             // Initialize Bootstrap modal
+             $('#upload-modal').modal({
+                 backdrop: 'static',
+                 keyboard: false,
+                 show: false
+             });
+         
+             // Update modal trigger
+             $('#upload-kaizen-btn').click(function() {
+                 $('#upload-modal').modal('show');
+             });
+         
+             // Add event listener for handwritten form submission
+             $('#handwritten-form').on('submit', function(e) {
+                 e.preventDefault();
+                 uploadHandwrittenSheet();
+             });
+         });
+         
+         // In your employee_dashboard.html script section
+         const modal = document.getElementById("upload-modal");
+         const btn = document.getElementById("upload-kaizen-btn");
+         const span = document.getElementsByClassName("close")[0];
+         
+         btn.onclick = () => modal.style.display = "block";
+         span.onclick = () => modal.style.display = "none";
+         window.onclick = (event) => {
+             if (event.target == modal) {
+                 modal.style.display = "none";
+             }
+         };
+         
+         function uploadHandwrittenSheet() {
+             const formData = new FormData();
+             const title = document.getElementById('handwritten_title').value;
+             const sheet = document.getElementById('handwritten_sheet').files[0];
+             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+             const submitBtn = document.querySelector('#handwritten-form .btn-primary'); // Updated selector
+             
+             if (!title || !sheet) {
+                 alert('Please fill in all required fields for handwritten sheet');
+                 return;
+             }
+             
+             formData.append('handwritten_title', title);
+             formData.append('handwritten_sheet', sheet);
+             formData.append('form_type', 'handwritten');
+             
+             // Disable button and show loading state
+             submitBtn.disabled = true;
+             submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Uploading...';
+             
+             fetch('/upload-handwritten-sheet/', {  // Make sure this URL matches your Django URL
+                 method: 'POST',
+                 body: formData,
+                 headers: {
+                     'X-CSRFToken': csrfToken
+                 },
+                 credentials: 'same-origin'
+             })
+             .then(response => response.json())
+             .then(data => {
+                 if (data.success) {
+                     // Show success message with Argon styling
+                     alert(`Handwritten sheet uploaded successfully!\nSerial Key: ${data.serial_key}`);
+                     $('#upload-modal').modal('hide'); // Using Bootstrap modal
+                     document.getElementById('handwritten-form').reset();
+                     location.reload(); // Refresh to show new submission
+                 } else {
+                     alert('Error: ' + (data.error || 'Unknown error occurred'));
+                 }
+             })
+             .catch(error => {
+                 console.error('Upload error:', error);
+                 alert('Error uploading sheet: ' + error.message);
+             })
+             .finally(() => {
+                 // Reset button state
+                 submitBtn.disabled = false;
+                 submitBtn.innerHTML = 'Submit';
+             });
+         }
+         
+         
+         function checkApprovalRequirements() {
+             const beforeCost = parseFloat(document.getElementById('id_cost_before_implementation').value) || 0;
+             const afterCost = parseFloat(document.getElementById('id_cost_after_implementation').value) || 0;
+             const costDifference = Math.abs(beforeCost - afterCost);
+             const messageContainer = document.getElementById('cost-approval-message');
+             
+             if (!messageContainer) {
+                 const container = document.createElement('div');
+                 container.id = 'cost-approval-message';
+                 container.className = 'alert mt-3';
+                 document.getElementById('cost_fields').querySelector('.card-body').appendChild(container);
+             }
+             
+             let message = '';
+             let messageClass = '';
+             
+             if (costDifference > 100000) {
+                 message = `
+                     <div class="approval-flow">
+                         <p><strong>Approval Flow Required:</strong></p>
+                         <ol>
+                             <li>HOD Approval</li>
+                             <li>Finance Approval</li>
+                             <li>Coordinator Approval</li>
+                         </ol>
+                         <p class="text-danger">Finance approval required (Above ₹1,00,000)</p>
+                     </div>`;
+                 messageClass = 'alert-danger';
+             } else if (costDifference > 45000) {
+                 message = `
+                     <div class="approval-flow">
+                         <p><strong>Approval Flow Required:</strong></p>
+                         <ol>
+                             <li>HOD Approval</li>
+                             <li>Coordinator Approval</li>
+                         </ol>
+                         <p class="text-warning">Coordinator approval required (Above ₹45,000)</p>
+                     </div>`;
+                 messageClass = 'alert-warning';
+             } else if (costDifference > 0) {
+                 message = `
+                     <div class="approval-flow">
+                         <p><strong>Approval Flow Required:</strong></p>
+                         <ol>
+                             <li>HOD Approval</li>
+                         </ol>
+                         <p class="text-info">HOD approval required</p>
+                     </div>`;
+                 messageClass = 'alert-info';
+             }
+             
+             messageContainer.className = `alert mt-3 ${messageClass}`;
+             messageContainer.innerHTML = message;
+         }
+         
+         function toggleDeploymentModal() {
+             const modal = document.getElementById('deploymentModal');
+             const deptList = modal.querySelector('.department-list');
+             modal.style.display = 'block';
+             deptList.style.display = 'block';
+         }
+         
+         function closeDeploymentModal() {
+             const modal = document.getElementById('deploymentModal');
+             const deptList = modal.querySelector('.department-list');
+             modal.style.display = 'none';
+             deptList.style.display = 'none';
+         }
+         
+         // Update window click handler
+         window.onclick = (event) => {
+             if (event.target.className === 'modal') {
+                 closeDeploymentModal();
+             }
+         };
+             
+      </script>
+      </div>
+      <style>
+         .approval-flow {
+         font-size: 0.9rem;
+         }
+         .approval-flow ol {
+         margin: 10px 0;
+         padding-left: 20px;
+         }
+         .approval-flow li {
+         margin-bottom: 5px;
+         }
+         .approval-flow p:last-child {
+         margin-bottom: 0;
+         font-weight: 600;
+         }
+         input[type="number"] {
+         appearance: textfield;
+         -moz-appearance: textfield;
+         }
+         input[type="number"]::-webkit-outer-spin-button,
+         input[type="number"]::-webkit-inner-spin-button {
+         -webkit-appearance: none;
+         margin: 0;
+         }
+      </style>
+   </body>
 </html>

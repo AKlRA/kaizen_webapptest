@@ -1,264 +1,309 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
 {% load custom_filters %}
-
 {% block title %} CIP Register {% endblock title %}
-
 {% block stylesheets %}
 {{ block.super }}
 <style>
-    
-.table {
-    white-space: nowrap;
-}
-
-.table td {
-    max-width: 200px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.impact-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-}
-
-.impact-tag {
-    background-color: #e3f2fd;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 0.9em;
-    color: #1976d2;
-}
-
-.files-container a {
-    color: #5e72e4;
-    text-decoration: none;
-}
-
-.action-buttons {
-    display: flex;
-    gap: 8px;
-}
-
-.save-btn, .approve-btn {
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-}
-
-.save-btn {
-    background-color: #2dce89;
-    color: white;
-}
-
-.approve-btn {
-    background-color: #5e72e4;
-    color: white;
-}
-
-[contenteditable="true"] {
-    padding: 4px;
-    border: 1px solid transparent;
-    border-radius: 4px;
-}
-
-[contenteditable="true"]:hover {
-    border-color: #dee2e6;
-}
-
-[contenteditable="true"]:focus {
-    outline: none;
-    border-color: #5e72e4;
-    background-color: #fff;
-}
-
-.status-approved {
-    color: #2dce89;
-    font-weight: 600;
-}
-
-.status-rejected {
-    color: #f5365c;
-    font-weight: 600;
-}
-
-.status-pending {
-    color: #fb6340;
-    font-weight: 600;
-}
-
-.month-select {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #dee2e6;
-    border-radius: 0.375rem;
-}
+   /* Table Styles */
+   .table {
+   white-space: nowrap;
+   }
+   .table td {
+   max-width: 200px;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   }
+   /* Impact Tags */
+   .impact-list {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 5px;
+   }
+   .impact-tag {
+   background-color: #e3f2fd;
+   padding: 3px 8px;
+   border-radius: 4px;
+   font-size: 0.9em;
+   color: #1976d2;
+   }
+   .impact-tag-clickable {
+   cursor: pointer;
+   border: none;
+   transition: all 0.2s ease;
+   }
+   .impact-tag-clickable:hover {
+   background-color: #800000;
+   color: white;
+   }
+   .impact-tag-clickable i {
+   margin-right: 4px;
+   }
+   /* File Links */
+   .files-container a {
+   color: #800000;
+   text-decoration: none;
+   }
+   /* Action Buttons */
+   .action-buttons {
+   display: flex;
+   gap: 8px;
+   }
+   .save-btn, .approve-btn {
+   padding: 0.5rem 1rem;
+   border-radius: 0.375rem;
+   font-size: 0.875rem;
+   font-weight: 600;
+   border: none;
+   cursor: pointer;
+   }
+   .save-btn {
+   background-color: #800000;
+   color: white;
+   }
+   .approve-btn {
+   background-color: #800000;
+   color: white;
+   }
+   /* Status Colors */
+   .status-approved {
+   color: #2dce89;
+   font-weight: 600;
+   }
+   .status-rejected {
+   color: #f5365c;
+   font-weight: 600;
+   }
+   .status-pending {
+   color: #fb6340;
+   font-weight: 600;
+   }
+   /* Month Select */
+   .month-select {
+   width: 100%;
+   padding: 0.5rem;
+   border: 1px solid #dee2e6;
+   border-radius: 0.375rem;
+   }
+   /* Modal Styles */
+   .modal-content {
+   border: 0;
+   border-radius: .375rem;
+   }
+   .modal-header {
+   padding: 1.25rem;
+   border-bottom: 1px solid #e9ecef;
+   }
+   .modal-body {
+   padding: 1.5rem;
+   }
+   /* Header Background */
+   .bg-primary {
+   background: radial-gradient(circle at center,
+   rgba(128, 0, 0, 0.8) 0%,
+   rgba(96, 0, 0, 0.9) 100%) !important;
+   }
+   /* Buttons */
+   .btn-primary, .btn-success, .btn-info {
+   background-color: #800000;
+   border-color: #800000;
+   color: white;
+   }
+   .btn-primary:hover, .btn-success:hover, .btn-info:hover {
+   background-color: #600000;
+   border-color: #600000;
+   }
+   /* Editable Fields */
+   [contenteditable="true"] {
+   padding: 4px;
+   border: 1px solid transparent;
+   border-radius: 4px;
+   }
+   [contenteditable="true"]:hover {
+   border-color: #dee2e6;
+   }
+   [contenteditable="true"]:focus {
+   outline: none;
+   border-color: #800000;
+   background-color: #fff;
+   }
+   .bg-card-color{
+   background:  rgba(255, 248, 248, 0.6)!important;
+   padding-top: 2rem;
+   }
+   .thead-light {
+   background: rgba(255, 242, 242, 0.1) !important;
+   }
+   .thead-light th {
+   color: #333333 !important;
+   border-color: rgba(128, 0, 0, 0.2) !important;
+   }
 </style>
 {% endblock stylesheets %}
-
 {% block content %}
 <!-- Header -->
 <div class="header bg-primary pb-6">
-    <div class="container-fluid">
-        <div class="header-body">
-            <div class="row align-items-center py-4">
-                <div class="col-lg-6 col-7">
-                    <h6 class="h2 text-white d-inline-block mb-0">CIP Register</h6>
-                    <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
-                        <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                            <li class="breadcrumb-item">
-                                <a href="{% url 'coordinator_dashboard' %}">
-                                    <i class="fas fa-home"></i> Dashboard
-                                </a>
-                            </li>
-                            <li class="breadcrumb-item ">
-                                <button class="btn" onclick="downloadCIPRegister()">
-                                    <i class="fas fa-download mr-2"></i>Download CIP Register
-                                </button>
-                            </li>
-                        </ol>
-                    </nav>
-                    
-                </div>
+   <div class="container-fluid">
+      <div class="header-body">
+         <div class="row align-items-center py-4">
+            <div class="col-lg-6 col-7">
+               <h6 class="h2 text-white d-inline-block mb-0">CIP Register</h6>
+               <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                  <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                     <li class="breadcrumb-item">
+                        <a href="{% url 'coordinator_dashboard' %}">
+                        <i class="fas fa-home"></i> Dashboard
+                        </a>
+                     </li>
+                     <li class="breadcrumb-item ">
+                        <button class="btn" onclick="downloadCIPRegister()">
+                        <i class="fas fa-download mr-2"></i>Download CIP Register
+                        </button>
+                     </li>
+                  </ol>
+               </nav>
             </div>
-        </div>
-    </div>
+         </div>
+      </div>
+   </div>
 </div>
-
 <!-- Page content -->
-<div class="container-fluid mt--6">
-    <div class="row">
-        <div class="col">
-            <div class="card">
-                <div class="card-header border-0">
-                    <h3 class="mb-0">Kaizen Sheets Register</h3>
-                </div>
-                <div class="table-responsive">
-                    <table class="table align-items-center table-flush">
-                        {% csrf_token %}
-                        <thead class="thead-light">
-                            <tr>
-                                <th>CIP No</th>
-                                <th>Reg Month</th>
-                                <th>Registered Date</th>
-                                <th>Financial Year</th>
-                                <th>Project Status</th>
-                                <th>Project Description</th>
-                                <th>Department</th>
-                                <th>Project Area</th>
-                                <th>Project Leader</th>
-                                <th>Team Member 1 ID</th>
-                                <th>Team Member 1</th>
-                                <th>Team Member 2 ID</th>
-                                <th>Team Member 2</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Savings Start Month</th>
-                                <th>Est. Savings/Year</th>
-                                <th>Realized Savings</th>
-                                <th>Area Of Improvement</th>
-                                <th>Files & Images</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for sheet in kaizen_sheets %}
-                            <tr data-sheet-id="{{ sheet.id }}">
-                                <td>{{ sheet.serial_key }}</td>
-                                <td>{{ sheet.created_at|date:"F" }}</td>
-                                <td>{{ sheet.created_at|date:"Y-m-d" }}</td>
-                                <td>FY {{ sheet.created_at|financial_year }}</td>
-                                <td>
-                                    {% if sheet.get_cost_difference == 0 %}
-                                        <span class="badge badge-secondary">No Approval Needed</span>
-                                    {% else %}
-                                        {% if sheet.approval_status == 'completed' %}
-                                            <span class="badge badge-success">Completed</span>
-                                        {% elif sheet.approval_status == 'finance_pending' %}
-                                            <span class="badge badge-warning">Finance Approval Pending</span>
-                                        {% elif sheet.approval_status == 'coordinator_pending' %}
-                                            <span class="badge badge-info">Coordinator Approval Pending</span>
-                                        {% else %}
-                                            <span class="badge badge-secondary">HOD Approval Pending</span>
-                                        {% endif %}
-                                    {% endif %}
-                                </td>
-                                <td contenteditable="true" data-field="title">{{ sheet.title }}</td>
-                                <td>{{ sheet.employee.profile.department }}</td>
-                                <td contenteditable="true" data-field="area_implemented">{{ sheet.area_implemented }}</td>
-                                <td>{{ sheet.project_leader }}</td>
-                                <td contenteditable="true" data-field="team_member1_id">{{ sheet.team_member1_id }}</td>
-                                <td>{{ sheet.employee.username }}</td>
-                                <td contenteditable="true" data-field="team_member2_id">{{ sheet.team_member2_id }}</td>
-                                <td contenteditable="true" data-field="team_member2">{{ sheet.team_member2 }}</td>
-                                <td contenteditable="true" data-field="start_date">{{ sheet.start_date|date:"Y-m-d" }}</td>
-                                <td contenteditable="true" data-field="end_date">{{ sheet.end_date|date:"Y-m-d" }}</td>
-                                <td>
-                                    <select class="month-select" data-field="savings_start_month" onchange="updateSavings(this, '{{ sheet.id }}')">
-                                        <option value="">Select Month</option>
-                                        {% for month in "January,February,March,April,May,June,July,August,September,October,November,December"|split:"," %}
-                                            <option value="{{ month }}" {% if sheet.savings_start_month == month %}selected{% endif %}>{{ month }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </td>
-                                <td contenteditable="true" data-field="estimated_savings">{{ sheet.estimated_savings }}</td>
-                                <td contenteditable="true" data-field="realized_savings">{{ sheet.realized_savings }}</td>
-                                <td class="impact-column">
-                                    <div class="impact-list">
-                                        {% for impact in impacts %}
-                                            {% with impact_info=sheet.impact_data|get_dict_item:impact %}
-                                                {% if impact_info.benefits_description or impact_info.uom or impact_info.before_implementation or impact_info.after_implementation %}
-                                                    {% if impact == 'cost' %}
-                                                        <button onclick="viewCostDetails('{{ sheet.id }}')" class="impact-tag impact-tag-clickable">
-                                                            <i class="ni ni-money-coins"></i> Cost
-                                                        </button>
-                                                    {% else %}
-                                                        <span class="impact-tag">{{ impact|title }}</span>
-                                                    {% endif %}
-                                                {% endif %}
-                                            {% endwith %}
-                                        {% endfor %}
-                                    </div>
-                                </td>
-                                    
-                                </td>
-                                <td class="files-column">
-                                    <div class="files-container">
-                                        {% if sheet.standardization_file %}
-                                            <div class="file-link">
-                                                <a href="{{ sheet.standardization_file_url }}" target="_blank">View Standardization File</a>
-                                            </div>
-                                        {% endif %}
-                                        {% if sheet.before_improvement_image %}
-                                            <div class="image-link">
-                                                <a href="{{ sheet.before_improvement_image_url }}" target="_blank">View Before Image</a>
-                                            </div>
-                                        {% endif %}
-                                        {% if sheet.after_improvement_image %}
-                                            <div class="image-link">
-                                                <a href="{{ sheet.after_improvement_image_url }}" target="_blank">View After Image</a>
-                                            </div>
-                                        {% endif %}
-                                        {% if sheet.is_handwritten and sheet.handwritten_sheet %}
-                                            <div class="file-link handwritten-link">
-                                                <a href="{{ sheet.handwritten_sheet_url }}" target="_blank">
-                                                    <i class="fas fa-file-alt"></i> View Handwritten Sheet
-                                                </a>
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                </td>
-                                <td>
-                                    {% if sheet.approval_status == 'coordinator_pending' %}
-                                        <button onclick="handleCoordinatorApproval('{{ sheet.id }}')" class="btn btn-sm btn-success">
+<div class="bg-card-color mt--6">
+   <div class="row">
+      <div class="col">
+         <div class="card">
+            <div class="card-header border-0">
+               <h3 class="mb-0">Kaizen Sheets Register</h3>
+            </div>
+            <div class="table-responsive">
+               <table class="table align-items-center table-flush">
+                  {% csrf_token %}
+                  <thead class="thead-light">
+                     <tr>
+                        <th>CIP No</th>
+                        <th>Reg Month</th>
+                        <th>Registered Date</th>
+                        <th>Financial Year</th>
+                        <th>Project Status</th>
+                        <th>Project Description</th>
+                        <th>Department</th>
+                        <th>Project Area</th>
+                        <th>Project Leader</th>
+                        <th>Team Member 1 ID</th>
+                        <th>Team Member 1</th>
+                        <th>Team Member 2 ID</th>
+                        <th>Team Member 2</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Savings Start Month</th>
+                        <th>Est. Savings/Year</th>
+                        <th>Realized Savings</th>
+                        <th>Area Of Improvement</th>
+                        <th>Files & Images</th>
+                        <th>Actions</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     {% for sheet in kaizen_sheets %}
+                     <tr data-sheet-id="{{ sheet.id }}">
+                        <td>{{ sheet.serial_key }}</td>
+                        <td>{{ sheet.created_at|date:"F" }}</td>
+                        <td>{{ sheet.created_at|date:"Y-m-d" }}</td>
+                        <td>FY {{ sheet.created_at|financial_year }}</td>
+                        <td>
+                            {% if sheet.approval_status == 'completed' %}
+                                <span class="badge badge-success">Completed</span>
+                            {% elif sheet.approval_status == 'rejected_by_hod' %}
+                                <span class="badge badge-danger">Rejected by HOD</span>
+                            {% elif sheet.approval_status == 'rejected_by_coordinator' %}
+                                <span class="badge badge-danger">Rejected by Coordinator</span>
+                            {% elif sheet.approval_status == 'rejected_by_finance' %}
+                                <span class="badge badge-danger">Rejected by Finance</span>
+                            {% elif sheet.approval_status == 'finance_pending' %}
+                                <span class="badge badge-warning">Finance Approval Pending</span>
+                            {% elif sheet.approval_status == 'coordinator_pending' %}
+                                <span class="badge badge-info">Coordinator Approval Pending</span>
+                            {% else %}
+                                <span class="badge badge-secondary">HOD Approval Pending</span>
+                            {% endif %}
+                        </td>
+                        <td contenteditable="true" data-field="title">{{ sheet.title }}</td>
+                        <td>{{ sheet.employee.profile.department }}</td>
+                        <td contenteditable="true" data-field="area_implemented">{{ sheet.area_implemented }}</td>
+                        <td>{{ sheet.project_leader }}</td>
+                        <td contenteditable="true" data-field="team_member1_id">{{ sheet.team_member1_id }}</td>
+                        <td>{{ sheet.employee.username }}</td>
+                        <td contenteditable="true" data-field="team_member2_id">{{ sheet.team_member2_id }}</td>
+                        <td contenteditable="true" data-field="team_member2">{{ sheet.team_member2 }}</td>
+                        <td contenteditable="true" data-field="start_date">{{ sheet.start_date|date:"Y-m-d" }}</td>
+                        <td contenteditable="true" data-field="end_date">{{ sheet.end_date|date:"Y-m-d" }}</td>
+                        <td>
+                           <select class="month-select" data-field="savings_start_month" onchange="updateSavings(this, '{{ sheet.id }}')">
+                              <option value="">Select Month</option>
+                              {% for month in "January,February,March,April,May,June,July,August,September,October,November,December"|split:"," %}
+                              <option value="{{ month }}" {% if sheet.savings_start_month == month %}selected{% endif %}>{{ month }}</option>
+                              {% endfor %}
+                           </select>
+                        </td>
+                        <td contenteditable="true" data-field="estimated_savings">{{ sheet.estimated_savings }}</td>
+                        <td contenteditable="true" data-field="realized_savings">{{ sheet.realized_savings }}</td>
+                        <td class="impact-column">
+                           <div class="impact-list">
+                              {% for impact in impacts %}
+                              {% with impact_info=sheet.impact_data|get_dict_item:impact %}
+                              {% if impact_info.benefits_description or impact_info.uom or impact_info.before_implementation or impact_info.after_implementation %}
+                              {% if impact == 'cost' %}
+                              <button onclick="viewCostDetails('{{ sheet.id }}')" class="impact-tag impact-tag-clickable">
+                              <i class="ni ni-money-coins"></i> Cost
+                              </button>
+                              {% else %}
+                              <span class="impact-tag">{{ impact|title }}</span>
+                              {% endif %}
+                              {% endif %}
+                              {% endwith %}
+                              {% endfor %}
+                           </div>
+                        </td>
+                        </td>
+                        <td class="files-column">
+                           <div class="files-container">
+                              {% if sheet.standardization_file %}
+                              <div class="file-link">
+                                 <a href="{{ sheet.standardization_file_url }}" target="_blank">View Standardization File</a>
+                              </div>
+                              {% endif %}
+                              {% if sheet.before_improvement_image %}
+                              <div class="image-link">
+                                 <a href="{{ sheet.before_improvement_image_url }}" target="_blank">View Before Image</a>
+                              </div>
+                              {% endif %}
+                              {% if sheet.after_improvement_image %}
+                              <div class="image-link">
+                                 <a href="{{ sheet.after_improvement_image_url }}" target="_blank">View After Image</a>
+                              </div>
+                              {% endif %}
+                              {% if sheet.is_handwritten and sheet.handwritten_sheet %}
+                              <div class="file-link handwritten-link">
+                                 <a href="{{ sheet.handwritten_sheet_url }}" target="_blank">
+                                 <i class="fas fa-file-alt"></i> View Handwritten Sheet
+                                 </a>
+                              </div>
+                              {% endif %}
+                           </div>
+                        </td>
+                        <td>
+                            <div class="button-container">
+                                {% if sheet.approval_status == 'coordinator_pending' %}
+                                    <div class="action-buttons">
+                                        <button onclick="handleCoordinatorAction('{{ sheet.id }}', 'approve')" class="btn btn-sm btn-success">
                                             Approve
                                         </button>
-                                    {% endif %}
+                                        <button onclick="handleCoordinatorAction('{{ sheet.id }}', 'reject')" class="btn btn-sm btn-danger">
+                                            Reject
+                                        </button>
+                                    </div>
+                                {% endif %}
+                                <div class="additional-buttons">
                                     {% if sheet.get_cost_difference > 0 %}
                                         <button onclick="viewCostDetails('{{ sheet.id }}')" class="btn btn-sm btn-info">
                                             <i class="ni ni-money-coins"></i> Cost Details
@@ -267,59 +312,59 @@
                                     <button onclick="saveChanges(this)" data-sheet-id="{{ sheet.id }}" class="btn btn-sm btn-primary">
                                         Save
                                     </button>
-                                </td>
-                                </td>
-                            
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+                                </div>
+                            </div>
+                        </td>
+                        </td>
+                     </tr>
+                     {% endfor %}
+                  </tbody>
+               </table>
             </div>
-        </div>
-    </div>
+         </div>
+      </div>
+   </div>
 </div>
 <div class="modal fade" id="costDetailsModal" tabindex="-1" role="dialog" aria-labelledby="costDetailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Cost Impact Details</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+   <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">Cost Impact Details</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="table-responsive">
+               <table class="table align-items-center">
+                  <tbody>
+                     <tr>
+                        <th>Benefits Description:</th>
+                        <td id="costBenefitsDescription"></td>
+                     </tr>
+                     <tr>
+                        <th>UOM:</th>
+                        <td id="costUOM"></td>
+                     </tr>
+                     <tr>
+                        <th>Before Implementation:</th>
+                        <td id="costBefore"></td>
+                     </tr>
+                     <tr>
+                        <th>After Implementation:</th>
+                        <td id="costAfter"></td>
+                     </tr>
+                     <tr>
+                        <th>Cost Difference:</th>
+                        <td id="costDifference"></td>
+                     </tr>
+                  </tbody>
+               </table>
             </div>
-
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table align-items-center">
-                        <tbody>
-                            <tr>
-                                <th>Benefits Description:</th>
-                                <td id="costBenefitsDescription"></td>
-                            </tr>
-                            <tr>
-                                <th>UOM:</th>
-                                <td id="costUOM"></td>
-                            </tr>
-                            <tr>
-                                <th>Before Implementation:</th>
-                                <td id="costBefore"></td>
-                            </tr>
-                            <tr>
-                                <th>After Implementation:</th>
-                                <td id="costAfter"></td>
-                            </tr>
-                            <tr>
-                                <th>Cost Difference:</th>
-                                <td id="costDifference"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div id="costCalculationDoc" class="mt-3"></div>
-            </div>
-        </div>
-    </div>
+            <div id="costCalculationDoc" class="mt-3"></div>
+         </div>
+      </div>
+   </div>
 </div>
 </div>
 {% endblock content %}
@@ -329,348 +374,394 @@
 <script src="https://unpkg.com/exceljs/dist/exceljs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <script>
-function toggleImpactFields(impact, sheetId) {
-    const btn = document.getElementById(`btn_${impact}_${sheetId}`);
-    const fields = document.getElementById(`fields_${impact}_${sheetId}`);
-    
-    if (fields.style.display === 'none') {
-        const impactData = {
-            benefits: `${impact}_benefits_description`,
-            uom: `${impact}_uom`,
-            before: `${impact}_before_implementation`,
-            after: `${impact}_after_implementation`
-        };
+   function toggleImpactFields(impact, sheetId) {
+       const btn = document.getElementById(`btn_${impact}_${sheetId}`);
+       const fields = document.getElementById(`fields_${impact}_${sheetId}`);
+       
+       if (fields.style.display === 'none') {
+           const impactData = {
+               benefits: `${impact}_benefits_description`,
+               uom: `${impact}_uom`,
+               before: `${impact}_before_implementation`,
+               after: `${impact}_after_implementation`
+           };
+   
+           Object.keys(impactData).forEach(key => {
+               const value = getImpactData(sheetId, impactData[key]);
+               document.getElementById(`${impact}_${key}_${sheetId}`).textContent = value;
+           });
+   
+           fields.style.display = 'block';
+           btn.classList.add('active');
+       } else {
+           fields.style.display = 'none';
+           btn.classList.remove('active');
+       }
+   }
+   
+   function approveKaizen(sheetId) {
+       if (confirm('Are you sure you want to approve this kaizen?')) {
+           fetch(`/coordinator-approve-kaizen/${sheetId}/`, {
+               method: 'POST',
+               headers: {
+                   'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+               }
+           })
+           .then(response => response.json())
+           .then(data => {
+               if (data.success) {
+                   location.reload();
+               } else {
+                   alert('Error approving kaizen: ' + (data.error || 'Unknown error'));
+               }
+           })
+           .catch(error => {
+               console.error('Error:', error);
+               alert('Error approving kaizen');
+           });
+       }
+   }
+   
+   function handleCoordinatorApproval(sheetId) {
+       if(!confirm('Are you sure you want to approve this kaizen?')) return;
+       
+       const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+       
+       fetch(`/coordinator-approve-kaizen/${sheetId}/`, {
+           method: 'POST',
+           headers: {
+               'X-CSRFToken': csrfToken,
+               'Content-Type': 'application/json'
+           }
+       })
+       .then(response => response.json())
+       .then(data => {
+           if(data.success) {
+               location.reload();
+           } else {
+               alert(data.error || 'Error approving kaizen');
+           }
+       })
+       .catch(error => {
+           console.error('Error:', error);
+           alert('Error approving kaizen');
+       });
+   }
+   
+   function handleCoordinatorAction(sheetId, action) {
+        if(!confirm(`Are you sure you want to ${action} this kaizen?`)) return;
+        
+        const button = event.target;
+        button.disabled = true;
+        button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${action === 'approve' ? 'Approving...' : 'Rejecting...'}`;
+        
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const url = action === 'approve' ? `/coordinator-approve-kaizen/${sheetId}/` : `/reject-kaizen/${sheetId}/`;
 
-        Object.keys(impactData).forEach(key => {
-            const value = getImpactData(sheetId, impactData[key]);
-            document.getElementById(`${impact}_${key}_${sheetId}`).textContent = value;
-        });
-
-        fields.style.display = 'block';
-        btn.classList.add('active');
-    } else {
-        fields.style.display = 'none';
-        btn.classList.remove('active');
-    }
-}
-
-function approveKaizen(sheetId) {
-    if (confirm('Are you sure you want to approve this kaizen?')) {
-        fetch(`/coordinator-approve-kaizen/${sheetId}/`, {
+        fetch(url, {
             method: 'POST',
             headers: {
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                'X-CSRFToken': csrfToken,
+                'Content-Type': 'application/json'
             }
         })
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
+            if(data.success) {
                 location.reload();
             } else {
-                alert('Error approving kaizen: ' + (data.error || 'Unknown error'));
+                alert(data.error || `Error ${action}ing kaizen`);
+                button.disabled = false;
+                button.innerHTML = action === 'approve' ? 'Approve' : 'Reject';
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error approving kaizen');
+            alert(`Error ${action}ing kaizen`);
+            button.disabled = false;
+            button.innerHTML = action === 'approve' ? 'Approve' : 'Reject';
         });
     }
-}
 
-function handleCoordinatorApproval(sheetId) {
-    if(!confirm('Are you sure you want to approve this kaizen?')) return;
-    
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    
-    fetch(`/coordinator-approve-kaizen/${sheetId}/`, {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': csrfToken,
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if(data.success) {
-            location.reload();
-        } else {
-            alert(data.error || 'Error approving kaizen');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Error approving kaizen');
-    });
-}
-function viewCostDetails(sheetId) {
-    fetch(`/fetch-kaizen-sheet/${sheetId}/`, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest',
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Data received:', data); // Debug log
-
-        // Populate modal fields with fetched data
-        document.getElementById('costBenefitsDescription').textContent = data['cost_benefits_description'] || 'N/A';
-        document.getElementById('costUOM').textContent = data['cost_uom'] || 'N/A';
-        document.getElementById('costBefore').textContent = data['cost_before_implementation'] || 'N/A';
-        document.getElementById('costAfter').textContent = data['cost_after_implementation'] || 'N/A';
-        document.getElementById('costDifference').textContent = data['cost_difference'] || 'N/A';
-
-        // Update cost calculation document section
-        const docDiv = document.getElementById('costCalculationDoc');
-        if (docDiv) {
-            const costCalcUrl = data['cost_calculation'];
-            console.log('Cost calculation URL:', costCalcUrl); // Debug log
-
-            if (costCalcUrl) {
-                docDiv.innerHTML = `
-                    <div class="text-center">
-                        <a href="${costCalcUrl}" target="_blank" class="btn btn-sm btn-primary">
-                            <i class="fas fa-file"></i> View Cost Calculation
-                        </a>
-                    </div>`;
-            } else {
-                docDiv.innerHTML = '<p class="text-muted text-center">No cost calculation document available</p>';
-            }
-        }
-
-        $('#costDetailsModal').modal('show');
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Error fetching cost details');
-    });
-}
-
-function saveChanges(btn) {
-    const sheetId = btn.getAttribute('data-sheet-id');
-    const row = document.querySelector(`tr[data-sheet-id="${sheetId}"]`);
-    const editableCells = row.querySelectorAll('[contenteditable="true"]');
-    
-    const data = {};
-
-    editableCells.forEach(cell => {
-        const field = cell.getAttribute('data-field');
-        let value = cell.textContent.trim();
-        data[field] = value;
-    });
-
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    data['csrfmiddlewaretoken'] = csrfToken;
-
-    btn.disabled = true;
-    const originalText = btn.textContent;
-    btn.textContent = 'Saving...';
-
-    fetch(`/update-kaizen/${sheetId}/`, {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': csrfToken,
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            btn.textContent = 'Saved!';
-            setTimeout(() => {
-                btn.textContent = originalText;
-                btn.disabled = false;
-            }, 2000);
-        } else {
-            alert('Error saving changes: ' + data.error);
-            btn.textContent = originalText;
-            btn.disabled = false;
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Error saving changes');
-        btn.textContent = originalText;
-        btn.disabled = false;
-    });
-}
-
-async function downloadCIPRegister() {
-    try {
-        const workbook = new ExcelJS.Workbook();
-        
-        // Fetch template
-        const response = await fetch('{% url "get_excel_template" "CIP register.xlsx" %}');
-        if (!response.ok) throw new Error('Failed to fetch template');
-        const templateBuffer = await response.arrayBuffer();
-        
-        await workbook.xlsx.load(templateBuffer);
-        const worksheet = workbook.getWorksheet(1);
-        
-        if (!worksheet) throw new Error('Worksheet not found in template');
-
-        // Get all rows from table
-        const tableRows = document.querySelectorAll('table tbody tr');
-        
-        // Write data rows
-        tableRows.forEach((row, index) => {
-            const rowNum = index + 3;
-            
-            try {
-                // Get data from table cells
-                const regDateText = row.querySelector('td:nth-child(4)').textContent.trim();
-                const regDate = regDateText ? new Date(regDateText) : null;
-                const financialYear = regDate && regDate.getMonth() >= 3 ? 
-                    `${regDate.getFullYear()}-${regDate.getFullYear() + 1}` : 
-                    `${regDate.getFullYear() - 1}-${regDate.getFullYear()}`;
-                
-                const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-                    'July', 'August', 'September', 'October', 'November', 'December'];
-                const regMonth = regDate ? monthNames[regDate.getMonth()] : '';
-
-                // Plot data in cells
-                worksheet.getCell(`A${rowNum}`).value = index + 1; // CIP No
-                worksheet.getCell(`B${rowNum}`).value = regMonth; // Reg Month
-                worksheet.getCell(`C${rowNum}`).value = regDate; // Registered Date
-                worksheet.getCell(`D${rowNum}`).value = financialYear; // Financial Year
-                worksheet.getCell(`E${rowNum}`).value = row.querySelector('td:nth-child(8)').textContent.trim(); // Project Status
-                worksheet.getCell(`F${rowNum}`).value = row.querySelector('td:nth-child(5)').textContent.trim(); // Project Description
-                worksheet.getCell(`G${rowNum}`).value = row.querySelector('td:nth-child(2)').textContent.trim(); // Department
-                worksheet.getCell(`H${rowNum}`).value = ''; // Project Area
-                worksheet.getCell(`I${rowNum}`).value = row.querySelector('td:nth-child(3)').textContent.trim(); // Project Leader
-                worksheet.getCell(`J${rowNum}`).value = ''; // Team Member 1 ID
-                worksheet.getCell(`K${rowNum}`).value = ''; // Team Member 1
-                worksheet.getCell(`L${rowNum}`).value = ''; // Team Member 2 ID
-                worksheet.getCell(`M${rowNum}`).value = regDate; // Start Date
-                worksheet.getCell(`N${rowNum}`).value = ''; // End Date
-                worksheet.getCell(`O${rowNum}`).value = row.querySelector('td:nth-child(6)').textContent.trim(); // Area of Impacts
-                worksheet.getCell(`P${rowNum}`).value = parseFloat(row.querySelector('td:nth-child(7)').textContent.trim()) || 0; // Estimated Savings
-                worksheet.getCell(`Q${rowNum}`).value = 0; // Realized Savings
-            } catch (err) {
-                console.error(`Error processing row ${index}:`, err);
-            }
-        });
-
-        // Format dates and numbers
-        ['C', 'M', 'N'].forEach(col => {
-            worksheet.getColumn(col).numFmt = 'dd-mm-yyyy';
-        });
-        
-        ['P', 'Q'].forEach(col => {
-            worksheet.getColumn(col).numFmt = '#,##0.00';
-        });
-
-        const buffer = await workbook.xlsx.writeBuffer();
-        const blob = new Blob([buffer], { 
-            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
-        });
-        saveAs(blob, `CIP_Register_${new Date().toISOString().split('T')[0]}.xlsx`);
-
-    } catch (error) {
-        console.error('Error generating Excel file:', error);
-        alert(`Error generating Excel file: ${error.message}`);
-    }
-}
-
-function getImpactData(sheetId, field) {
-    const sheet = document.querySelector(`tr[data-sheet-id="${sheetId}"]`);
-    return sheet.dataset[field] || '';
-}
-
-function updateSavings(element, sheetId) {
-    const value = element.value;
-    const fieldName = element.dataset.field;
-    
-    const data = {
-        id: sheetId,
-        [fieldName]: value,
-        csrfmiddlewaretoken: document.querySelector('[name=csrfmiddlewaretoken]').value
-    };
-    
-    fetch(`/update-kaizen/${sheetId}/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': data.csrfmiddlewaretoken,
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            console.log('Updated successfully');
-        } else {
-            alert('Error updating data: ' + data.error);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Error updating data');
-    });
-}
+   function viewCostDetails(sheetId) {
+       fetch(`/fetch-kaizen-sheet/${sheetId}/`, {
+           method: 'GET',
+           headers: {
+               'Accept': 'application/json',
+               'X-Requested-With': 'XMLHttpRequest',
+           }
+       })
+       .then(response => response.json())
+       .then(data => {
+           console.log('Data received:', data); // Debug log
+   
+           // Populate modal fields with fetched data
+           document.getElementById('costBenefitsDescription').textContent = data['cost_benefits_description'] || 'N/A';
+           document.getElementById('costUOM').textContent = data['cost_uom'] || 'N/A';
+           document.getElementById('costBefore').textContent = data['cost_before_implementation'] || 'N/A';
+           document.getElementById('costAfter').textContent = data['cost_after_implementation'] || 'N/A';
+           document.getElementById('costDifference').textContent = data['cost_difference'] || 'N/A';
+   
+           // Update cost calculation document section
+           const docDiv = document.getElementById('costCalculationDoc');
+           if (docDiv) {
+               const costCalcUrl = data['cost_calculation'];
+               console.log('Cost calculation URL:', costCalcUrl); // Debug log
+   
+               if (costCalcUrl) {
+                   docDiv.innerHTML = `
+                       <div class="text-center">
+                           <a href="${costCalcUrl}" target="_blank" class="btn btn-sm btn-primary">
+                               <i class="fas fa-file"></i> View Cost Calculation
+                           </a>
+                       </div>`;
+               } else {
+                   docDiv.innerHTML = '<p class="text-muted text-center">No cost calculation document available</p>';
+               }
+           }
+   
+           $('#costDetailsModal').modal('show');
+       })
+       .catch(error => {
+           console.error('Error:', error);
+           alert('Error fetching cost details');
+       });
+   }
+   
+   function saveChanges(btn) {
+       const sheetId = btn.getAttribute('data-sheet-id');
+       const row = document.querySelector(`tr[data-sheet-id="${sheetId}"]`);
+       const editableCells = row.querySelectorAll('[contenteditable="true"]');
+       
+       const data = {};
+   
+       editableCells.forEach(cell => {
+           const field = cell.getAttribute('data-field');
+           let value = cell.textContent.trim();
+           data[field] = value;
+       });
+   
+       const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+       data['csrfmiddlewaretoken'] = csrfToken;
+   
+       btn.disabled = true;
+       const originalText = btn.textContent;
+       btn.textContent = 'Saving...';
+   
+       fetch(`/update-kaizen/${sheetId}/`, {
+           method: 'POST',
+           headers: {
+               'X-CSRFToken': csrfToken,
+               'Content-Type': 'application/json',
+           },
+           body: JSON.stringify(data),
+       })
+       .then(response => response.json())
+       .then(data => {
+           if (data.success) {
+               btn.textContent = 'Saved!';
+               setTimeout(() => {
+                   btn.textContent = originalText;
+                   btn.disabled = false;
+               }, 2000);
+           } else {
+               alert('Error saving changes: ' + data.error);
+               btn.textContent = originalText;
+               btn.disabled = false;
+           }
+       })
+       .catch(error => {
+           console.error('Error:', error);
+           alert('Error saving changes');
+           btn.textContent = originalText;
+           btn.disabled = false;
+       });
+   }
+   
+   async function downloadCIPRegister() {
+       try {
+           const workbook = new ExcelJS.Workbook();
+           
+           // Fetch template
+           const response = await fetch('{% url "get_excel_template" "CIP register.xlsx" %}');
+           if (!response.ok) throw new Error('Failed to fetch template');
+           const templateBuffer = await response.arrayBuffer();
+           
+           await workbook.xlsx.load(templateBuffer);
+           const worksheet = workbook.getWorksheet(1);
+           
+           if (!worksheet) throw new Error('Worksheet not found in template');
+   
+           // Get all rows from table
+           const tableRows = document.querySelectorAll('table tbody tr');
+           
+           // Write data rows starting from row 3
+           tableRows.forEach((row, index) => {
+               const rowNum = index + 3; // Start from row 3
+               
+               try {
+                   const cells = row.querySelectorAll('td');
+                   
+                   // Parse dates correctly
+                   const registeredDate = cells[2] ? new Date(cells[2].textContent.trim()) : null;
+                   const startDate = cells[13] ? new Date(cells[13].textContent.trim()) : null;
+                   const endDate = cells[14] ? new Date(cells[14].textContent.trim()) : null;
+   
+                   // Map table columns to Excel columns with corrected indices
+                   worksheet.getCell(`A${rowNum}`).value = cells[0].textContent.trim(); // CIP No
+                   worksheet.getCell(`B${rowNum}`).value = cells[1].textContent.trim(); // Reg Month
+                   worksheet.getCell(`C${rowNum}`).value = registeredDate; // Registered Date
+                   worksheet.getCell(`D${rowNum}`).value = cells[3].textContent.trim(); // Financial Year
+                   worksheet.getCell(`E${rowNum}`).value = cells[4].querySelector('span').textContent.trim(); // Project Status
+                   worksheet.getCell(`F${rowNum}`).value = cells[5].textContent.trim(); // Project Description
+                   worksheet.getCell(`G${rowNum}`).value = cells[6].textContent.trim(); // Department
+                   worksheet.getCell(`H${rowNum}`).value = cells[7].textContent.trim(); // Project Area
+                   worksheet.getCell(`I${rowNum}`).value = cells[8].textContent.trim(); // Project Leader
+                   worksheet.getCell(`J${rowNum}`).value = cells[9].textContent.trim(); // Team Member 1 ID
+                   worksheet.getCell(`K${rowNum}`).value = cells[10].textContent.trim(); // Team Member 1
+                   worksheet.getCell(`L${rowNum}`).value = cells[11].textContent.trim(); // Team Member 2 ID
+                   worksheet.getCell(`M${rowNum}`).value = startDate; // Start Date
+                   worksheet.getCell(`N${rowNum}`).value = endDate; // End Date
+                   worksheet.getCell(`O${rowNum}`).value = Array.from(cells[18].querySelectorAll('.impact-tag'))
+                       .map(tag => tag.textContent.trim())
+                       .join(', '); // Impact Areas
+                   worksheet.getCell(`P${rowNum}`).value = parseFloat(cells[16].textContent.trim()) || 0; // Estimated Savings
+                   worksheet.getCell(`Q${rowNum}`).value = parseFloat(cells[17].textContent.trim()) || 0; // Realized Savings
+   
+               } catch (err) {
+                   console.error(`Error processing row ${index}:`, err);
+               }
+           });
+   
+           // Format dates
+           ['C', 'M', 'N'].forEach(col => {
+               worksheet.getColumn(col).numFmt = 'dd-mm-yyyy';
+           });
+           
+           // Format numbers
+           ['P', 'Q'].forEach(col => {
+               worksheet.getColumn(col).numFmt = '#,##0.00';
+           });
+   
+           const buffer = await workbook.xlsx.writeBuffer();
+           const blob = new Blob([buffer], { 
+               type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+           });
+           saveAs(blob, `CIP_Register_${new Date().toISOString().split('T')[0]}.xlsx`);
+   
+       } catch (error) {
+           console.error('Error generating Excel file:', error);
+           alert(`Error generating Excel file: ${error.message}`);
+       }
+   }
+   
+   function getImpactData(sheetId, field) {
+       const sheet = document.querySelector(`tr[data-sheet-id="${sheetId}"]`);
+       return sheet.dataset[field] || '';
+   }
+   
+   function updateSavings(element, sheetId) {
+       const value = element.value;
+       const fieldName = element.dataset.field;
+       
+       const data = {
+           id: sheetId,
+           [fieldName]: value,
+           csrfmiddlewaretoken: document.querySelector('[name=csrfmiddlewaretoken]').value
+       };
+       
+       fetch(`/update-kaizen/${sheetId}/`, {
+           method: 'POST',
+           headers: {
+               'Content-Type': 'application/json',
+               'X-CSRFToken': data.csrfmiddlewaretoken,
+           },
+           body: JSON.stringify(data)
+       })
+       .then(response => response.json())
+       .then(data => {
+           if (data.success) {
+               console.log('Updated successfully');
+           } else {
+               alert('Error updating data: ' + data.error);
+           }
+       })
+       .catch(error => {
+           console.error('Error:', error);
+           alert('Error updating data');
+       });
+   }
 </script>
 {% endblock javascripts %}
 <style>
-    .approval-flow {
-        font-size: 0.9rem;
+   .approval-flow {
+   font-size: 0.9rem;
+   }
+   .approval-flow ol {
+   margin: 10px 0;
+   padding-left: 20px;
+   }
+   .approval-flow li {
+   margin-bottom: 5px;
+   }
+   .approval-flow p:last-child {
+   margin-bottom: 0;
+   font-weight: 600;
+   }
+   input[type="number"] {
+   appearance: textfield;
+   -moz-appearance: textfield;
+   }
+   input[type="number"]::-webkit-outer-spin-button,
+   input[type="number"]::-webkit-inner-spin-button {
+   -webkit-appearance: none;
+   margin: 0;
+   }
+   .impact-tag-clickable {
+   cursor: pointer;
+   border: none;
+   transition: all 0.2s ease;
+   }
+   .impact-tag-clickable:hover {
+   background-color: #5e72e4;
+   color: white;
+   }
+   .impact-tag-clickable i {
+   margin-right: 4px;
+   }
+   .modal-content {
+   border: 0;
+   border-radius: .375rem;
+   }
+   .modal-header {
+   padding: 1.25rem;
+   border-bottom: 1px solid #e9ecef;
+   }
+   .modal-body {
+   padding: 1.5rem;
+   }
+   .table th {
+   font-weight: 600;
+   color: #8898aa;
+   }
+   .button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
     }
-    
-    .approval-flow ol {
-        margin: 10px 0;
-        padding-left: 20px;
-    }
-    
-    .approval-flow li {
-        margin-bottom: 5px;
-    }
-    
-    .approval-flow p:last-child {
-        margin-bottom: 0;
-        font-weight: 600;
-    }
-    
-    input[type="number"] {
-        appearance: textfield;
-        -moz-appearance: textfield;
-    }
-    
-    input[type="number"]::-webkit-outer-spin-button,
-    input[type="number"]::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-    .impact-tag-clickable {
-    cursor: pointer;
-    border: none;
-    transition: all 0.2s ease;
-}
 
-.impact-tag-clickable:hover {
-    background-color: #5e72e4;
-    color: white;
-}
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+    }
 
-.impact-tag-clickable i {
-    margin-right: 4px;
-}
-.modal-content {
-    border: 0;
-    border-radius: .375rem;
-}
+    .additional-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
 
-.modal-header {
-    padding: 1.25rem;
-    border-bottom: 1px solid #e9ecef;
-}
-
-.modal-body {
-    padding: 1.5rem;
-}
-
-.table th {
-    font-weight: 600;
-    color: #8898aa;
-}
-    </style>
+    .btn {
+        width: fit-content;
+    }
+</style>
